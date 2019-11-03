@@ -1,0 +1,49 @@
+h3{
+	text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    border-bottom: 1px solid #75757A;
+}
+.skills{
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+	font-family: 'Montserrat', sans-serif;
+	align-items: baseline;
+}
+.skills li{
+	font-family: 'Montserrat', sans-serif;
+	text-align: center;
+
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.skillBar{
+	height: 50px;
+
+	background-color: #87B569;
+	margin-right: auto;
+	margin-left: auto;
+
+	margin-bottom: 10px;
+}
+
+.years{
+	font-size: 0.8rem;
+}
+.skillLabel{
+	width: 120px;
+}
+.skills .skillLabel p{
+	margin: 0;
+}
+.skillDescript{
+	max-width: 1000px;
+	margin-top: 20px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.skillDescript p{
+	text-align: center;
+}

@@ -1,0 +1,133 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Solar System</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Solar System</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/solar9.png" alt="solar system">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2 class="no-gap">Overview</h2>
+
+        <ul>
+          <!-- <li><p><a href="TODO">demo</a></p></li> -->
+          <li><p><a href="https://github.com/AdrianMargel/3d-solar-system">github</a></p></li>
+        </ul>
+
+        <p>This program simulates the formation of a simple 3D solar system. When the simulation starts there are a huge number of tiny little micro-planets, overtime these micro-planets collide and merge with each other until there are only a few large planets left orbiting the sun.</p>
+
+        <p>The program is able to simulate gravitational attraction and simple planetary collisions by merging the two planets into a single mass. This means that the program is general and can be adapted to run a large range of scenarios beyond just solar system formation. Possible examples include binary star systems, black holes, collisions between solar systems, etc.</p>
+
+        <h2>Inspiration</h2>
+
+        <p>This was inspired by a demo project in my highschool computer science class. The teacher was showing a demo on how to create a simple solar system using rotations to the class. I had already mastered the skills he planned on teaching through that demo on my own and so found myself extremely bored. I decided to keep myself entertained that I would make a more advanced solar system simulation.</p>
+
+        <h2>Creation</h2>
+
+        <p>As stated above, this was inspired by a simple demo my computer science teacher did with the class in highschool. The example the teacher was doing just had a simple method that would rotate planets around a central point - this was the first thing to go. I quickly scrapped the simple rotation method for an equation able to calculate gravitational attraction. After this I decided that the two dimensions we were using in class weren't enough, so I added a new dimension, the third dimension! This was all fine but planets would still just phase through each other when they collided. So I gave planets the ability to collide with each other merging into larger planets - all while conserving mass and energy of course. At this point I increased the number of planets from just a few planets to a few hundred. I then watched as these hundreds of small planets collide and merge with one another until only a small handful of large planets remained orbiting the sun.</p>
+
+        <h2>Results</h2>
+
+        <p>Below are images of the simulated formation of a solar system. Keep in mind that although the sun looks small it has a much higher density than the planets do.</p>
+        <img class="full-img" src="img/solar1.png" alt="solar system">
+        <img class="full-img" src="img/solar2.png" alt="solar system">
+        <img class="full-img" src="img/solar3.png" alt="solar system">
+        <img class="full-img" src="img/solar4.png" alt="solar system">
+        <img class="full-img" src="img/solar5.png" alt="solar system">
+        <img class="full-img" src="img/solar6.png" alt="solar system">
+
+      </div>
+      <p class="center"><a href="#">back to top</a></p>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+
+</body>
+
+</html>

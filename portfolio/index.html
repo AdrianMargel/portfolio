@@ -1,0 +1,211 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Adrian Margel</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- <link rel="icon" href="favicon.ico" /> -->
+
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+<!-- <p id="debug">debug</p> -->
+  <header>
+
+    <a href="index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="index.html">
+            <div class="menu-selected">
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="projects.html">
+            <div>
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="intro">
+
+      <div class="intro-text">
+        <h1>Adrian Margel</h1>
+        <p class="hand-written">Programmer | Graphic Artist</p>
+      </div>
+      <a href="#after-intro">
+        <div class="arrow-down"></div>
+      </a>
+    </section>
+
+    <section class="projects" id="after-intro">
+      <h2><a href="projects.html">Projects</a></h2>
+      <div class="contain">
+        <div class="buttons">
+          <button class="button category-button" onclick="setCategory('design')" id="cat-design">
+            Design
+            <div class="arrow-select"><div></div></div>
+          </button>
+          <button class="button category-button selected" onclick="setCategory('programming')" id="cat-programming">
+            Programming
+            <div class="arrow-select"><div></div></div>
+          </button>
+          <button class="button category-button" onclick="setCategory('art')" id="cat-art">
+            Art
+            <div class="arrow-select"><div></div></div>
+          </button>
+        </div>
+
+        <div class="project-display" id="project-load">
+
+          <!-- <div class="project-item highlight">
+            <div class="background"></div>
+            <div class="over"></div>
+            <a href="">
+              <div class="description">
+                <h3>y</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+                <p class="fake-link">view project</p>
+              </div>
+            </a>
+            <div class="caption"><h3><a href="">Alchemy circles</a></h3></div>
+          </div>
+
+          <div class="project-item highlight">
+            <div class="background"></div>
+            <div class="over"></div>
+            <a href="">
+              <div class="description">
+                <h3>y</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+                <p class="fake-link">view project</p>
+              </div>
+            </a>
+            <div class="caption"><h3><a href="">Alchemy circles</a></h3></div>
+          </div>
+
+          <div class="project-item highlight">
+            <div class="background"></div>
+            <div class="over"></div>
+            <a href="">
+              <div class="description">
+                <h3>y</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+                <p class="fake-link">view project</p>
+              </div>
+            </a>
+            <div class="caption"><h3><a href="">Alchemy circles</a></h3></div>
+          </div>
+
+          <div class="project-item">
+            <div class="background"></div>
+            <a href="">
+              <div class="description">
+                <h3>y</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+                <p class="fake-link">view project</p>
+              </div>
+            </a>
+            <div class="caption"><h3><a href="">Alchemy circles</a></h3></div>
+            <div class="over"></div>
+          </div> -->
+
+        </div>
+      </div>
+      <p><a href="projects.html">view all</a></p>
+    </section>
+
+    <section class="info about">
+      <h2><a href="about.html">About Me</a></h2>
+      <div class="contain">
+        <img src="img/fireflylogo1.png" alt="picture">
+        <div>
+
+          <p>I am a NAIT student currently studying computer software developement. I achieved a perfect 4.0 GPA in the last semester I took. I fell in love with programming back when I first learned the basics in grade 10. Since then I have written many thousands of lines of code and tackled many extremely interesting and difficult projects. Programming is not just a career for me - it’s a passion (if not an obsession). I spend most of my free time programming as a hobby when I’m not at work or school. I also am skilled with graphic design and continually work on developing my skills with design along side my programming ability. I am currently aiming to start a fulfilling career in the computer field.</p>
+        </div>
+      </div>
+      
+      <div class="clearfix"></div>
+      <p class="center"><a href="about.html">more info</a></p>
+    </section>
+
+    <section class="info">
+      <div class="contain2">
+        <h2><a href="contact.html">Contact</a></h2>
+        <p class="">Questions, comments, job opportunities, something else? Feel free to reach out to me.</p>
+
+        <p class="contact-type">Email: adrianjmargel<img src="img/at2.png">gmail<img src="img/dot2.png">com</p>
+        <p class="contact-type">Github: <a href="https://github.com/AdrianMargel">AdrianMargel</a></p>
+        <p class="contact-type">Reddit: <a href="https://www.reddit.com/user/blind_firefly">u/blind_firefly</a></p>
+      </div>
+    </section>
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>

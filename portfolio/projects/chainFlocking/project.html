@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Chain Flocking</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Chain Flocking</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/chainflock1.png" alt="Flock">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2 class="no-gap">Overview</h2>
+
+        <ul>
+          <!-- <li><p><a href="TODO">demo</a></p></li> -->
+          <li><p><a href="https://github.com/AdrianMargel/chain-flocking">github</a></p></li>
+        </ul>
+
+        <p>This is just a small project to play around with different kinds of emergent behavior that can arize from flocking algorithms. The chain flocking algorithm I came up with is a modified version of the <a href="https://en.wikipedia.org/wiki/Boids">boids algorithm</a> but where each boid is attracted to a single other boid in the flock. This leads to "chains" of boids forming each one following in a line after the one in front of it. Admittedly this doesn't have many practical uses and mostly just exists as an interesting experiment.</p>
+
+        <h2>Inspiration</h2>
+
+        <p>This was heavily inspired by the <a href="https://en.wikipedia.org/wiki/Boids">boids algorithm</a>. I had already made a few different variations of the boids algorithm in the past and so I wanted to try something new to see how difficult it would be to create cohesive flocking behaviour from simple rules. This project exists almost completely just as a test to allow me to get a better feel for flocking algorithms.</p>
+
+        <h2>Results</h2>
+
+        <p>Below are a few examples of the flocking algorithm running.</p>
+
+        <img class="full-img" src="img/chainflock2.png" alt="Flock">
+        <img class="full-img" src="img/chainflock3.png" alt="Flock">
+        <img class="full-img" src="img/chainflock4.png" alt="Flock">
+      </div>
+      <p class="center"><a href="#">back to top</a></p>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Tetris AI</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Tetris AI</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/tetris2.png" alt="tetris">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2 class="no-gap">Overview</h2>
+
+        <ul>
+          <!-- <li><p><a href="TODO">demo</a></p></li> -->
+          <li><p><a href="https://github.com/AdrianMargel/tetris-multiplayer">github</a></p></li>
+        </ul>
+
+        <p>This program is a recreation of the game <a href="https://en.wikipedia.org/wiki/Tetris">Tetris</a> with local CO-OP multiplayer and AI. The AI I created for this game is a type of heuristic AI. Provided there is enough space the AIs are able to play almost indefinitely.</p>
+
+        <h2>Inspiration</h2>
+
+        <p>Back in highschool I decided to recreate my own version of Tetris. After finishing the program I decided to spice it up a bit by adding the ability to have a second player on the same screen. I started playing this two player Tetris with some of my classmates and we had a lot of fun with it. Well, I already had the code for two players so why stop there? I then added support for any number of players. Unfortunately my supply of friends was not as infinite as the player count. So I decided to program in an AI to take the place of my friends. It turned out that the AI was much better at playing than my friends and soon enough I had the AIs playing better than even I could.</p>
+
+        <h2>The AI</h2>
+        <p>The AI is a classic <a href="https://en.wikipedia.org/wiki/Heuristic_(computer_science)">heuristic</a> based AI. It works by figuring out a possible set of moves that it can make and then simulating each one. Then using a set of heuristics it assigns a score to the each move. It will then make the move that gives the highest heuristic score. To allow bots to play together I also put in a bit of logic that causes each AI to test if another AI's piece exists underneath its own piece.  If there is, it will slow fall to avoid accidentally stealing spaces that another AI is trying to use. This is not a perfect solution to multiplayer AI - especially since there is no real communication between the AIs. It still works surprisingly well though, plus it allows for human players to play along side the AI.</p>
+
+        <h2>Results</h2>
+
+        <p>The AIs are able to work together to play almost indefinitely. The scoring as displayed at the top of the screen is the number of rows cleared. Provided there is enough space for the bots they can easily reach 10,000 rows cleared in a single game. I've only let it get over a score of a few thousand a few time because of the amount of time it takes. Below are some screenshots of the bots playing.</p>
+
+        <img class="full-img" src="img/tetris10b.png" alt="Tetris">
+        <img class="full-img" src="img/tetris_bots.png" alt="Tetris">
+        <img class="full-img" src="img/tetris_bots_2.png" alt="Tetris">
+
+      </div>
+      <p class="center"><a href="#">back to top</a></p>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+  
+</body>
+
+</html>

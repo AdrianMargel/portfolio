@@ -1,0 +1,131 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Pixel Renderer</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Pixel Renderer</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/pixelRender.png" alt="pixels">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2 class="no-gap">Overview</h2>
+
+        <ul>
+          <!-- <li><p><a href="TODO">demo</a></p></li> -->
+          <li><p><a href="https://github.com/AdrianMargel/pixel-renderer">github</a></p></li>
+        </ul>
+
+        <p>This program is able to render lighting effects on a 3d surface including shadows. It works by running a simple ray tracing algorithm to calculate the light from each light source. The program is able to handle multiple light sources. It can also support color, both colored light sources and colored pixels on the surface being rendered.</p>
+
+        <p>The program runs on the CPU and thus is optimized to do as few calculations as possible. This means that the program is extremely fast when dealing with few light sources and or dim light sources that do not require many lighting calculations. In fact the program for the most part is able to do lighting in real time. However when trying to calculate too many light sources, especially bright ones, the program will slow down. This is only a problem in the case of using this for real time lighting, if used for rendering pixel art there is no problem.</p>
+
+        <h2>Inspiration</h2>
+
+        <p>This project was inspired by looking at the development process behind the game <a href="http://rainworldgame.com">Rain World</a>. I discovered that much of Rain World's amazing art is done by a simple engine which uses ray tracing to render the lighting. This lead me to create this project as a simplified version of Rain World's rendering engine.</p>
+
+        <h2>Results</h2>
+
+        <p>Below are a few examples of the program rendering lighting for different test cases.</p>
+        <img class="full-img" src="img/pixelRender2.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender3.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender4.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender5.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender6.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender7.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender8.png" alt="pixels">
+        <img class="full-img" src="img/pixelRender9.png" alt="pixels">
+
+      </div>
+      <p class="center"><a href="#">back to top</a></p>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+
+</body>
+
+</html>

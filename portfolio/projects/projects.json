@@ -1,0 +1,382 @@
+[
+    {
+        "name": "alchemyCircles",
+        "title": "Alchemy Circles",
+        "weight": 1.1,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"},
+                {"category": "design"}
+            ],
+        "description": "An algorithmic approach to creating alchemy circles."
+    },
+    {
+        "name": "antFarm",
+        "title": "Ant Farm",
+        "weight": 1,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "An evolutionary simulation based off langton's ant."
+    },
+    {
+        "name": "bot2048",
+        "title": "2048 AI",
+        "weight": 2,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "An AI to play the game 2048."
+    },
+    {
+        "name": "botTetris",
+        "title": "Multiplayer Tetris AI",
+        "weight": 2,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "An AI to play a multiplayer version of the game Tetris."
+    },
+    {
+        "name": "chainFlocking",
+        "title": "Chain Flocking",
+        "weight": 4,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "An experiment involving modified flocking algorithms."
+    },
+    {
+        "name": "evoCells",
+        "title": "Evolving Cells",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A cellular automaton where cells are able to evolve their rule sets via a genetic algorithm."
+    },
+    {
+        "name": "explodeTrees",
+        "title": "Exploding Trees",
+        "weight": 5,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A simple test for procedurally generating trees."
+    },
+    {
+        "name": "jelly",
+        "title": "Jelly Engine",
+        "weight": 5,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A 2D simulation of soft body physics using shape memory to resolve self-intersections."
+    },
+    {
+        "name": "pixelLighting",
+        "title": "Pixel Renderer",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A lighting engine able to render low resolution 2D environments."
+    },
+    {
+        "name": "simpleTexture",
+        "title": "Simple Textures",
+        "weight": 4,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A test for procedurally generating pixel art tile textures."
+    },
+    {
+        "name": "solarSystem",
+        "title": "Solar System",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A gravitational simulation to model the formation of a 3D solar system"
+    },
+    {
+        "name": "spiral",
+        "title": "Spiral Generator",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program for rendering complex visually interesting spiral patterns."
+    },
+    {
+        "name": "flame",
+        "title": "Fire Simulation",
+        "weight": 1,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A visually plausible simulation for low resolution fire."
+    },
+    {
+        "name": "buddhabrot",
+        "title": "Buddhabrot",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program for rendering mandelbrot based fractals, most notably the buddhabrot"
+    },
+    {
+        "name": "pixelGirls",
+        "title": "Pixel Art Girls",
+        "weight": 1,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A few pixel art characters."
+    },
+    {
+        "name": "fireBird",
+        "title": "Fire Bird",
+        "weight": 1,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A phoenix-like digital art bird."
+    },
+    {
+        "name": "leviathan",
+        "title": "Leviathan",
+        "weight": 1,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A piece of fanart for the game Rain World."
+    },
+    {
+        "name": "dawnBird",
+        "title": "The Dawn Wing",
+        "weight": 2,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A pixel art fantasy creature."
+    },
+    {
+        "name": "pixelGuns",
+        "title": "Pixel Art Guns",
+        "weight": 2,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A number of pixel art guns."
+    },
+    {
+        "name": "botSlitherio",
+        "title": "Slitherio AI",
+        "weight": 4,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "An AI able to learn the basics of how to play the game Slitherio."
+    },
+    {
+        "name": "proceduralInk",
+        "title": "Procedural Ink",
+        "weight": 2,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program that creates abstract patterns using the emergent behavior of thousands of particles."
+    },
+    {
+        "name": "celestialCircles",
+        "title": "Celestial Circles",
+        "weight": 2,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"},
+                {"category": "design"}
+            ],
+        "description": "A program to generate aesthetically pleasing circular designs."
+    },
+    {
+        "name": "mazeGen",
+        "title": "Maze Generator",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program for generating mazes."
+    },
+    {
+        "name": "squareEncoder",
+        "title": "Square Encoder",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program able to represent shapes using different sizes of squares."
+    },
+    {
+        "name": "usernameGen",
+        "title": "Username Generator",
+        "weight": 5,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program for generating usernames."
+    },
+    {
+        "name": "rayTracer",
+        "title": "Ray Tracer",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A program able to render simple 3D environments."
+    },
+    {
+        "name": "bethelFlag",
+        "title": "Bethel Flag",
+        "weight": 1.05,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "design"}
+            ],
+        "description": "A national flag for a church."
+    },
+    {
+        "name": "cornerstoneLogo",
+        "title": "Cornerstone Logo",
+        "weight": 1,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "design"}
+            ],
+        "description": "A redone logo for a rural school."
+    },
+    {
+        "name": "pixelTree",
+        "title": "Pixel Tree",
+        "weight": 2,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+            ],
+        "description": "A simple pixel art tree."
+    },
+    {
+        "name": "enhancedQuotes",
+        "title": "Enhanced Quotes",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "design"}
+            ],
+        "description": "Visually enhanced quotes for posters."
+    },
+    {
+        "name": "letterTransforms",
+        "title": "Letter Transforms",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "design"}
+            ],
+        "description": "A design composed of symbols based on tranforming the lines from different letters in the alphabet."
+    },
+    {
+        "name": "zombie",
+        "title": "Zombie",
+        "weight": 3,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "design"},
+                {"category": "art"}
+
+            ],
+        "description": "A piece of vector art of a zombie."
+    },
+    {
+        "name": "patternLetters",
+        "title": "Pattern Letters",
+        "weight": 4,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "design"}
+            ],
+        "description": "Decorative letters using interchangeable modules."
+    },
+    {
+        "name": "botSawtooth",
+        "title": "Sawtooth AI",
+        "weight": 0.9,
+        "highlight": true,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "The winning AI in an international AI competition."
+    }
+
+
+]
