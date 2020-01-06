@@ -35,7 +35,7 @@
     },
     {
         "name": "botTetris",
-        "title": "Multiplayer Tetris AI",
+        "title": "Tetris AI",
         "weight": 2,
         "highlight": true,
         "categories":
@@ -91,7 +91,7 @@
     {
         "name": "pixelLighting",
         "title": "Pixel Renderer",
-        "weight": 3,
+        "weight": 3.2,
         "highlight": false,
         "categories":
             [
@@ -113,7 +113,7 @@
     {
         "name": "solarSystem",
         "title": "Solar System",
-        "weight": 3,
+        "weight": 3.3,
         "highlight": false,
         "categories":
             [
@@ -124,7 +124,7 @@
     {
         "name": "spiral",
         "title": "Spiral Generator",
-        "weight": 3,
+        "weight": 3.4,
         "highlight": false,
         "categories":
             [
@@ -146,7 +146,7 @@
     {
         "name": "buddhabrot",
         "title": "Buddhabrot",
-        "weight": 3,
+        "weight": 3.5,
         "highlight": false,
         "categories":
             [
@@ -246,7 +246,7 @@
     {
         "name": "mazeGen",
         "title": "Maze Generator",
-        "weight": 3,
+        "weight": 3.7,
         "highlight": false,
         "categories":
             [
@@ -257,7 +257,7 @@
     {
         "name": "squareEncoder",
         "title": "Square Encoder",
-        "weight": 3,
+        "weight": 3.8,
         "highlight": false,
         "categories":
             [
@@ -279,7 +279,7 @@
     {
         "name": "rayTracer",
         "title": "Ray Tracer",
-        "weight": 3,
+        "weight": 3.9,
         "highlight": false,
         "categories":
             [
@@ -376,6 +376,29 @@
                 {"category": "programming"}
             ],
         "description": "The winning AI in an international AI competition."
+    },
+    {
+        "name": "truchetPatterns",
+        "title": "Truchet Patterns",
+        "weight": 3.6,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"},
+                {"category": "design"}
+            ],
+        "description": "A program for procedurally generateing Truchet patterns."
+    },
+    {
+        "name": "deformedPenrose",
+        "title": "Deformed Penrose",
+        "weight": 3.9,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"}
+            ],
+        "description": "A test in generating aperiodic tiles and applying deformations to them."
     }
 
 

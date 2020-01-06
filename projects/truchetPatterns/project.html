@@ -1,0 +1,111 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Truchet Patterns</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Truchet Patterns</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/truchetpattern_wide.png" alt="truchet pattern">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2>Overview</h2>
+
+        <p>This program procedurally generates <a href="https://en.wikipedia.org/wiki/Truchet_tiles">Truchet Patterns</a>. This is done by creating a bunch of tiles at different sizes and then rendering each tile as one of a select number of possible Truchet tile types. Each of these tile types interlocks seamlessly with every other type of tile regardless of size allowing for a continuous seamless pattern. To get tiles of different sizes an initial tile grid is generated and then tiles are randomly selected out of this grid to be split into 4 smaller tiles (similar to a quadtree).</p>
+
+        <h2>Inspiration</h2>
+
+        <p>This was <b>heavily</b> inspired by Christopher Carlson's <a href="https://christophercarlson.com/portfolio/multi-scale-truchet-patterns/">Multi-Scale Truchet Patterns</a>.</p>
+
+      </div>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Deformed Penrose</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="icon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300,400|Sue+Ellen+Francisco&display=swap" rel="stylesheet"> 
+
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/project.css">
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <header>
+
+    <a href="../../index.html">
+      <div class="logo">
+      </div>
+    </a>
+    <div>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <div>
+              <p>
+                Home
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../projects.html">
+            <div class="menu-selected">
+              <p>
+                Projects
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../about.html">
+            <div>
+              <p>
+                About me
+              </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="../../contact.html">
+            <div>
+              <p>
+                Contact
+              </p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-small">
+      <div class="contain">
+        <h1>Deformed Penrose</h1>
+      </div>
+    </section>
+    <section class="big-image">
+      <div class="contain">
+        <img src="img/gradientpenrose16.png" alt="penrose">
+      </div>
+    </section>
+
+    <section class="info no-gap">
+      <div class="contain2">
+
+        <h2>Overview</h2>
+
+        <p>This program is able to generate various aperiodic tiles (such as Penrose tiles and Penrose sun tiles) and apply arbitrary deformations to these tiles. These arbitrary deformations allow anything from simple gradients as shown above to animated movement as can be seen <a href="https://www.reddit.com/r/proceduralgeneration/comments/eexir6/procedurally_generated_penrose_tiles_with/">here</a>.</p>
+
+        <p>The problem can be broken up into 3 separate components:</p>
+
+        <ol>
+          <li>Generating Penrose tiles - this is done by recursively subdividing shapes. A really simple explanation for this can be found <a href="https://preshing.com/20110831/penrose-tiling-explained/">here</a>.</li>
+          <li>Identifying the different types of nodes - this is done by representing each node's neighborhood as a set of angles and shape types (blue or red). After this it is possible to search all nodes where a certain criteria is met. When a match is found the rotation/offset is subtracted off to "normalize" the node's neighborhood for the final step.</li>
+          <li>Apply distortions - once the type of node has been identified and the neighborhood normalized then deformations can be applied to these nodes. These deformations are arbitrarily hard coded depending on the desired effect.</li>
+        </ol>
+
+        <h2>Inspiration</h2>
+
+        <p>This was inspired by the work of Richard Welberry on <a href="https://www.iucr.org/news/newsletter/volume-27/number-3/deformed-penrose-tiling-and-quasicrystals">crystal deformations and quasicrystals</a>. Unfortunately the methods he describes using were difficult for me to understand and replicate. Terms like "rhombicicosahedron internal space projection window" or "5D hypercubic space" sound more like science fiction than real scientific terms. As a result I was forced to come up with my own methods, as I was interested in replicating the aesthetics of these crystal deformations and not accurately describing their properties this was not too difficult.</p>
+
+        <h2>Results</h2>
+
+        <p>Below are a few examples of different deformations.</p>
+        <h3>Penrose Tiles</h3>
+        <img class="full-img" src="img/gradientpenrose10.png" alt="penrose">
+        <img class="full-img" src="img/gradientpenrose15.png" alt="penrose">
+        <h3>Penrose Sun Tiles</h3>
+        <img class="full-img" src="img/gradientpenrose14_sun.png" alt="penrose">
+        <h3>Penrose Sun to Penrose Tiles</h3>
+        <img class="full-img" src="img/gradientpenrosetosun.png" alt="penrose">
+        <h3>Arbitrary Deformations</h3>
+        <img class="full-img" src="img/gradientpenrose12.png" alt="penrose">
+        <img class="full-img" src="img/gradientpenrose13.png" alt="penrose">
+
+      </div>
+      <p class="center"><a href="#">back to top</a></p>
+    </section>
+
+  </main>
+  
+  <script src="js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
+  <script src="js/plugins.js"></script>
+
+</body>
+
+</html>

@@ -10,3 +10,30 @@ h2{
 li{
     font-family: 'Montserrat', sans-serif;
 }
+
+ol{
+	padding-left: 40px;
+}
+ol li{
+	list-style: inherit;
+	padding-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+ol li a{
+    color: #87B569;
+    /*color: #87B569;*/
+}
+ol li a:visited{
+    color: #87B569;
+    /*color: #87B569;*/
+}
+ol li a:hover{
+    color: #87B569;
+    /*color: #87B569;*/
+    text-decoration: underline;
+}
+ol li a:active{
+    color: #557A3B;
+    text-decoration: underline;
+}
