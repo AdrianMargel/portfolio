@@ -387,7 +387,7 @@
                 {"category": "programming"},
                 {"category": "design"}
             ],
-        "description": "A program for procedurally generateing Truchet patterns."
+        "description": "A program for procedurally generating Truchet patterns."
     },
     {
         "name": "deformedPenrose",
@@ -399,6 +399,30 @@
                 {"category": "programming"}
             ],
         "description": "A test in generating aperiodic tiles and applying deformations to them."
+    },
+    {
+        "name": "glyphs",
+        "title": "Glyphs",
+        "weight": 3.6,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"},
+                {"category": "design"}
+            ],
+        "description": "A program for procedurally generating glyphs."
+    },
+    {
+        "name": "runes",
+        "title": "Runes",
+        "weight": 3.6,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "programming"},
+                {"category": "design"}
+            ],
+        "description": "A program for procedurally generating runes."
     }
 
 
