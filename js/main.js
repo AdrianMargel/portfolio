@@ -67,7 +67,7 @@ function readTextFile(file)
             }
         }
     }
-    console.log(rawFile);
+    // console.log(rawFile);
     rawFile.send(null);
     return allText;
 }

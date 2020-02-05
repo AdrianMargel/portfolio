@@ -789,6 +789,45 @@ p.categories-list{
 
 
 
+.mobileNav ul{
+    flex-wrap: wrap;
+}
+.mobileNav li{
+    min-width: 80%;
+    transform: skew(0deg);
+}
+.mobileNav li p{
+    transform: skew(0deg);
+}
+
+.mobileNav button{
+    height: calc(1.4rem + 40px + 0px);
+    width: calc(1.4rem + 40px + 0px);
+    border: none;
+    cursor: pointer;
+}
+.mobileNav .toggleMenu{
+    justify-content: right;
+    display: flex;
+}
+
+.xIcon{
+    display: block;
+    background-image: url("../img/x.png");
+    background-size: 42px 42px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: initial;
+}
+.menuIcon{
+    display: block;
+    background-image: url("../img/menu.png");
+    background-size: 42px 42px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: initial;
+}
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */
