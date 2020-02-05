@@ -449,6 +449,11 @@ section p{
     min-width: 300px;
     margin-bottom: calc(1.8rem + 20px);
 }
+@media only screen and (max-width: 400px) {
+    .project-item{
+        min-width: 100%;
+    }
+}
 
 .spacer{
     /*cursor: pointer;*/
