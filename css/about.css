@@ -17,14 +17,14 @@ h3{
 
 	display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    width: 100%;
 }
 .skillBar{
 	height: 50px;
 
 	background-color: #87B569;
 	margin-right: auto;
-	margin-left: auto;
 
 	margin-bottom: 10px;
 }
@@ -33,7 +33,7 @@ h3{
 	font-size: 0.8rem;
 }
 .skillLabel{
-	width: 120px;
+	min-width: 120px;
 }
 .skills .skillLabel p{
 	margin: 0;

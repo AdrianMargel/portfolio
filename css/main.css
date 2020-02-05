@@ -591,6 +591,17 @@ button:focus {
 
     border: none;
 }
+@media only screen and (max-width: 500px) {
+  .buttons{
+    flex-wrap: wrap;
+  }
+  .buttons button{
+    margin-bottom: 20px;
+  }
+  .about img{
+    width: 100% !important;
+  }
+}
 .buttons button:active{
     background-color: #557A3B;
     border: 1px solid #28282E;
@@ -691,9 +702,9 @@ button:focus {
     flex-shrink: 0.2;
     align-self: flex-start;  */
     width: 50%;
-    max-width: 400px;
+    /*max-width: 400px;*/
     float: left;
-    margin: 0 20px 20px 20px;
+    padding: 0 15px;
 }
 
 .about p.center{
