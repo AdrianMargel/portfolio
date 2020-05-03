@@ -157,7 +157,7 @@
     {
         "name": "pixelGirls",
         "title": "Pixel Art Girls",
-        "weight": 1,
+        "weight": 2.1,
         "highlight": false,
         "categories":
             [
@@ -201,7 +201,7 @@
     {
         "name": "pixelGuns",
         "title": "Pixel Art Guns",
-        "weight": 2,
+        "weight": 2.2,
         "highlight": false,
         "categories":
             [
@@ -312,7 +312,7 @@
     {
         "name": "pixelTree",
         "title": "Pixel Tree",
-        "weight": 2,
+        "weight": 2.2,
         "highlight": false,
         "categories":
             [
@@ -423,6 +423,18 @@
                 {"category": "design"}
             ],
         "description": "A program for procedurally generating runes."
+    },
+    {
+        "name": "voxelCathedral",
+        "title": "Voxel Cathedral",
+        "weight": 1.5,
+        "highlight": false,
+        "categories":
+            [
+                {"category": "art"}
+
+            ],
+        "description": "A gothic cathedral built in Minecraft."
     }
 
 
