@@ -436,6 +436,8 @@ let headerElm=new Header(title);
 let navElm=new Nav(openTab,scrollPosition,searchCriteria);
 let pageElm=new Page(selectedPage,pageLocked);
 
+console.log(window.innerHeight);
+
 // Populate page html
 let body=html`
 	${headerElm}
