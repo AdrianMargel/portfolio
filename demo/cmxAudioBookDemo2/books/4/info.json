@@ -1,0 +1,28 @@
+{
+	"title":"Twenty Thousand Leagues under the Sea",
+	"author":"Jules Verne",
+	"date":"1871",
+	"description":"Regarded as one of the premier adventure novels and one of Verne's greatest works, along with Around the World in Eighty Days and Journey to the Center of the Earth. Its depiction of Captain Nemo's underwater ship, the Nautilus, is regarded as ahead of its time, since it accurately describes many features of today's submarines, which in the 1860s were comparatively primitive vessels.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"One",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Two",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Three",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"historic"
+	]
+}

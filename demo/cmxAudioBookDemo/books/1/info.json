@@ -1,0 +1,28 @@
+{
+	"title":"The Prince",
+	"author":"Niccolò Machiavelli",
+	"date":"1532",
+	"description":"The Prince is a 16th-century political treatise written by Italian diplomat and political theorist Niccolò Machiavelli as an instruction guide for new princes and royals. The general theme of The Prince is of accepting that the aims of princes - such as glory and survival - can justify the use of immoral means to achieve those ends.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"Chapter 1",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 2",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 3",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"historic"
+	]
+}

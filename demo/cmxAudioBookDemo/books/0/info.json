@@ -1,0 +1,28 @@
+{
+	"title":"The Adventures of Tom Sawyer",
+	"author":"Mark Twain",
+	"date":"1876",
+	"description":"The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, where Twain lived as a boy.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"Chapter 1",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 2",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 3",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"scifi"
+	]
+}

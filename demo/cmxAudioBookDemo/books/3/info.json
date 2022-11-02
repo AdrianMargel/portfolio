@@ -1,0 +1,28 @@
+{
+	"title":"Grimms' Fairy Tales",
+	"author":"Brothers Grimm",
+	"date":"1812",
+	"description":"A German collection of fairy tales by the Grimm brothers or \"Brothers Grimm\", Jacob and Wilhelm.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"Chapter 1",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 2",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 3",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"historic"
+	]
+}

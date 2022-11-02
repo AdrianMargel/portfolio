@@ -1,0 +1,28 @@
+{
+	"title":"The Iliad",
+	"author":"Homer",
+	"date":"800 BC",
+	"description":"The Iliad is one of two major ancient Greek epic poems attributed to Homer. It is one of the oldest extant works of literature still widely read by modern audiences.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"Chapter 1",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 2",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 3",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"historic"
+	]
+}

@@ -1,0 +1,28 @@
+{
+	"title":"The Complete Works of Lovecraft",
+	"author":"H.P. Lovecraft",
+	"date":"1926",
+	"description":"Lovecraft's literary corpus is based around the idea of cosmicism, which was simultaneously his personal philosophy and the main theme of his fiction.",
+	"coverImgLow":"cover-sm.jpg",
+	"coverImgHigh":"cover.jpg",
+	"chapters":[
+		{
+			"name":"Chapter 1",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 2",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		},
+		{
+			"name":"Chapter 3",
+			"time":4344,
+			"file":["chapter-1.mp3"]
+		}
+	],
+	"genres":[
+		"historic"
+	]
+}
