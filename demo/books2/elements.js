@@ -881,7 +881,7 @@ defineElm(Header,(()=>{
 			position: absolute;
 			height:${size};
 			width:${size};
-			background-image: url('/img/logo.png');
+			background-image: url('${demoPath}/img/logo.png');
 			background-size: contain;
 			background-repeat: no-repeat;
 			background-position: center;
