@@ -66,6 +66,8 @@ async function getBookInfo(id){
 		resp.id=id;
 		resp.liked=local?.liked??false;
 		return resp;
+	}).catch(e=>{
+		console.log(e);
 	});
 }
 function prepBookSave(book){
