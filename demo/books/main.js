@@ -54,6 +54,7 @@ async function getBookInfo(id){
 	// await sleep(10000);
 	return await fetch(demoPath+"/books/"+id+"/info.json")
 	.then(async response=>{
+		console.log(response);
 		if (!response.ok) {
 			throw new Error("HTTP error "+response.status);
 		}
@@ -436,7 +437,13 @@ let headerElm=new Header(title);
 let navElm=new Nav(openTab,scrollPosition,searchCriteria);
 let pageElm=new Page(selectedPage,pageLocked);
 
-console.log(window.innerHeight);
+let t=0;
+setInterval(()=>{
+	t++;
+	if(t<500){
+		console.log(t,window.innerHeight);
+	}
+},10);
 
 // Populate page html
 let body=html`
