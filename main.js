@@ -423,7 +423,7 @@ function setPage(id,pushState=true){
 	if(id==""){
 		id="home";
 	}
-	if(id===selectedPage.data.id.data){
+	if(id===selectedPage?.data?.id?.data){
 		//if it is already the correct page then do nothing
 		return;
 	}
