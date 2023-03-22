@@ -198,6 +198,7 @@ defineElm(Skill,scss`&{
 				transition: background-color 0.2s;
 				${theme.center}
 				>img{
+					width:25px;
 					transform: scale(1);
 					transition: transform 0.5s;
 				}
