@@ -9,7 +9,7 @@ class ProjectPage extends CustomElm{
 					Sawtooth is the name of an AI I created for the <a href="https://terminal.c1games.com/">Terminal games</a> - an international artificial intelligence competition by <a href="https://www.correlation-one.com/">Correlation One</a>. My AI was able to quickly climb to the top of the leaderboards against over 30,000 AI's submitted by over 10,000 players. I later made a few small upgrades to Sawtooth releasing a SawtoothV2. Beyond just reaching the top of the leaderboards Sawtooth also won the Terminal CodeBullet competition against over 600 submitted AI's. In the image above the blue side showcases Sawtooth's design.
 				</p>
 				<p>
-					The design of my AI proved so effective that it became widely copied by nearly all the top players on the leaderboard to the point where the developers behind the competition ended up rebalancing the competition rules to discourage use of my strategy.
+					The design of my AI proved so effective that it became widely copied by many of the other top players on the leaderboard to the point where the developers behind the competition ended up rebalancing the competition rules to discourage use of my strategy.
 				</p>
 				<p>
 					Below is a screenshot I took shortly after SawtoothV2 was able to overtake the previously highest rated algorithm on the leaderboards.

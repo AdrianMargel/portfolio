@@ -259,15 +259,10 @@ class AboutPage extends CustomElm{
 		${addClass("intro",new Surface(html`
 			<div class="pic"></div>
 			<h2>Who I Am</h2>
-			<p> 
-			This portfolio hasn't been updated in a few years...
-			
-			Feel free to look around if you'd like to. Most of what you'll find are old projects. I haven't added any of my more recent projects yet.
-			
-			I'll get around to updating this eventually.
-			</p>
-			<p class="center">
-				${new ButtonClickable("My Resume",()=>window.open("/resume/Resume_2020_b.pdf", '_blank').focus())}
+			<p>I'm a software developer with a focus on web technoligies. In this constantly evolving industry flexability and adaptation are key to success. There is no greater skill than the ability to learn and this is a skill I've mastered. Almost everything I know about programming I've taught myself. With every line of code I write I continue to sharpen my skills - and with well over a hundred thousand lines of code behind me in personal projects alone, this portfolio speaks for itself.</p>
+			<p>I've worked on a huge variety of projects ranging from novel models of Artificial Intelligence to computational descriptions of color theory, and everything in between. Programming is both my career and my passion so I am always excited to explore new areas where I can apply my skills.</p>
+			<p class="center buttonDiv">
+				${new ButtonClickable("My Resume",()=>window.open("/resume/resume-2023-web.docx", '_blank'))}
 			</p>
 		`,"lg",false,true))}
 		${addClass("skills",new Surface(html`
@@ -286,14 +281,17 @@ class AboutPage extends CustomElm{
 					${new SubSkill("Vue",2,"2 years",yearsMax)}
 					${new SubSkill("Jest",2,"2 years",yearsMax)}
 					${new SubSkill("Puppeteer",1,"1 year",yearsMax)}
+					${new SubSkill("Deno",1,"1 year",yearsMax)}
 					${new SubSkill("Socket.io",1,"1 year",yearsMax)}
+					${new SubSkill("WebRTC",1,"1 year",yearsMax)}
+					${new SubSkill("React",.75,"<1 year",yearsMax)}
 				`)}
 
 				<p class="group">Application / Server</p>
 				${new Skill("Java",5,"5 years",yearsMax)}
 				${new Skill("C#",4,"4 years",yearsMax,html`
-					${addClass("small",new SubSkill(".NET framework",4,"4 years",yearsMax))}
-					${new SubSkill(".NET core",3,"3 years",yearsMax)}
+					${addClass("small",new SubSkill(".NET Framework",4,"4 years",yearsMax))}
+					${new SubSkill(".NET Core",3,"3 years",yearsMax)}
 					${new SubSkill("LINQ",3,"3 years",yearsMax)}
 				`)}
 				${new Skill("PHP",1,"1 year",yearsMax)}
@@ -301,6 +299,7 @@ class AboutPage extends CustomElm{
 				
 				<p class="group">Database</p>
 				${new Skill("SQL",4,"4 years",yearsMax)}
+				${new Skill("MongoDB",.75,"<1 year",yearsMax)}
 
 				<p class="group">Other</p>
 				${new Skill("Git",6,"6 years",yearsMax)}
@@ -316,10 +315,10 @@ class AboutPage extends CustomElm{
 			<p>I value the ability to demonstrate results. Why explain what a project should be when you can just show off what it is? This is why many of my projects have a strong visual component to them. Pages of explanation can often be summarized by a handful of clever visualizations. I aim to clearly showcase my projects in a way that can be easily understood even by those with only basic background knowledge. Often times bad work can be hidden behind hard to understand design and confusing explanations, thus I try to make it clear what each project’s purpose is and let the viewer judge the results for themselves. Anyone can claim to have any skill but the only true test is the results they are able to produce.</p>
 			<br>
 			<h3>Independence</h3>
-			<p>I value the ability to work independently. It is important to be able to reach set goals without needing to rely on other people. I am primarily a self-taught programmer, learning the basics in highschool and teaching myself from there through online resources and personal code projects. There is an absolutely staggering amount to learn about and so I try to limit myself to only learning practical skills I can use right now. This approach of learning new skills as I need them has given me the ability to acquire new skills extremely quickly while working on projects. Often times the projects I work on require the use of skills I don’t have. Rather than relying on someone else I teach myself the necessary skills to reach my goals.</p>
+			<p>I value the ability to work independently. It is important to be able to reach set goals without needing to rely on other people. I am primarily a self-taught programmer, learning the basics in highschool and teaching myself from there through online resources and personal code projects. There is an absolutely staggering amount to learn about and so I try to limit myself to only learning practical skills I can use right now. This approach of learning new skills as I need them has given me the ability to acquire new skills extremely quickly while working on projects. Often times the projects I work on require the use of skills I don’t have. Rather than relying on someone else, I teach myself the necessary skills as I need them.</p>
 			<br>
 			<h3>Perseverance</h3>
-			<p>I value having the ability to persevere and see a project through to completion. Spending countless hours on a project is worth very little if the goal of the project is not met. It is almost guaranteed that there will be complications when working on a project that will make it more difficult than it initially seemed - in some cases even impossible. I believe it is important to carry on regardless and complete the project when possible. Some of the projects I’ve finished have taken hundreds of hours spread across multiple years. I could have abandon these projects at any time and no one would have known. However the act of completing these difficult projects often forced me to see things from a new perspective and left me with a deeper understanding for the problem - and of course one more finished project.</p>
+			<p>I value having the ability to persevere and see a project through to completion. Spending countless hours on a project is worth very little if the goal of the project is not met. It is almost guaranteed that there will be complications when working on a project that will make it more difficult than it initially seemed. I believe it is important to carry on regardless and see it through to completion. Some of the projects I’ve finished have taken hundreds of hours spread across multiple years. I could have abandon these projects at any time and no one would have known. However the act of completing these difficult projects often forced me to see things from a new perspective, leaving me with a deeper understanding of code - and of course one more finished project.</p>
 			<br>
 			<h3>Polish</h3>
 			<p>I value the ability to create a clean and polished end product. There comes a point in any project where it is “good enough” and that is often the place where it is tempting to stop. However often a few extra hours of work on small details and subtleties can make the difference between an okay user experience and an unforgettable one. Small details which most users will never consciously notice all contribute to the overall feel of the finished project and shape how the user will remember the experience. In my view this step is often given the least attention despite being one of the most critical in shaping the user experience. This final layer of polish on a project is like the thin layer of icing on a cake and everyone knows how much better cake is with icing!</p>
@@ -346,6 +345,9 @@ defineElm(AboutPage,scss`&{
 		}
 		p{
 			margin-top:0;
+		}
+		.buttonDiv{
+			margin-top:20px;
 		}
 	}
 	>.gap{
