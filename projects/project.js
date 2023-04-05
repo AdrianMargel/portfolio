@@ -66,14 +66,16 @@ let pages=bind([
 	}
 ]);
 
+trackPage(window.location.pathname);
 // Set up paging
 function setPage(id){
-	window.location.href = "/"+id;
+	// Don't need to track this page here since the page will be tracked when the new url loads
+	window.location.href="/"+id;
 }
 
 // Set up scroll watcher
 let scrollPosition=bind(0);
-document.addEventListener('scroll', ()=>{
+document.addEventListener('scroll',()=>{
 	scrollPosition.data=window.scrollY;
 });
 function scrollToTop(){

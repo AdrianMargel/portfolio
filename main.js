@@ -419,6 +419,7 @@ selectedPage.data=getSelectedPage();
 function getSelectedPage(){
 	return pages.find(a=>a.selected.data);
 }
+trackPage(initialPage);
 function setPage(id,pushState=true){
 	if(id==""){
 		id="home";
@@ -427,6 +428,7 @@ function setPage(id,pushState=true){
 		//if it is already the correct page then do nothing
 		return;
 	}
+	trackPage(id);
 	pages.forEach(a=>a.selected.data=a.id.data==id);
 	selectedPage.data=getSelectedPage();
 	scrollToTop();
@@ -434,7 +436,7 @@ function setPage(id,pushState=true){
 		history.pushState([id],"","/"+id);
 	}
 }
-window.onpopstate = function(e){
+window.onpopstate=function(e){
 	if(e.state){
 		let id=e.state[0];
 		setPage(id,false);
