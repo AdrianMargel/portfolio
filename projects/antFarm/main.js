@@ -17,7 +17,7 @@ class ProjectPage extends CustomElm{
 			${new Surface(html`
 				<h2>Inspiration</h2>
 				<p>
-					This was primarily inspired by a <a href="https://adrianmargel.ca/projects/evocells">previous project</a> I did involving a variation of <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life</a> with the ability for cells to evolve their own rule set. I was surprised at the complexity that emerged from such a simple system and especially fascinated that it would almost always converge on an ecosystem built on a symbiotic relationship between two different species. I decided to try to apply the same concept to Langton's ant as I was interested to see if it would exhibit similar behaviours to the cellular automata.
+					This was primarily inspired by a <a href="https://adrianmargel.ca/projects/evoCells">previous project</a> I did involving a variation of <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life</a> with the ability for cells to evolve their own rule set. I was surprised at the complexity that emerged from such a simple system and especially fascinated that it would almost always converge on an ecosystem built on a symbiotic relationship between two different species. I decided to try to apply the same concept to Langton's ant as I was interested to see if it would exhibit similar behaviours to the cellular automata.
 				</p>
 			`,"lg")}
 			<div class="gap"></div>
