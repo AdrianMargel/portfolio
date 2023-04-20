@@ -639,7 +639,9 @@ class ProjectCard extends CustomElm{
 					class="background"
 					style=${attr(()=>`background-image: url("/projects/${project.id.data}/image.png");`,project.id)}
 				></div>
-				<div class="cover"></div>
+				<div class="cover">
+					${html`${project.highlight.data?`<div class="highlightBox">Highlight</div>`:""}`()}
+				</div>
 				<div class="description">
 					<h3>${project.title}</h3>
 					<p>${project.description}</p>
@@ -651,6 +653,7 @@ class ProjectCard extends CustomElm{
 				</div>
 			</a>
 		`(project));
+		this.attr("class",()=>project.highlight.data?"highlight":"")(project.highlight);
 	}
 }
 defineElm(ProjectCard,(()=>{
@@ -670,6 +673,23 @@ defineElm(ProjectCard,(()=>{
 	position: relative;
 	cursor: pointer;
 	user-select: none;
+	&.highlight{
+		.cover{
+			border-left-color: ${theme.color.highlight};
+			.highlightBox{
+				position: absolute;
+				top:-4px;
+				left: -4px;
+				height:20px;
+				padding: 4px 8px;
+				background-color: ${theme.color.highlight};
+				font-weight: 700;
+				border-bottom-right-radius:12px;
+				${theme.center}
+				font-style: italic;
+			}
+		}
+	}
 	a{
 		color: ${theme.color.white};
 		&:hover{

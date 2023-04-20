@@ -11,7 +11,7 @@ let projectsList=bind([
 		title:"Alchemy Circles",
 		description:"An algorithmic approach to creating alchemy circles.",
 		weight: 2,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming","design"
 		]
@@ -19,7 +19,7 @@ let projectsList=bind([
 		id: "antFarm",
 		title: "Ant Farm",
 		weight: 1,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -29,7 +29,7 @@ let projectsList=bind([
 		id: "bot2048",
 		title: "2048 AI",
 		weight: 1.1,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -39,7 +39,7 @@ let projectsList=bind([
 		id: "botTetris",
 		title: "Tetris AI",
 		weight: 1.2,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -129,7 +129,7 @@ let projectsList=bind([
 		id: "flame",
 		title: "Fire Simulation",
 		weight: 1,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -260,7 +260,7 @@ let projectsList=bind([
 		id: "cornerstoneLogo",
 		title: "Cornerstone Logo",
 		weight: 1,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"design"
 		],
@@ -270,7 +270,7 @@ let projectsList=bind([
 		id: "bethelFlag",
 		title: "Bethel Flag",
 		weight: 3.61,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"design"
 		],
@@ -320,7 +320,7 @@ let projectsList=bind([
 		id: "botSawtooth",
 		title: "Sawtooth AI",
 		weight: 0.9,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -383,7 +383,7 @@ let projectsList=bind([
 		id: "voxelLighting",
 		title: "Voxel Lighting",
 		weight: 0.85,
-		highlight: false,
+		highlight: true,
 		categories:[
 			"programming"
 		],
@@ -393,7 +393,7 @@ let projectsList=bind([
 		id: "colors3d",
 		title: "3D Color Spaces",
 		weight: 0.8,
-		highlight: false,
+		highlight: true,
 		categories:[
 			"programming",
 			"art"

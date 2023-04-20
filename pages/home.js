@@ -17,7 +17,7 @@ class HomePage extends CustomElm{
 		this.define(html`
 			${new Surface(html`
 				<h2>Mission</h2>
-				<p>I am driven by deep love for programming. I aim to push the limits of what is possible with code, carving my own path as I go. Following the rules but always thinking outside the box - I'm an inherently creative person and I believe code is an art.</p>
+				<p>I am driven by a deep love for programming. I aim to push the limits of what is possible with code. Working within the constraints of the challenge but always thinking outside the box. I'm an inherently creative person and I believe code is an art.</p>
 				<br>
 				<p class="center">${new ButtonLink("About Me",()=>setPage("about"))}</p>
 			`,"lg",false,true)}
