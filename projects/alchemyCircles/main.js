@@ -30,7 +30,7 @@ class ProjectPage extends CustomElm{
 					Below are a few examples of alchemy circles generated at different levels complexity.
 				</p>
 				<h3>Animation</h3>
-				${new VideoDisplay("video/alchemy.mp4")}
+				${new VideoDisplay("video/alchemy-small.mp4")}
 				<h3>Low Complexity</h3>
 				${new ImageDisplay("img/alc3.png")}
 				<h3>Medium Complexity</h3>

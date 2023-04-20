@@ -10,7 +10,7 @@ class ProjectPage extends CustomElm{
 				<p>
 					This is a realtime 2D fluid simulation running on the CPU. The simulation is stable even under high pressure. This project was inspired largely by Google's <a href="https://google.github.io/liquidfun/">Liquid Fun</a>.
 				</p>
-				${new VideoDisplay("video/2d-fluid.mp4")}
+				${new VideoDisplay("video/2d-fluid-small.mp4")}
 			`,"lg",false,true)}
 		`);
 	}

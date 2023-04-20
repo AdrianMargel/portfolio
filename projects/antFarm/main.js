@@ -23,7 +23,7 @@ class ProjectPage extends CustomElm{
 			<div class="gap"></div>
 			${new Surface(html`
 				<h2>Animation</h2>
-				${new VideoDisplay("video/antfarm9.mp4")}
+				${new VideoDisplay("video/antfarm-small.mp4")}
 			`,"lg")}
 			<div class="gap"></div>
 			${new Surface(html`
