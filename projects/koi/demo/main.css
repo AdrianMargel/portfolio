@@ -1,0 +1,52 @@
+html{
+	font-family: 'Montserrat', sans-serif;
+	background-color: #28282E;
+	color: white;
+}
+::selection {
+  background: #97F28060;
+}
+.hidden{
+	display: none;
+}
+
+canvas{
+	opacity: 0.2;
+}
+
+body{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.centerLogo{
+	position: absolute;
+	display: flex;
+	z-index: -1;
+	justify-content: center;
+	align-items: center;
+	background-color: #28282E;
+	width: 250px;
+	height: 250px;
+	border-radius: 50%;
+	/*box-shadow: 0 0 30px #00000080;*/
+}
+.centerLogo .icon{
+	display: block;
+	position: absolute;
+	height: 200px;
+	width: 200px;
+	background-image: url('./img/logo.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.centerLogo h1{
+	font-size: 26px;
+	font-weight: 700;
+	font-family: 'Sen', sans-serif;
+	background-color: #28282E;
+	z-index: 1;
+	margin-top: 70px;
+}

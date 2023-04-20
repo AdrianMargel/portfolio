@@ -155,6 +155,11 @@ class Skill extends CustomElm{
 }
 defineElm(Skill,scss`&{
 	${theme.elementReset}
+	&.small{
+		.desc p{
+			${theme.font.sizeStep(-2)}
+		}
+	}
 	.skill{
 		${theme.center}
 		position:relative;
@@ -283,7 +288,7 @@ class AboutPage extends CustomElm{
 					${new SubSkill("Puppeteer",1,"1 year",yearsMax)}
 					${new SubSkill("Deno",1,"1 year",yearsMax)}
 					${new SubSkill("Socket.io",1,"1 year",yearsMax)}
-					${new SubSkill("WebRTC",1,"1 year",yearsMax)}
+					${new SubSkill("WebRTC",.75,"<1 year",yearsMax)}
 					${new SubSkill("React",.75,"<1 year",yearsMax)}
 				`)}
 
@@ -306,6 +311,8 @@ class AboutPage extends CustomElm{
 				${new Skill("GLSL",2,"2 years",yearsMax)}
 				${new Skill("OpenCL",1,"1 year",yearsMax)}
 				${new Skill("Docker",.75,"<1 year",yearsMax)}
+				${addClass("small",new Skill("Google API",.75,"<1 year",yearsMax))}
+				${addClass("small",new Skill("Big Commerce",.75,"<1 year",yearsMax))}
 			</div>
 		`,"sm",true))}
 		${new Surface(html`

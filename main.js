@@ -378,6 +378,88 @@ let projectsList=bind([
 			"art"
 		],
 		description: "A gothic cathedral built in Minecraft."
+	},
+	{
+		id: "voxelLighting",
+		title: "Voxel Lighting",
+		weight: 0.85,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A realtime ray tracer supporting dynamic ambient lighting."
+	},
+	{
+		id: "colors3d",
+		title: "3D Color Spaces",
+		weight: 0.8,
+		highlight: false,
+		categories:[
+			"programming",
+			"art"
+		],
+		description: "A visualisation tool that displays any image as a 3D cloud in color space."
+	},
+	{
+		id: "tetrisPong",
+		title: "Tetris Pong",
+		weight: 3.55,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A game combining Tetris and Pong."
+	},
+	{
+		id: "koi",
+		title: "Koi",
+		weight: 2.4,
+		highlight: false,
+		categories:[
+			"programming",
+			"design"
+		],
+		description: "Simulated koi fish."
+	},
+	{
+		id: "ultimateTicTacToe",
+		title: "Ultimate Tic Tac Toe",
+		weight: 3.55,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A digital version of the game Ultimate Tic Tac Toe."
+	},
+	{
+		id: "waveTank",
+		title: "Ripple Tank",
+		weight: 3.75,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A 2D pressure wave simulator."
+	},
+	{
+		id: "fluid2d",
+		title: "2D Fluid Simulator",
+		weight: 3.75,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A 2D fluid simulator."
+	},
+	{
+		id: "teachingGame",
+		title: "AI Education Game",
+		weight: 1.9,
+		highlight: false,
+		categories:[
+			"programming"
+		],
+		description: "A small start up using AI to teach highschool students how to program."
 	}
 ]).sort((a,b)=>a.weight.data-b.weight.data);
 let selectedCategory=bind("programming");
