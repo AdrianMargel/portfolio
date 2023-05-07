@@ -265,7 +265,7 @@ class AboutPage extends CustomElm{
 			<div class="pic"></div>
 			<h2>Who I Am</h2>
 			<p>I'm a software developer with a focus on web technoligies. In this constantly evolving industry flexability and adaptation are key to success. There is no greater skill than the ability to learn and this is a skill I've mastered. Almost everything I know about programming I've taught myself. With every line of code I write I continue to sharpen my skills - and with well over a hundred thousand lines of code behind me in personal projects alone, this portfolio speaks for itself.</p>
-			<p>I've worked on a huge variety of projects ranging from novel models of Artificial Intelligence to computational descriptions of color theory, and everything in between. Programming is both my career and my passion so I am always excited to explore new areas where I can apply my skills.</p>
+			<p>I've worked on a huge variety of projects. Everything ranging from novel artificial intelligence models to my own reactive web framework which I used to build this website. Programming is both my career and my passion so I am always excited to explore new areas where I can apply my skills.</p>
 			<p class="center buttonDiv">
 				${new ButtonClickable("My Resume",()=>window.open("/resume/resume-2023-web.docx", '_blank'))}
 			</p>
@@ -345,6 +345,11 @@ defineElm(AboutPage,scss`&{
 		flex-direction: column;
 		>.pic{
 			background-color: ${theme.color.greyStep(1)};
+			background: url('/img/me.jpg');
+			background-position: center;
+			background-size: cover;
+			border: 6px solid ${theme.color.greyStep(-2)};
+			box-sizing: border-box;
 			width: 200px;
 			height: 200px;
 			border-radius: 50%;
