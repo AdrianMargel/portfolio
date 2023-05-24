@@ -289,7 +289,7 @@ let projectsList=bind([
 	{
 		id: "enhancedQuotes",
 		title: "Enhanced Quotes",
-		weight: 1.5,
+		weight: 2.1,
 		highlight: false,
 		categories:[
 			"design"
