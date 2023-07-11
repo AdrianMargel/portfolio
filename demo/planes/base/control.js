@@ -32,7 +32,7 @@ class Control{
 				}
 			}
 			this.mouseDown=this.mouseRDown||this.mouseLDown;
-			e.preventDefault();
+			// e.preventDefault();
 		};
 		element.onmousedown = clickFunc;
 		element.oncontextmenu = clickFunc;

@@ -1,0 +1,6 @@
+-improve water
+-particles
+	-variable framerate
+	-set particle maximums/chance
+
+-shader precision

@@ -1,27 +1,3 @@
-let PI=Math.PI;
-let TAU=Math.PI*2;
-
-function nrmAng2PI(ang){
-	let newAng=ang;//TODO use mod
-	while(newAng<0){
-		newAng+=2*Math.PI;
-	}
-	while(newAng>2*Math.PI){
-		newAng-=2*Math.PI;
-	}
-	return newAng;
-}
-function nrmAngPI(ang){
-	let newAng=ang;//TODO use mod
-	while(newAng<-Math.PI){
-		newAng+=2*Math.PI;
-	}
-	while(newAng>Math.PI){
-		newAng-=2*Math.PI;
-	}
-	return newAng;
-}
-
 class Vector{
 	constructor(...data){
 		if(data.length==1&&typeof data[0]!="number"){
@@ -34,9 +10,9 @@ class Vector{
 
 	/* UTIL OPS */
 
-	forAll(op){
+	forAll(op,val){
 		for(let i=0;i<this.array.length;i++){
-			this.array[i]=op(this.array[i]);
+			this.array[i]=op(this.array[i],val);
 		}
 		return this;
 	}
@@ -48,16 +24,25 @@ class Vector{
 		}
 		return this;
 	}
+	runOp(func,val){
+		return typeof val=="number"?
+			this.forAll(func,val):
+			this.forVec(func,val);
+	}
 
 	/* META OPS */
 
-	set(vec){
-		let arr=vec.array??vec;
-		this.clr();
-		this.array.push(...arr);
+	set(val){
+		if(typeof val=="number"){
+			this.forAll(()=>val);
+		}else{
+			let arr=vec.array??vec;
+			this.clr();
+			this.array.push(...arr);
+		}
 		return this;
 	}
-	clr(vec){
+	clr(){
 		this.array.splice(0,this.array.length);
 		return this;
 	}
@@ -75,48 +60,39 @@ class Vector{
 	/* MATH OPS */
 	
 	add(val){
-		return typeof val=="number"?
-			this.forAll(x=>x+val):
-			this.forVec((a,b)=>a+b,val);
+		return this.runOp((a,b)=>a+b,val);
 	}
 	sub(val){
-		return typeof val=="number"?
-			this.forAll(x=>x-val):
-			this.forVec((a,b)=>a-b,val);
+		return this.runOp((a,b)=>a-b,val);
 	}
 	scl(val){
-		return typeof val=="number"?
-			this.forAll(x=>x*val):
-			this.forVec((a,b)=>a*b,val);
+		return this.runOp((a,b)=>a*b,val);
 	}
 	div(val){
-		return typeof val=="number"?
-			this.forAll(x=>x/val):
-			this.forVec((a,b)=>a/b,val);
+		return this.runOp((a,b)=>a/b,val);
+	}
+
+	mod(val=1){
+		return this.runOp((a,b)=>((a%b)+b)%b,val);
 	}
 	mix(val,amount){
 		let keep=1-amount;
-		return typeof val=="number"?
-			this.forAll(x=>x*keep+val*amount):
-			this.forVec((a,b)=>a*keep+b*amount,val);
+		return this.runOp((a,b)=>a*keep+b*amount,val);
 	}
-
+	
 	min(val=0){
-		return typeof val=="number"?
-			this.forAll(x=>Math.min(x,val)):
-			this.forVec((a,b)=>Math.min(a,b),val);
+		return this.runOp((a,b)=>Math.min(a,b),val);
 	}
 	max(val=1){
-		return typeof val=="number"?
-			this.forAll(x=>Math.max(x,val)):
-			this.forVec((a,b)=>Math.max(a,b),val);
+		return this.runOp((a,b)=>Math.max(a,b),val);
 	}
 	pow(val){
-		typeof val=="number"?
-			this.forAll(x=>Math.pow(x,val)):
-			this.forVec((a,b)=>Math.pow(a,b),val);
+		return this.runOp((a,b)=>Math.pow(a,b),val);
 	}
-
+	
+	round(){
+		return this.forAll(x=>Math.round(x))
+	}
 	ceil(){
 		return this.forAll(x=>Math.ceil(x))
 	}
@@ -130,7 +106,7 @@ class Vector{
 		return this.forAll(x=>Math.sign(x))
 	}
 	clamp(min=0,max=1){
-		return this.forAll(x=>Math.max(Math.min(x,max),min))
+		return this.min(max).max(min);
 	}
 
 	/* VECTOR OPS */
@@ -172,6 +148,7 @@ class Vector{
 			return this.rotXY(rot);
 		}
 	}
+	//TODO: xy,yz,yx, etc etc
 	rotXY(rot,pin){
 		if(pin!=null){
 			return this.sub(pin).rotXY(rot).add(pin);
@@ -184,11 +161,11 @@ class Vector{
 			return this;
 		}
 	}
-	//TODO: xy,yz,yx, etc etc
 
 	ang(vec){
 		return this.angXY(vec);
 	}
+	//TODO: xy,yz,yx, etc etc
 	angXY(vec){
 		if(vec!=null){
 			let arr=vec.array??vec;
@@ -204,6 +181,7 @@ class Vector{
 		}
 		return Math.sqrt(this.array.reduce((a,curr)=>a+curr**2,0));
 	}
+	//TODO: xy,yz,yx, etc etc
 	magXY(vec){
 		if(vec!=null){
 			let arr=vec.array??vec;
@@ -304,26 +282,3 @@ function VecA(mag,...angs){
 		v.yz=new Vector(v.yz).rot(angs[2]);
 	return v;
 }
-
-// let test=Vec(1,2,3).add([1,2]);
-// console.log(...test.array);
-
-//gammaCorrect,gammaShift,cross,dot,color/hex
-// let t=new Date().getTime();
-// for(let i=0;i<1000000;i++){
-// 	// let test=Vec(5,5,5);
-// 	// let test=new Vector(5,5);
-
-// 	// let test1=[5,5,5];
-// 	// let test2=[5,5,5];
-// 	// let test3=test1.map((_,i)=>test1[i]+test2[i]);
-
-// 	let test1=new Vector(5,5);
-// 	// let test2=new Vector(test1);
-// 	// let test3=test1.mag(test2);
-
-// 	// let test1=new Vector2(5,5);
-// 	// let test2=new Vector2(5,5);
-// 	// test1.addVec(test2);
-// }
-// console.log(t-new Date().getTime());

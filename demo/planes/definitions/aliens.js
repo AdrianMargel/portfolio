@@ -1,8 +1,8 @@
+//#region spawner
 class Spawner extends Entity{
 	constructor(trigger,p,s,time){
-		super();
+		super(p);
 
-		this.pos=Vec(p);
 		this.trigger=trigger;
 		this.spawnMax=time;
 		this.spawnTime=this.spawnMax;
@@ -17,24 +17,21 @@ class Spawner extends Entity{
 		this.barTexSize=Vec(12,10);
 
 		this.size=Vec(1,1);
-		this.calcHitbox();
+		this.offset=Vec(0,0);
+	}
+	getClosest(vec){
+		//make this unhittable by returning a far away point
+		return Vec(0,1000000);
 	}
 	calcHitbox(){
-		let c1=this.size.cln().scl(.5).rot(this.angle);
-		let c2=this.size.cln().scl(Vec(-.5,.5)).rot(this.angle);
-		let c3=this.size.cln().scl(Vec(-.5,-.5)).rot(this.angle);
-		let c4=this.size.cln().scl(Vec(.5,-.5)).rot(this.angle);
-		let min=c1.cln().min(c2).min(c3).min(c4);
-		let max=c1.cln().max(c2).max(c3).max(c4);
-		min.add(this.pos);
-		max.add(this.pos);
-		this.hb=[min,max];
+		let min=this.pos.cln();
+		let max=this.pos.cln();
+		min.sub(this.size);
+		max.add(this.size);
+		this.hitbox=[min,max];
 	}
-	getHitbox(){
-		return this.hb;
-	}
-	run(){
-		this.spawnTime--;
+	runBase(timeStep){
+		this.spawnTime-=timeStep;
 		if(this.spawnTime<=0){
 			this.alive=false;
 			this.die();
@@ -146,40 +143,57 @@ class Spawner extends Entity{
 			-this.arrowSize.x/2-arrowOff2,0);
 	}
 }
+
+//#endregion
+
 class Alien extends Entity{
 	constructor(p,a){
-		super();
+		super(p);
 
-		this.speed=1;
-		this.agility=0.1;
+		//General
+		this.angle=a;
 		this.pushSpeed=1;
 
+		//Movement
+		//Thrust
+		this.speed=1;
+		//Agility
+		this.agility=0.1;
+		//Flight
 		this.resistance=0.95;
+		//Water
 		this.resistanceWater=0.9;
 		this.buoyancy=Vec(0,0);
-		this.submerged=false;
-		this.bubbling=false;
 		this.splashSize=2;
 		this.waveSize=1;
 
+		//Firing
 		this.cooldownMax=100;
-		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
+		this.cooldown=0;
 		this.bulletSpeed=30;
 		this.bulletSize=8;
 		this.bulletDamage=1;
 		this.bulletRange=50;
 		this.accuracy=0.05;
 
-		this.pos=Vec(p);
-		this.velo=Vec(0,0);
-		this.angle=a;
-		this.size=Vec(56,102).scl(2);
+		//Display
 		this.texPos=Vec(324,1);
 		this.texSize=Vec(56,102);
+		this.size=null;
+		this.displaySize=null;
+		this.offset=Vec(0,0);
+		this.displayOffset=this.offset.cln();
 
 		this.head=null;
-		
-		this.calcHitbox();
+	}
+	init(){
+		this.maxHealth*=gameRunner.alienHealthScale;
+		this.health*=gameRunner.alienHealthScale;
+		this.randomizeCooldown();
+		return super.init();
+	}
+	kill(){
+		this.health=0;
 	}
 	randomizeCooldown(){
 		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
@@ -187,47 +201,9 @@ class Alien extends Entity{
 	setHead(head){
 		this.head=head;
 	}
-	getClosest(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle);
-		let s=v.cln().sign();
-		let sz=this.size.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return vec.cln();
-		}else{
-			v.min(sz);
-		}
-		return v.scl(s).rot(this.angle).add(this.pos);
-	}
-	getDist(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle);
-		let sz=this.size.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return Math.max(v.x-sz.x,v.y-sz.y);
-		}else{
-			let v2=v.cln();
-			v.min(sz);
-			return v2.mag(v);
-		}
-	}
-	calcHitbox(){
-		let c1=this.size.cln().scl(.5).rot(this.angle);
-		let c2=this.size.cln().scl(Vec(-.5,.5)).rot(this.angle);
-		let c3=this.size.cln().scl(Vec(-.5,-.5)).rot(this.angle);
-		let c4=this.size.cln().scl(Vec(.5,-.5)).rot(this.angle);
-		let min=c1.cln().min(c2).min(c3).min(c4);
-		let max=c1.cln().max(c2).max(c3).max(c4);
-		min.add(this.pos);
-		max.add(this.pos);
-		this.hb=[min,max];
-	}
-	getHitbox(){
-		return this.hb;
-	}
 	hit(target){
-		let diff=this.pos.cln().sub(target.pos);
-		let mag=diff.mag()/this.size.cln().add(target.size).mag();
+		let diff=this.pos.cln().sub(target.getPos(this.pos));
+		let mag=diff.mag()/this.getSize().add(target.getSize()).mag();
 		let push=Math.max(1-mag,0);
 		this.velo.add(
 			diff.nrm(push).scl(this.pushSpeed)
@@ -238,86 +214,65 @@ class Alien extends Entity{
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
-	}
-	run(){
-		super.run();
-		this.velo.scl(this.resistance);
-		this.pos.add(this.velo);
-
-		if(gameRunner.isUnderwater(this.pos.x,this.pos.y)){
-			let slowed=this.velo.cln();
-			this.velo.scl(this.resistanceWater);
-
-			slowed.sub(this.velo);
-			let strength=slowed.mag();
-			gameRunner.wave(this.pos.x,this.pos.y,100,strength*this.waveSize);
-			if(!this.submerged){
-				let splash=strength*this.splashSize;
-				if(splash>2)
-					gameRunner.splash(this.pos.x+this.velo.x*5,this.pos.y+this.velo.y*5,slowed.x*10,slowed.y*10,splash);
-			}
-			this.submerged=true;
-			this.velo.add(this.buoyancy);
-		}else{
-			this.submerged=false;
+		if(this.head!=null){
+			this.head.die();
 		}
+	}
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+		this.velo.scl(this.resistance**timeStep);
 
 		if(this.cooldown>0){
-			this.cooldown--;
+			this.cooldown-=timeStep;
 		}
 
-		this.calcHitbox();
+		this.move(timeStep);
 	}
-	shoot(bulletsArr,dryFire){
-		if(!this.alive)
-			return;
-		if(this.cooldown==0){
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				let pVelo=VecA(s,this.angle+ra);
-				pVelo.add(this.velo);
-				let pPos=VecA(this.size.x/2.,this.angle);
-				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-			}
+	dryFire(){
+		//used to prevent cooldown sync for large swarms
+		if(this.cooldown<=0){
 			this.cooldown=this.cooldownMax;
 		}
 	}
-	move(target,speed=1){
-		this.velo.sub(this.pos.cln().add(this.velo).sub(target).lim(this.speed*speed));
+	shoot(bulletsArr,timeStep){
+		if(this.cooldown<=0){
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			let pVelo=VecA(s,this.angle+ra);
+			pVelo.add(this.velo);
+			let pPos=VecA(this.getSize().x/2.,this.angle);
+			pPos.add(this.pos);
+			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			this.cooldown=this.cooldownMax;
+		}
 	}
-	moveDir(dir,speed=1){
-		this.velo.add(dir.cln().lim(this.speed*speed));
+
+	moveTo(target,timeStep,keepVelo=false){
+		if(keepVelo){
+			this.velo.add(target.cln().sub(this.pos).lim(this.speed).scl(timeStep));
+		}else{
+			this.velo.add(target.cln().sub(this.velo).sub(this.pos).lim(this.speed).scl(timeStep));
+		}
 	}
-	boost(speed=1){
-		this.velo.add(VecA(this.speed*speed,this.angle));
-	}
-	slow(resist){
-		this.velo.scl(resist);
-	}
-	face(target){
+	face(target,timeStep){
 		let ang=this.pos.ang(target);
-		this.faceAng(ang);
+		this.faceAng(ang,timeStep);
 	}
-	faceAng(ang){
+	faceAng(ang,timeStep){
 		this.angle+=clamp(
-			nrmAngPI(ang-this.angle),-this.agility,this.agility);
+			nrmAngPI(ang-this.angle),-this.agility*timeStep,this.agility*timeStep);
 	}
-	display(disp,renderer){
-		let flip=nrmAngPI(this.angle+PI/2)<0;
-		renderer.img(
-			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
-			this.angle,
-			this.texPos.x,
-			this.texPos.y,
-			this.texSize.x,
-			this.texSize.y,
-			flip);
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+	boost(timeStep){
+		this.velo.add(VecA(this.speed*timeStep,this.angle));
+		this.boostEffect(this.speed,timeStep);
+	}
+	boostEffect(strength,timeStep){
 	}
 }
+//apply mixin
+Object.assign(Alien.prototype,shapeMixin.rect);
+
+//#region aliens
 class Shield extends Alien{
 	constructor(p,a){
 		super(p,a);
@@ -326,6 +281,7 @@ class Shield extends Alien{
 		this.health=this.maxHealth;
 
 		this.size=Vec(56,102).scl(2);
+		this.displaySize=this.size.cln();
 		this.texPos=Vec(377,1);
 		this.texSize=Vec(56,102);
 
@@ -334,26 +290,25 @@ class Shield extends Alien{
 		this.shieldTime=0;
 		this.shieldTimeMax=10;
 
-		this.pushSpeed=0.3;
+		this.pushSpeed=1;
 
 		this.color=new Color("AAFF0000");
 	}
-	run(){
-		super.run();
+	runCustom(timeStep){
+		super.runCustom(timeStep);
 		if(this.shieldTime>0){
-			this.shieldTime--;
+			this.shieldTime-=timeStep;
 			this.color.w=this.shieldTime/this.shieldTimeMax;
 		}
 	}
 	hurt(damage,damager){
-		if(Math.abs(nrmAngPI(damager.pos.ang(this.pos)-this.angle))>PI/2){
+		if(Math.abs(nrmAngPI(damager.getPos(this.pos).ang(this.pos)-this.angle))>PI/2){
 			this.shieldTime=this.shieldTimeMax;
 		}else{
 			this.health-=damage;
 		}
 	}
 	shoot(){
-
 	}
 	display(disp,renderer){
 		let flip=nrmAngPI(this.angle+PI/2)<0;
@@ -368,7 +323,7 @@ class Shield extends Alien{
 			flip);
 
 		if(this.shieldTime>0){
-			let p=VecA(-this.size.x+5,this.angle).add(this.pos);
+			let p=VecA(-this.size.x+5,this.angle).add(this.getPos(gameRunner.getPlayer().getPos()));
 			let a=0.85;
 			disp.noStroke();
 			disp.setFill(this.color);
@@ -377,7 +332,7 @@ class Shield extends Alien{
 				this.size.x*1.5,this.angle-a,this.angle+a);
 			disp.shape();
 		}
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
 class Swarmer extends Alien{
@@ -388,12 +343,13 @@ class Swarmer extends Alien{
 		this.health=this.maxHealth;
 
 		this.size=Vec(30,17).scl(2);
+		this.displaySize=this.size.cln();
 		this.texPos=Vec(336,1);
 		this.texSize=Vec(30,17);
 
 		this.speed=10;
 		this.pushSpeed=3;
-		this.agility=0.03;
+		this.agility=0.1;
 		this.resistance=0.8;
 		this.resistanceWater=0.8;
 
@@ -412,7 +368,7 @@ class Swarmer extends Alien{
 	}
 	hit(target,special){
 		if(special){
-			if(this.cooldown==0){
+			if(this.cooldown<=0){
 				gameRunner.spark(this.pos.x,this.pos.y,this.velo.x/3,this.velo.y/3,0);
 				target.hurt(this.damage,this);
 				this.cooldown=this.cooldownMax;
@@ -423,9 +379,11 @@ class Swarmer extends Alien{
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,2);
+		if(this.head!=null){
+			this.head.die();
+		}
 	}
 	shoot(){
-
 	}
 }
 class Dart extends Alien{
@@ -436,8 +394,11 @@ class Dart extends Alien{
 		this.health=this.maxHealth;
 
 		this.size=Vec(40,35).scl(2);
+		this.displaySize=this.size.cln();
 		this.texPos=Vec(336,37);
 		this.texSize=Vec(40,35);
+		
+		this.cooldownMax=50;
 
 		this.speed=0.5;
 		this.resistance=0.99;
@@ -452,52 +413,48 @@ class Arrow extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=3;
+		this.maxHealth=5;
 		this.health=this.maxHealth;
 
 		this.size=Vec(73,63).scl(2);
+		this.displaySize=this.size.cln();
 		this.texPos=Vec(434,1);
 		this.texSize=Vec(73,63);
 
-		this.speed=1;
+		this.speed=0.8;
 		this.resistance=0.99;
 		this.agility=0.05;
 		this.pushSpeed=2;
 
-		this.cooldownMax=150;
-		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
+		this.cooldownMax=75;
 		this.bulletSpeed=40;
 
 		this.splashSize=2;
 		this.waveSize=1;
 	}
-	shoot(bulletsArr,dryFire){
-		if(!this.alive)
-			return;
-		if(this.cooldown==0){
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				{
-					let pVelo=VecA(s,this.angle+ra);
-					pVelo.add(this.velo);
-					let pPos=Vec(this.size.x/2-20,14);
-					if(Math.cos(this.angle)<0)
-						pPos.y*=-1;
-					pPos.rot(this.angle);
-					pPos.add(this.pos);
-					bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-				}
-				{
-					let pVelo=VecA(s,this.angle+ra);
-					pVelo.add(this.velo);
-					let pPos=Vec(this.size.x/2-20,-14);
-					if(Math.cos(this.angle)<0)
-						pPos.y*=-1;
-					pPos.rot(this.angle);
-					pPos.add(this.pos);
-					bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-				}
+	shoot(bulletsArr){
+		if(this.cooldown<=0){
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			{
+				let pVelo=VecA(s,this.angle+ra);
+				pVelo.add(this.velo);
+				let pPos=Vec(this.size.x/2-20,14);
+				if(Math.cos(this.angle)<0)
+					pPos.y*=-1;
+				pPos.rot(this.angle);
+				pPos.add(this.pos);
+				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			}
+			{
+				let pVelo=VecA(s,this.angle+ra);
+				pVelo.add(this.velo);
+				let pPos=Vec(this.size.x/2-20,-14);
+				if(Math.cos(this.angle)<0)
+					pPos.y*=-1;
+				pPos.rot(this.angle);
+				pPos.add(this.pos);
+				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 			}
 			this.cooldown=this.cooldownMax;
 		}
@@ -507,10 +464,11 @@ class Shell extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=5;
+		this.maxHealth=8;
 		this.health=this.maxHealth;
 
 		this.size=Vec(59,64).scl(2);
+		this.displaySize=Vec(59,64).scl(2);
 		this.texPos=Vec(508,1);
 		this.texSize=Vec(59,64);
 
@@ -518,8 +476,7 @@ class Shell extends Alien{
 		this.resistance=0.99;
 		this.agility=0.05;
 		this.pushSpeed=2;
-		this.cooldownMax=200;
-		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
+		this.cooldownMax=100;
 
 		this.splashSize=2;
 		this.waveSize=1;
@@ -532,67 +489,23 @@ class Sniper extends Alien{
 		this.maxHealth=5;
 		this.health=this.maxHealth;
 
-		this.size=Vec(78,86).scl(2);
+		this.size=Vec(53,86).scl(2);
+		this.displaySize=Vec(78,86).scl(2);
 		this.texPos=Vec(568,1);
 		this.texSize=Vec(78,86);
-
-		this.hitboxSize=Vec(53,86).scl(2);
-		this.hitboxOffset=Vec(0,0);
 		this.displayOffset=Vec(25,0);
 
 		this.speed=0.5;
 		this.pushSpeed=0.5;
 		
-		this.cooldownMax=300;
-		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
+		this.cooldownMax=150;
 		this.bulletSpeed=50;
 		this.bulletSize=12;
 		this.bulletDamage=5;
-		this.bulletRange=100;
+		this.bulletRange=75;
 		this.accuracy=0.05;
 	}
-	//TODO: adjust hitbox function to include hitbox size and offset
-	getClosest(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-		let s=v.cln().sign();
-		let sz=this.hitboxSize.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return vec.cln();
-		}else{
-			v.min(sz);
-		}
-		return v.scl(s).rot(this.angle).add(this.pos);
-	}
-	getDist(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-		let sz=this.hitboxSize.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return Math.max(v.x-sz.x,v.y-sz.y);
-		}else{
-			let v2=v.cln();
-			v.min(sz);
-			return v2.mag(v);
-		}
-	}
-	display(disp,renderer){
-		let flip=nrmAngPI(this.angle+PI/2)<0;
-		renderer.img(
-			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
-			this.angle,
-			this.texPos.x,
-			this.texPos.y,
-			this.texSize.x,
-			this.texSize.y,
-			flip,
-			this.displayOffset.x,
-			this.displayOffset.y);
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
-	}
 }
-
 class StarGunner extends Alien{
 	constructor(p,a){
 		super(p,a);
@@ -600,19 +513,18 @@ class StarGunner extends Alien{
 		this.maxHealth=3;
 		this.health=this.maxHealth;
 
-		this.size=Vec(69,50).scl(2);
 		this.texPos=Vec(434,129);
 		this.texSize=Vec(69,50);
-
-		this.hitboxSize=Vec(53,86).scl(2);
-		this.hitboxOffset=Vec(0,0);
+		this.size=Vec(69,50).scl(2);
+		this.displaySize=this.size.cln();
+		this.offset=Vec(0,0);
 		this.displayOffset=Vec(0,0);
 
 		this.speed=0.5;
 		this.pushSpeed=0.5;
 		this.agility=0.2;
 
-		this.cooldownMax1=300;
+		this.cooldownMax1=200;
 		this.bulletSpeed1=100;
 		this.bulletSize1=8;
 		this.bulletDamage1=1;
@@ -622,7 +534,7 @@ class StarGunner extends Alien{
 		this.cooldownMax2=5;
 		this.bulletSpeed2=50;
 		this.bulletSize2=16;
-		this.bulletDamage2=3;
+		this.bulletDamage2=2;
 		this.bulletRange2=30;
 		this.accuracy2=0.2;
 		this.kickBack=10;
@@ -652,85 +564,44 @@ class StarGunner extends Alien{
 			this.accuracy=this.accuracy2;
 		}
 	}
-	shoot(bulletsArr,dryFire){
-		if(!this.alive)
-			return;
-		if(this.cooldown==0){
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				let pVelo;
-				if(this.isForward){
-					pVelo=VecA(s,this.angle+ra);
-				}else{
-					pVelo=VecA(s,this.angle+ra+PI);
-					this.shove(pVelo.cln().nrm(-this.kickBack));
-				}
-				pVelo.add(this.velo);
-				let pPos=VecA(0,0);
-				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+	shoot(bulletsArr){
+		if(this.cooldown<=0){
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			let pVelo;
+			if(this.isForward){
+				pVelo=VecA(s,this.angle+ra);
+			}else{
+				pVelo=VecA(s,this.angle+ra+PI);
+				this.shove(pVelo.cln().nrm(-this.kickBack));
 			}
+			pVelo.add(this.velo);
+			let pPos=VecA(0,0);
+			pPos.add(this.pos);
+			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+
 			this.cooldown=this.cooldownMax;
 		}
 	}
-	faceAng(ang){
+	faceAng(ang,timeStep){
 		if(this.isForward){
 			this.angle+=clamp(
-				nrmAngPI(ang-this.angle),-this.agility,this.agility);
+				nrmAngPI(ang-this.angle),-this.agility*timeStep,this.agility*timeStep);
 		}else{
 			this.angle+=clamp(
-				nrmAngPI(ang-this.angle-PI),-this.agility,this.agility);
+				nrmAngPI(ang-this.angle-PI),-this.agility*timeStep,this.agility*timeStep);
 		}
-	}
-	getClosest(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-		let s=v.cln().sign();
-		let sz=this.hitboxSize.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return vec.cln();
-		}else{
-			v.min(sz);
-		}
-		return v.scl(s).rot(this.angle).add(this.pos);
-	}
-	getDist(vec){
-		let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-		let sz=this.hitboxSize.cln().scl(.5);
-		v.abs();
-		if(v.x<sz.x&&v.y<sz.y){
-			return Math.max(v.x-sz.x,v.y-sz.y);
-		}else{
-			let v2=v.cln();
-			v.min(sz);
-			return v2.mag(v);
-		}
-	}
-	display(disp,renderer){
-		let flip=nrmAngPI(this.angle+PI/2)<0;
-		renderer.img(
-			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
-			this.angle,
-			this.texPos.x,
-			this.texPos.y,
-			this.texSize.x,
-			this.texSize.y,
-			false,
-			this.displayOffset.x,
-			this.displayOffset.y);
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
 	}
 }
 class Wrecker extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=5;
+		this.maxHealth=8;
 		this.health=this.maxHealth;
 
-		this.size=Vec(62,62).scl(2);
+		this.size=62;
+		this.displaySize=Vec(62,62).scl(2);
 		this.texPos=Vec(647,1);
 		this.texSize=Vec(62,62);
 		
@@ -762,31 +633,8 @@ class Wrecker extends Alien{
 		this.damage=1;
 		this.spin=0;
 	}
-	//TODO: adjust sdfs and hitbox to be a circle
-	// getClosest(vec){
-	// 	let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-	// 	let s=v.cln().sign();
-	// 	let sz=this.hitboxSize.cln().scl(.5);
-	// 	v.abs();
-	// 	if(v.x<sz.x&&v.y<sz.y){
-	// 		return vec.cln();
-	// 	}else{
-	// 		v.min(sz);
-	// 	}
-	// 	return v.scl(s).rot(this.angle).add(this.pos);
-	// }
-	// getDist(vec){
-	// 	let v=vec.cln().sub(this.pos).rot(-this.angle).add(this.hitboxOffset);
-	// 	let sz=this.hitboxSize.cln().scl(.5);
-	// 	v.abs();
-	// 	if(v.x<sz.x&&v.y<sz.y){
-	// 		return Math.max(v.x-sz.x,v.y-sz.y);
-	// 	}else{
-	// 		let v2=v.cln();
-	// 		v.min(sz);
-	// 		return v2.mag(v);
-	// 	}
-	// }
+	shoot(){
+	}
 	runSpecial(arrays){
 		let a2=arrays["planes"];
 		for(let j=0;j<a2.length;j++){
@@ -795,8 +643,8 @@ class Wrecker extends Alien{
 	}
 	hit(target,special){
 		if(special){
-			if(this.cooldown==0){
-				let sparkP=target.getPos().sub(this.pos).nrm(this.size.x/2).add(this.pos);
+			if(this.cooldown<=0){
+				let sparkP=target.getPos(this.pos).sub(this.pos).nrm(this.size/2).add(this.pos);
 				gameRunner.spark(sparkP.x,sparkP.y,0,0,0);
 				target.hurt(this.damage,this);
 				this.cooldown=this.cooldownMax;
@@ -804,28 +652,30 @@ class Wrecker extends Alien{
 		}else{
 			super.hit(target);
 		}
-		let shoveDir=target.getPos().sub(this.pos).nrm(this.spin*5);
+		let shoveDir=target.getPos(this.pos).sub(this.pos).nrm(this.spin*5);
 		target.shove(shoveDir);
 	}
-	
-	faceAng(ang){
+	faceAng(ang,timeStep){
 		let look=VecA(15,ang);
-		this.facePos=look.sub(this.facePos).lim(1).add(this.facePos);
-		super.faceAng(ang);
+		this.facePos=look.sub(this.facePos).lim(1*timeStep).add(this.facePos);
+		super.faceAng(ang,timeStep);
 	}
-	run(){
-		super.run();
+	runCustom(timeStep){
+		super.runCustom(timeStep);
 		this.spin=this.velo.mag()/50+1;
-		this.blade1Angle+=this.spin/TAU;
-		this.blade2Angle-=this.spin*0.75/TAU;
+		this.blade1Angle+=this.spin/TAU*timeStep;
+		this.blade2Angle-=this.spin*0.75/TAU*timeStep;
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,8);
+		if(this.head!=null){
+			this.head.die();
+		}
 	}
 	display(disp,renderer){
 		renderer.img(
 			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
+			this.displaySize.x,this.displaySize.y,
 			this.angle,
 			this.texPos.x,
 			this.texPos.y,
@@ -889,10 +739,15 @@ class Wrecker extends Alien{
 			this.faceTexSize.y,
 			false);
 
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
+//apply mixin
+Object.assign(Wrecker.prototype,shapeMixin.circ);
 
+//#endregion
+
+//#region bosses
 class BossSpike extends Alien{
 	constructor(p,a){
 		super(p,a);
@@ -900,7 +755,8 @@ class BossSpike extends Alien{
 		this.maxHealth=25;
 		this.health=this.maxHealth;
 
-		this.size=Vec(110,110).scl(2);
+		this.size=110;
+		this.displaySize=Vec(this.size,this.size).scl(2);
 		this.texPos=Vec(744,1);
 		this.texSize=Vec(110,110);
 		
@@ -920,15 +776,17 @@ class BossSpike extends Alien{
 		this.speed=1;
 		this.resistance=0.8;
 		this.pushSpeed=0.25;
-		this.agility=0;
 		
 		this.cooldownMax=10;
-		this.cooldown=0;
 
 		this.damage=20;
 		this.spin=0.025;
+		this.spinBase=0.025;
+		this.spinResist=.99;
+		this.spinSpeed=.005;
 	}
-	shoot(){
+	shoot(bulletA,timeStep){
+		this.spin+=this.spinSpeed*timeStep;
 	}
 	runSpecial(arrays){
 		let a2=arrays["planes"];
@@ -937,11 +795,11 @@ class BossSpike extends Alien{
 		}
 	}
 	hit(target,special){
-		let shoveDir=target.getPos().sub(this.pos).nrm(this.spin*100);
+		let shoveDir=target.getPos(this.pos).sub(this.pos).nrm(this.spin*100);
 		target.shove(shoveDir);
 		if(special){
-			if(this.cooldown==0){
-				let sparkP=target.getPos().sub(this.pos).nrm(this.size.x/2).add(this.pos);
+			if(this.cooldown<=0){
+				let sparkP=target.getPos(this.pos).sub(this.pos).nrm(this.size/2).add(this.pos);
 				gameRunner.spark(sparkP.x,sparkP.y,0,0,3);
 				target.hurt(this.damage,this);
 				this.cooldown=this.cooldownMax;
@@ -954,19 +812,22 @@ class BossSpike extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		if(this.head!=null){
+			this.head.die();
+		}
 	}
-	run(){
-		super.run();
-		this.spike1Angle+=this.spin;
-		this.spike2Angle-=this.spin;
-		this.spike3Angle+=this.spin/2;
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+		this.spin=Math.max(this.spin*this.spinResist**timeStep,this.spinBase);
+		this.spike1Angle+=this.spin*timeStep;
+		this.spike2Angle-=this.spin*timeStep;
+		this.spike3Angle+=this.spin/2*timeStep;
 	}
-	//TODO: circle sdf
 	display(disp,renderer){
 		renderer.img(
 			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
-			this.angle,
+			this.displaySize.x,this.displaySize.y,
+			0,
 			this.texPos.x,
 			this.texPos.y,
 			this.texSize.x,
@@ -977,7 +838,7 @@ class BossSpike extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.spike2Size.x,this.spike2Size.y,
-				this.angle+n/6*TAU+this.spike2Angle,
+				n/6*TAU+this.spike2Angle,
 				this.spike2TexPos.x,
 				this.spike2TexPos.y,
 				this.spike2TexSize.x,
@@ -990,7 +851,7 @@ class BossSpike extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.spike2Size.x,this.spike2Size.y,
-				this.angle+n/6*TAU+this.spike3Angle,
+				n/6*TAU+this.spike3Angle,
 				this.spike2TexPos.x,
 				this.spike2TexPos.y,
 				this.spike2TexSize.x,
@@ -1003,7 +864,7 @@ class BossSpike extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.spike1Size.x,this.spike1Size.y,
-				this.angle+n/3*TAU+this.spike1Angle,
+				n/3*TAU+this.spike1Angle,
 				this.spike1TexPos.x,
 				this.spike1TexPos.y,
 				this.spike1TexSize.x,
@@ -1013,9 +874,11 @@ class BossSpike extends Alien{
 				this.spike1Offset.y);
 		}
 
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
+//apply mixin
+Object.assign(BossSpike.prototype,shapeMixin.circ);
 
 class BossDrill extends Alien{
 	constructor(p,a){
@@ -1024,7 +887,7 @@ class BossDrill extends Alien{
 		this.maxHealth=25;
 		this.health=this.maxHealth;
 
-		this.size=Vec(142,150).scl(2);
+		this.displaySize=Vec(142,150).scl(2);
 		this.texPos=Vec(952,1);
 		this.texSize=Vec(142,150);
 		this.offset=Vec(30,0).scl(2);
@@ -1057,15 +920,13 @@ class BossDrill extends Alien{
 		this.gunAngle2=0.0;
 		this.gunAngle3=0.0;
 
-		this.speed=0.5;
+		this.speed=1;
 		this.resistance=0.98;
 		this.resistanceWater=0.97;
 		this.pushSpeed=0.25;
-		this.agilityNormal=0.01;
-		this.agilityBoost=0.03;
+		this.agilityNormal=0.02;
+		this.agilityBoost=0.05;
 		this.agility=this.agilityNormal;
-		this.boostCooldown=0;
-		this.boostCooldownMax=30;
 		
 		this.gunCooldownMax=30;
 		this.gunCooldown=0;
@@ -1073,12 +934,16 @@ class BossDrill extends Alien{
 		this.gunAccel=0.005;
 		this.gunResistance=0.95;
 		this.damage=1;
+		
+		this.splashSize=5;
+		this.waveSize=5;
 
 		this.bulletSpeed=50;
 		this.bulletRange=50;
 
 		this.eyeSpin1=PI/2+0.5;
 		this.eyeSpin2=PI/2+0.1;
+		this.hitBoxPoly=[Vec(-60,-150),Vec(-60,150),Vec(200,0)];
 	}
 	runSpecial(arrays){
 		let a2=arrays["planes"];
@@ -1087,7 +952,7 @@ class BossDrill extends Alien{
 		}
 	}
 	hit(target,special){
-		let shoveDir=target.getPos().sub(this.pos).nrm(this.gunSpeed*30);
+		let shoveDir=target.getPos(this.pos).sub(this.pos).nrm(this.gunSpeed*30);
 		target.shove(shoveDir);
 		super.hit(target);
 	}
@@ -1095,40 +960,44 @@ class BossDrill extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
-	}
-	run(){
-		super.run();
-		this.gunSpeed*=this.gunResistance;
-		let drillSpeed=this.gunSpeed+0.03;
-		// this.gunAngle1+=drillSpeed;
-		// this.gunAngle2+=drillSpeed*75/46;
-		// this.gunAngle3+=drillSpeed*75/20;
-		this.gunAngle1+=drillSpeed;
-		this.gunAngle2+=drillSpeed*2;
-		this.gunAngle3+=drillSpeed*3;
-		if(this.boostCooldown>0){
-			this.boostCooldown--;
-			this.boost(1,false);
+		if(this.head!=null){
+			this.head.die();
 		}
-		this.agility=this.boostCooldown==0?this.agilityNormal:this.agilityBoost;
 	}
-	face(target){
-		super.face(target);
-		let p=target.cln().sub(this.getPos()).lim(30);
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+		this.gunSpeed*=this.gunResistance**timeStep;
+		let drillSpeed=this.gunSpeed+0.03;
+		this.gunAngle1+=drillSpeed*timeStep;
+		this.gunAngle2+=drillSpeed*2*timeStep;
+		this.gunAngle3+=drillSpeed*3*timeStep;
+		this.agility=this.boosting?this.agilityBoost:this.agilityNormal;
+		this.boosting=false;
+	}
+	face(target,timeStep){
+		super.face(target,timeStep);
+		let p=target.cln().sub(this.getPos(target)).lim(30);
 		p.z=40;
 		p.nrm(40);
 		this.eyeSpin2=Vec(p.yz).ang();
 		this.eyeSpin1=Vec(p.xz).ang();
 	}
-	shoot(bulletsArr,dryFire){
-		if(!this.alive)
-			return;
-		this.gunSpeed+=this.gunAccel;
+	faceAng(ang,timeStep){
+		super.faceAng(ang,timeStep);
+		let p=VecA(30,ang);
+		p.z=40;
+		p.nrm(40);
+		this.eyeSpin2=Vec(p.yz).ang();
+		this.eyeSpin1=Vec(p.xz).ang();
+		this.eyeSpin1=Vec(p.xz).ang();
+	}
+	shoot(bulletsArr,timeStep){
+		this.gunSpeed+=this.gunAccel*timeStep;
 		let gunCount=8;
 		let fireIdx=this.gunCooldown;
 		for(let i=0;i<gunCount;i++){
 			fireIdx++;
-			if(fireIdx%this.gunCooldownMax!=0){
+			if(fireIdx%this.gunCooldownMax>1){
 				continue;
 			}
 			let p=VecA(75,i/gunCount*TAU+this.gunAngle1);
@@ -1137,20 +1006,18 @@ class BossDrill extends Alien{
 			}
 			p.x=40*2;
 			
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				let pVelo=VecA(s,this.angle+ra);
-				pVelo.add(this.velo);
-				let pPos=p.cln().rot(this.angle);
-				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-			}
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			let pVelo=VecA(s,this.angle+ra);
+			pVelo.add(this.velo);
+			let pPos=p.cln().rot(this.angle);
+			pPos.add(this.pos);
+			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 		}
 		gunCount=6;
 		for(let i=0;i<gunCount;i++){
 			fireIdx++;
-			if(fireIdx%this.gunCooldownMax!=0){
+			if(fireIdx%this.gunCooldownMax>1){
 				continue;
 			}
 			let p=VecA(46,i/gunCount*TAU+this.gunAngle2);
@@ -1159,20 +1026,18 @@ class BossDrill extends Alien{
 			}
 			p.x=60*2;
 			
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				let pVelo=VecA(s,this.angle+ra);
-				pVelo.add(this.velo);
-				let pPos=p.cln().rot(this.angle);
-				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-			}
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			let pVelo=VecA(s,this.angle+ra);
+			pVelo.add(this.velo);
+			let pPos=p.cln().rot(this.angle);
+			pPos.add(this.pos);
+			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 		}
 		gunCount=3;
 		for(let i=0;i<gunCount;i++){
 			fireIdx++;
-			if(fireIdx%this.gunCooldownMax!=0){
+			if(fireIdx%this.gunCooldownMax>1){
 				continue;
 			}
 			let p=VecA(20,i/gunCount*TAU+this.gunAngle3);
@@ -1181,52 +1046,48 @@ class BossDrill extends Alien{
 			}
 			p.x=80*2;
 
-			if(!dryFire){
-				let ra=(Math.random()-0.5)*2*this.accuracy;
-				let s=this.bulletSpeed;
-				let pVelo=VecA(s,this.angle+ra);
-				pVelo.add(this.velo);
-				let pPos=p.cln().rot(this.angle);
-				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
-			}
+			let ra=(Math.random()-0.5)*2*this.accuracy;
+			let s=this.bulletSpeed;
+			let pVelo=VecA(s,this.angle+ra);
+			pVelo.add(this.velo);
+			let pPos=p.cln().rot(this.angle);
+			pPos.add(this.pos);
+			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 		}
 		fireIdx+=Math.floor(Math.random()*2);
 		this.gunCooldown=fireIdx%this.gunCooldownMax;
 	}
-	boost(power,real=true){
-		super.boost(power);
-		if(real){
-			this.boostCooldown=this.boostCooldownMax;
-		}
-		
-		let offset=VecA(-this.size.x/2+this.offset.x,this.angle);
-		offset.add(this.pos);
+	boost(timeStep){
+		this.boosting=true;
+		super.boost(timeStep);
+	}
+	boostEffect(strength,timeStep){
+		let offset=VecA(-this.displaySize.x/2+this.offset.x,this.angle);
+		offset.add(this.pos).add(this.velo);
 		let offset2=VecA(20*2,this.angle+PI/2);
 
 		gameRunner.thrust(offset.x,offset.y,this.velo.x,this.velo.y,
-			Math.random()+0.5
+			(Math.random()+0.5)*timeStep
 		);
 		gameRunner.thrust(offset.x+offset2.x,offset.y+offset2.y,this.velo.x,this.velo.y,
-			Math.random()+0.5
+			(Math.random()+0.5)*timeStep
 		);
 		gameRunner.thrust(offset.x-offset2.x,offset.y-offset2.y,this.velo.x,this.velo.y,
-			Math.random()+0.5
+			(Math.random()+0.5)*timeStep
 		);
-		let m=this.velo.mag();
+		let m=this.velo.mag()*timeStep;
 		let cloudCol=RGB(255,255,255,50).scl(255);
 		for(let v=0;v<m;v+=20){
-			let p=this.velo.cln().nrm(v).add(offset).add(VecA(Math.random()*20,Math.random()*TAU));
+			let p=this.velo.cln().nrm(-v).add(offset).add(VecA(Math.random()*20,Math.random()*TAU));
 			gameRunner.cloud(p.x,p.y,cloudCol.x,cloudCol.y,cloudCol.z,cloudCol.w);
 			gameRunner.cloud(p.x+offset2.x,p.y+offset2.y,cloudCol.x,cloudCol.y,cloudCol.z,cloudCol.w);
 			gameRunner.cloud(p.x-offset2.x,p.y-offset2.y,cloudCol.x,cloudCol.y,cloudCol.z,cloudCol.w);
 		}
 	}
-	//TODO: triangle sdf
 	display(disp,renderer){
 		renderer.img(
 			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
+			this.displaySize.x,this.displaySize.y,
 			this.angle,
 			this.texPos.x,
 			this.texPos.y,
@@ -1424,9 +1285,11 @@ class BossDrill extends Alien{
 			this.triOffset.x,
 			this.triOffset.y);
 
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
+//apply mixin
+Object.assign(BossDrill.prototype,shapeMixin.poly);
 
 class BossAxe extends Alien{
 	constructor(p,a){
@@ -1435,7 +1298,8 @@ class BossAxe extends Alien{
 		this.maxHealth=25;
 		this.health=this.maxHealth;
 
-		this.size=Vec(202,118).scl(2);
+		this.size=118;
+		this.displaySize=Vec(202,118).scl(2);
 		this.texPos=Vec(1134,1);
 		this.texSize=Vec(202,118);
 		this.offset=Vec(100,0);
@@ -1457,7 +1321,6 @@ class BossAxe extends Alien{
 		this.agility=this.agilityNormal;
 
 		this.cooldownMax=500;
-		this.cooldown=Math.floor(Math.random()*this.cooldownMax);
 		this.bulletSpeed=80;
 		this.bulletSize=30;
 		this.bulletDamage=20;
@@ -1465,52 +1328,60 @@ class BossAxe extends Alien{
 		this.accuracy=0;
 		this.fireChainMax=100;
 		this.fireChain=0;
-		this.fireChainMod=10;
+		this.fireChainCooldownMax=10;
+		this.fireChainCooldown=0;
 
 		this.damage=20;
 		this.spin=0.025;
+	}
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+
+		if(this.fireChainCooldown>0){
+			this.fireChainCooldown-=timeStep;
+		}
+		if(this.fireChain>0){
+			this.fireChain-=timeStep;
+		}
+
+		if(this.cooldown<20){
+			this.coverOpen=clamp(this.coverOpen+this.coverSpeed*timeStep,0,1);
+		}else if(this.fireChain<=0){
+			this.coverOpen=clamp(this.coverOpen-this.coverSpeed*timeStep,0,1);
+		}
+		
+		this.agility=(this.cooldown<=0||this.fireChain>0)?this.agilityFire:this.agilityNormal;
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
-	}
-	shoot(bulletsArr,dryFire){
-		if(!this.alive)
-			return;
-		if(this.cooldown<20){
-			this.coverOpen=clamp(this.coverOpen+this.coverSpeed,0,1);
-		}else if(this.fireChain==0){
-			this.coverOpen=clamp(this.coverOpen-this.coverSpeed,0,1);
-
+		if(this.head!=null){
+			this.head.die();
 		}
-		if(this.cooldown==0){
-			if(!dryFire){
-				this.fireChain=this.fireChainMax;
-				this.agility=this.agilityFire;
-			}
+	}
+	shoot(bulletsArr,timeStep){
+		if(this.cooldown<=0){
+			this.fireChain=this.fireChainMax;
 			this.cooldown=this.cooldownMax;
 		}
 		if(this.fireChain>0){
-			if(this.fireChain%this.fireChainMod==0){
+			if(this.fireChainCooldown<=0){
 				let ra=(Math.random()-0.5)*2*this.accuracy;
 				let s=this.bulletSpeed;
 				let pVelo=VecA(s,this.angle+ra);
 				pVelo.add(this.velo);
 				let pPos=VecA(0,this.angle);
 				pPos.add(this.pos);
-				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+				bulletsArr.push(new AlienBulletHeavy(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+				this.fireChainCooldown=this.fireChainCooldownMax;
 			}
-			this.fireChain--;
-		}else{
-			this.agility=this.agilityNormal;
 		}
 	}
-	//TODO: axe sdf
 	display(disp,renderer){
 		renderer.img(
 			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
+			this.displaySize.x,this.displaySize.y,
 			this.angle,
 			this.texPos.x,
 			this.texPos.y,
@@ -1563,9 +1434,11 @@ class BossAxe extends Alien{
 			.3,.6,.1
 		);
 
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
+//apply mixin
+Object.assign(BossAxe.prototype,shapeMixin.circ);
 
 class BossYarn extends Alien{
 	constructor(p,a){
@@ -1574,14 +1447,16 @@ class BossYarn extends Alien{
 		this.maxHealth=25;
 		this.health=this.maxHealth;
 
-		this.size=Vec(122,122).scl(2);
+		this.size=122;
+		this.displaySize=Vec(this.size,this.size).scl(2);
 		this.texPos=Vec(1477,1);
 		this.texSize=Vec(122,122);
 		this.offset=Vec(0,0);
 
 		this.isOpen=false;
 		this.arrowOpen=0;
-		this.openSpeed=0.02;
+		this.openSpeed=0.05;
+		this.displayAngle=0;
 
 		this.arrowSize=Vec(38,53).scl(2);
 		this.arrowTexPos=Vec(1354,1);
@@ -1610,43 +1485,60 @@ class BossYarn extends Alien{
 		this.letterCount=9;
 		this.letters=Array(50).fill().map(x=>Math.floor(Math.random()*(this.letterCount+2)));
 
-		this.speed=2;
+		this.speedBase=5;
+		this.speed=this.speedBase;
 		this.resistance=0.8;
 		this.pushSpeed=0.25;
+
+		this.cooldownMax=5;
+		this.bulletDamage=5;
+		this.bulletSize=12;
 	}
-	run(){
-		super.run();
-		this.arrow2Spin+=0.02;
-		this.angle-=0.005;
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+		this.arrow2Spin+=0.02*timeStep;
+		this.displayAngle-=0.005*timeStep;
 		if(this.isOpen){
-			this.arrowOpen=Math.max(this.arrowOpen-this.openSpeed,0);
+			this.arrowOpen=Math.max(this.arrowOpen-this.openSpeed*timeStep,0);
 		}else{
-			this.arrowOpen=Math.min(this.arrowOpen+this.openSpeed,1);
+			this.arrowOpen=Math.min(this.arrowOpen+this.openSpeed*timeStep,1);
 		}
-	}
-	open(){
-		this.isOpen=true;
-	}
-	close(){
+		this.speed=this.arrowOpen==0?0:this.speedBase;
 		this.isOpen=false;
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		if(this.head!=null){
+			this.head.die();
+		}
 	}
-	shoot(){
+	shoot(bulletsArr){
+		let arrowCount=6;
+		this.isOpen=true;
+		if(this.cooldown<=0&&this.arrowOpen==0){
+			for(let i=0;i<6;i++){
+				let ra=(Math.random()-0.5)*2*this.accuracy;
+				let s=this.bulletSpeed;
+				let a=this.displayAngle+this.arrow2Spin+TAU*i/arrowCount;
+				let pVelo=VecA(s,a+ra);
+				pVelo.add(this.velo);
+				let pPos=VecA(this.getSize().x,a);
+				pPos.add(this.pos);
+				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			}
+			this.cooldown=this.cooldownMax;
+		}
 	}
-	//TODO: circle sdf
 	display(disp,renderer){
-		
 		let arrowCount=6;
 		
 		for(let n=0;n<arrowCount;n++){
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.arrow2Size.x,this.arrow2Size.y,
-				this.angle+(n+0.5)/arrowCount*TAU+this.arrow2Spin,
+				this.displayAngle+(n+0.5)/arrowCount*TAU+this.arrow2Spin,
 				this.arrow2TexPos.x,
 				this.arrow2TexPos.y,
 				this.arrow2TexSize.x,
@@ -1657,8 +1549,8 @@ class BossYarn extends Alien{
 		}
 		renderer.img(
 			this.pos.x,this.pos.y,
-			this.size.x,this.size.y,
-			this.angle,
+			this.displaySize.x,this.displaySize.y,
+			this.displayAngle,
 			this.texPos.x,
 			this.texPos.y,
 			this.texSize.x,
@@ -1674,7 +1566,7 @@ class BossYarn extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.letterSize.x,this.letterSize.y,
-				this.angle+(n)/this.letters.length*TAU,
+				this.displayAngle+(n)/this.letters.length*TAU,
 				this.letterTexPos.x+l*this.letterTexSize.x,
 				this.letterTexPos.y,
 				this.letterTexSize.x,
@@ -1688,7 +1580,7 @@ class BossYarn extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.arrowSize.x,this.arrowSize.y,
-				this.angle+n/arrowCount*TAU,
+				this.displayAngle+n/arrowCount*TAU,
 				this.arrowTexPos.x,
 				this.arrowTexPos.y,
 				this.arrowTexSize.x,
@@ -1701,7 +1593,7 @@ class BossYarn extends Alien{
 			renderer.img(
 				this.pos.x,this.pos.y,
 				this.blockSize.x,this.blockSize.y,
-				this.angle+(n+0.5)/arrowCount*TAU,
+				this.displayAngle+(n+0.5)/arrowCount*TAU,
 				this.blockTexPos.x,
 				this.blockTexPos.y,
 				this.blockTexSize.x,
@@ -1714,13 +1606,135 @@ class BossYarn extends Alien{
 		renderer.img(
 			this.pos.x,this.pos.y,
 			this.ringSize.x,this.ringSize.y,
-			this.angle,
+			this.displayAngle,
 			this.ringTexPos.x,
 			this.ringTexPos.y,
 			this.ringTexSize.x,
 			this.ringTexSize.y,
 			false);
 
-		gameRunner.shadow(this.pos.x,this.pos.y,(this.hb[1].x-this.hb[0].x)/2);
+		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
 }
+//apply mixin
+Object.assign(BossYarn.prototype,shapeMixin.circ);
+
+//#endregion
+
+//#region mothership
+class Mothership extends Alien{
+	constructor(p,a){
+		super(p,a);
+
+		this.maxHealth=150;
+		this.health=this.maxHealth;
+
+		this.size=Vec(287,194).scl(3);
+		this.displaySize=this.size.cln();
+		this.texPos=Vec(1312,247);
+		this.texSize=Vec(287,194);
+		this.offset=Vec(0,0);
+		this.hitboxOffset=Vec(0,45).scl(3);
+		this.hitboxBottom=25*3;
+		this.tailSize=Vec(20,200).scl(3);
+		
+		this.calcHitbox();
+	}
+	shove(){
+	}
+	hit(){
+	}
+	getClosest(vec){
+		let pos=loopVec(this.pos,vec);
+		let rP=vec.cln().sub(pos).sub(this.hitboxOffset).lim(this.size.x/2).add(pos).add(this.hitboxOffset);
+		let r=rP.mag(vec);
+		let lP=vec.cln().sub(pos);
+		lP.y=Math.min(lP.y,this.hitboxBottom);
+		lP.add(pos);
+		let l=lP.mag(vec);
+
+		let boxP;
+		{
+			let v=vec.cln().sub(pos);
+			let s=v.cln().sign();
+			let sz=this.tailSize.cln().scl(.5);
+			v.abs();
+			if(v.x<sz.x&&v.y<sz.y){
+				boxP=vec.cln();
+			}else{
+				v.min(sz);
+			}
+			boxP=v.scl(s).add(pos);
+		}
+		let box=boxP.mag(vec);
+
+		let arc;
+		let arcP;
+		if(l<r){
+			arc=r;
+			arcP=rP;
+		}else{
+			arc=l;
+			arcP=lP;
+		}
+		if(arc<box){
+			return arcP;
+		}else{
+			return boxP;
+		}
+	}
+	getDist(vec){
+		let pos=loopVec(this.pos,vec);
+		let r=pos.mag(vec.cln().sub(this.hitboxOffset))-this.size.x/2;
+		let l=vec.y-pos.cln().add(this.hitboxOffset).y+this.hitboxBottom;
+		let box;
+		{
+			let v=vec.cln().sub(pos);
+			let sz=this.tailSize.cln().scl(.5);
+			v.abs();
+			if(v.x<sz.x&&v.y<sz.y){
+				box=Math.max(v.x-sz.x,v.y-sz.y);
+			}else{
+				let v2=v.cln();
+				v.min(sz);
+				box=v2.mag(v);
+			}
+		}
+		return Math.min(Math.max(r,l),box);
+	}
+	calcHitbox(){
+		let min=this.pos.cln();
+		let max=this.pos.cln();
+		min.sub(this.size.x/2).add(this.hitboxOffset);
+		max.add(this.size.x/2).add(this.hitboxOffset);
+		max.y=this.pos.y+this.tailSize.y/2;
+		this.hitbox=[min,max];
+	}
+	die(){
+		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,40);
+		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
+		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
+		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		if(this.head!=null){
+			this.head.die();
+		}
+	}
+	shoot(){
+	}
+	display(){
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.displaySize.x,this.displaySize.y,
+			0,
+			this.texPos.x,
+			this.texPos.y,
+			this.texSize.x,
+			this.texSize.y,
+			false,
+			this.displayOffset.x,
+			this.displayOffset.y);
+		let hb=this.getHitbox();
+		gameRunner.shadow(this.pos.x,this.pos.y,(hb[1].x-hb[0].x)/2);
+	}
+}
+//#endregion

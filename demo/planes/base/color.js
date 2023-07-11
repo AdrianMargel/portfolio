@@ -2,8 +2,7 @@ let COLOR={
 	RGB:"rgb",
 	REAL:"real",
 	HSV:"hsv",
-	HSL:"hsl",
-	HCL:"hcl"//TODO
+	HSL:"hsl"
 };
 
 class Color extends Vector{
@@ -19,6 +18,9 @@ class Color extends Vector{
 				super(0,0,0,0);
 				this.fromHex(r);
 				this.space=COLOR.RGB;
+			}else if(r instanceof Color){
+				super(r.x,r.y,r.z,r.a);
+				this.space=r.space;
 			}else{
 				super(...r);
 				this.pad([0,0,0,a]);
@@ -182,7 +184,7 @@ class Color extends Vector{
 				this.z=v;
 				break;
 			}
-			case COLOR.HSV:
+			case COLOR.HSL:
 			{
 				var max=Math.max(r,g,b),
 					min=Math.min(r,g,b),
@@ -218,12 +220,14 @@ class Color extends Vector{
 		return this;
 	}
 	fromHex(hex){
+		//TODO: handle short hexes
 		this.space=COLOR.RGB;
 		var result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
 		this.x=parseInt(result[1],16)/255;
 		this.y=parseInt(result[2],16)/255;
 		this.z=parseInt(result[3],16)/255;
 		this.w=parseInt(result[4]??"FF",16)/255;
+		return this;
 	}
 	toHex(){
 		function limit(a){
@@ -245,12 +249,14 @@ class Color extends Vector{
 		this.x=Math.pow(this.x,gammaExp);
 		this.y=Math.pow(this.y,gammaExp);
 		this.z=Math.pow(this.z,gammaExp);
+		return this;
 	}
 	gammaShift(){
 		let gammaExp=2.2;
 		this.x=Math.pow(this.x,gammaExp);
 		this.y=Math.pow(this.y,gammaExp);
 		this.z=Math.pow(this.z,gammaExp);
+		return this;
 	}
 	toString(){
 		return this.toHex();
@@ -258,8 +264,76 @@ class Color extends Vector{
 	cln(){
 		return new Color(this);
 	}
+
+	// z
+	get r(){
+		return this.array[0]??0;
+	}
+	get h(){
+		return this.array[0]??0;
+	}
+
+	set r(val){
+		return this.array[0]=val;
+	}
+	set h(val){
+		return this.array[0]=val;
+	}
+
+	// y
+	get g(){
+		return this.array[1]??0;
+	}
+	get s(){
+		return this.array[1]??0;
+	}
+	get c(){
+		return this.array[1]??0;
+	}
+
+	set g(val){
+		return this.array[1]=val;
+	}
+	set s(val){
+		return this.array[1]=val;
+	}
+	set c(val){
+		return this.array[1]=val;
+	}
+
+	// z
+	get b(){
+		return this.array[2]??0;
+	}
+	get v(){
+		return this.array[2]??0;
+	}
+	get l(){
+		return this.array[2]??0;
+	}
+
+	set b(val){
+		return this.array[2]=val;
+	}
+	set v(val){
+		return this.array[2]=val;
+	}
+	set l(val){
+		return this.array[2]=val;
+	}
+
+	// w
+	get a(){
+		return this.array[3]??0;
+	}
+	set a(val){
+		return this.array[3]=val;
+	}
 }
 
+function Col(...data){
+	return new Color(...data);
+}
 function rgb(...rgba){
 	return new Color(...rgba);
 }

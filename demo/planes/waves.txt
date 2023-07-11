@@ -1,55 +1,23 @@
-Objective: survive 5 minutes
--30	30
--30	1:00
--30	1:30
--30	2:00
--1:00 *	3:00
-
--30	3:30
--30	4:00
--30	4:30
--30	5:00
-Objective: defeat the boss
-- -- ** (*x3)
-
-Objective: survive 15 minutes
--1:00	1:00
--1:00 *	2:00
--1:00	3:00
--1:00 *	4:00
--1:00	5:00
--1:00 *	6:00
--1:30 **7:30
--1:00 * 8:30
--1:30 **10:00
-Final Objective: defeat the boss
-- -- ***
-
-Endless
-
 TODO:
--looping
--framerate
--render optimization
--max view distance/zoom
--refactor entity classes
--sound/music
--nuke explosions
 
--make sure simulation matches display
--allow clouds to extend below water
--set particle maximums
-
--don't render offscreen
--hitboxes/gun positions
--bouyancy
--settings
--menu/ui
--loading
--mobile
--cursor
--stars/low background
--animals
 -the rest of the game
+	-save/progress
+-menu/ui
+	-pause
+		-exit
+	-selection for difficulty scaling
+	-graphics settings
+-settings
+-loading
+-tracking
+-seo
+
+-endless mode
+-sound/music
+-mobile
+
+-pod racer frame studdering physics
 -sea serpent > dragon > mecha dragon
+-more interesting mothership
+-mothership in the sky easteregg
 

@@ -1,7 +1,9 @@
 body{
 	overflow: hidden;
 	background-color: #EFE9D7;
+	background-color: black;
 	/*background: radial-gradient(#EFE9D7 20%, #E2D9C3 100%);*/
+	font-family: 'Nunito', sans-serif;
 }
 #canvasContainer{
 	position: absolute;
@@ -17,5 +19,11 @@ body{
 	height: 100vh;
 }
 canvas{
-	/* image-rendering: pixelated; */
+	image-rendering: pixelated;
+}
+button{
+	user-select: none;
+}
+.hidden{
+	display:none;
 }
