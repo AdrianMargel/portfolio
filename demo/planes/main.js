@@ -49,6 +49,7 @@ async function animation(timestamp) {
 	// gameRunner.run(gameDisplay,gameControl,.34);
 	// gameRunner.run(gameDisplay,gameControl,.34);
 	
+	// if(Math.random()<.05)
 	// await sleep(1000*(3/60));
 
 	gameRunner.display(gameDisplay,gameControl,renderer,background,animAmount);
@@ -66,14 +67,34 @@ function sleep(ms){
 
 let showPlaneSelector=bind(true);
 let showGameOver=bind(false);
+let showWin=bind(false);
+let showSettings=bind(false);
+let paused=bind(false);
 let waveNum=bind(1);
+let soundMuted=bind(true);
+let soundVolume=bind(.15);
+let musicVolume=bind(.5);
 let playerHealth=bind(1);
 let playerMaxHealth=bind(1);
+
+let soundLink=link(()=>gameRunner.sounds.setVolume(soundVolume.data),soundVolume);
+let musicLink=link(()=>gameRunner.music.setVolume(musicVolume.data),musicVolume);
+soundLink();
+musicLink();
+
 // Populate page html
 let uiBody=html`
 	${new TopDisplay(showPlaneSelector,waveNum,playerHealth,playerMaxHealth)}
-	${new PlaneSelector(showPlaneSelector)}
+	${new PlaneSelector(showPlaneSelector,soundMuted)}
 	${new GameOverMenu(showGameOver,waveNum)}
+	${new GameWinMenu(showWin,waveNum)}
+	${new PauseMenu(paused,soundMuted)}
+	${new SettingsMenu(showSettings,soundVolume,musicVolume)}
 `().data;
 addElm(uiBody,document.body);
 uiBody.disolve();
+
+function gimmeMoney(){
+	console.log(";)")
+	gameRunner.pay(1000000000);
+}

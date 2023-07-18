@@ -28,6 +28,7 @@ let ORDER_VARS=function(){
 	let player=gameRunner.getPlayer();
 	let playerPos=player.getPos(pos);
 	let playerAng=player.angle;
+	let playerVelo=player.velo.cln();
 	return{
 		pos,
 		ang,
@@ -36,6 +37,7 @@ let ORDER_VARS=function(){
 		velo,
 		playerPos,
 		playerAng,
+		playerVelo
 	}
 
 }
@@ -383,7 +385,7 @@ class SwarmerAI extends BasicAI{
 		}=ORDER_FUNCS;
 
 		//Connections
-		this.tryConnect("head","swarmer","tail",1000,(conSelf,conTarget)=>{
+		this.tryConnect("head","swarmer","tail",2000,(conSelf,conTarget)=>{
 			let head=conTarget.parent;
 			let conChain=head.chain;
 			if(conChain==this.chain){
@@ -961,5 +963,46 @@ class MothershipAI extends BasicAI{
 			});
 		}
 		super.disconnect(connectionId);
+	}
+}
+class SpaghettiAI extends BasicAI{
+	constructor(body){
+		super(body);
+		this.time=0;
+		this.heightLimit=-30000;
+		this.despawnLimit=-25000;
+	}
+	run(timeStep){
+		//Setup
+		let {
+			pos,ang,dir,speed,
+			playerPos,playerAng,playerVelo
+		}=ORDER_VARS.call(this);
+		let {
+			move,moveDir,face,faceAng,shoot,boost,special,
+			heightLimit,
+			circle,
+			inside,outside,on,
+		}=ORDER_FUNCS;
+
+		this.time+=timeStep;
+
+		//Orders
+		let p=playerPos.cln().add(Vec(0,-500));
+		p.y=Math.min(p.y,this.heightLimit);
+		if(playerPos.mag(pos)>10000){
+			this.body.pos=pos.cln().sub(playerPos).lim(9000).add(playerPos);
+		}
+		this.order(move(p));
+		if(this.time>200){
+			if(playerPos.y>this.despawnLimit){
+				this.body.kill();
+			}
+		}
+		if(playerPos.y<this.heightLimit){
+			let player=gameRunner.getPlayer();
+			player.velo.lim(4);
+			player.velo.add(Vec(0,(this.heightLimit-playerPos.y)*timeStep));
+		}
 	}
 }

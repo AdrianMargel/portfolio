@@ -27,6 +27,7 @@ class Entity extends EntityBase{
 		this.buoyancy=Vec(0,0.2);
 		this.waveSize=0.5;
 		this.splashSize=1;
+		this.hasBubbles=true;
 		this.bubbleTime=0;
 		this.bubbleMax=40;
 		
@@ -130,23 +131,24 @@ class Entity extends EntityBase{
 			this.velo.scl(this.resistanceWater**timeStep);
 			slowed.sub(this.velo);
 			let strength=slowed.mag();
-			gameRunner.wave(this.pos.x,this.pos.y,100,strength*this.waveSize);
+			gameRunner.wave(this.pos.x,this.pos.y,100,Math.min(strength*this.waveSize,5));
 			if(!this.submerged){
-				let splash=strength*this.splashSize;
+				let splash=Math.min(strength*this.splashSize,10);
 				gameRunner.splash(this.pos.x,this.pos.y,slowed.x/timeStep,slowed.y/timeStep,splash/timeStep);
 			}
 			this.submerged=true;
 			this.velo.add(this.buoyancy.cln().scl(timeStep));
 		
-			//TODO: improve this to account for speed
-			if(this.bubbling&&strength>0.3&&this.bubbleTime<this.bubbleMax){
-				this.bubbleTime++;
-				gameRunner.bubbles(this.pos.x,this.pos.y,0,0,
-					(strength-0.5)*10*(1-this.bubbleTime/this.bubbleMax)
-				);
-			}else{
-				this.bubbleTime=0;
-				this.bubbling=false;
+			if(this.hasBubbles){
+				if(this.bubbling&&strength>0.3&&this.bubbleTime<this.bubbleMax){
+					this.bubbleTime++;
+					gameRunner.bubbles(this.pos.x,this.pos.y,0,0,
+						(strength-0.5)*10*(1-this.bubbleTime/this.bubbleMax)
+					);
+				}else{
+					this.bubbleTime=0;
+					this.bubbling=false;
+				}
 			}
 		}else{
 			this.bubbling=true;

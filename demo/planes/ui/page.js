@@ -2,7 +2,7 @@ let planeSelection=[
 	{
 		id:"jet",
 		unlockPrice:0,
-		upgradePrice:500,
+		upgradePrice:5000,
 		levels:{
 			0:{name:"Wright Flyer",description:"A little more complicated than a bicycle",spawnClass:WrightFlyer,baseLevel:1},
 			1:{name:"Fighter Jet",description:"Cup holders not included",spawnClass:Jet},
@@ -12,7 +12,7 @@ let planeSelection=[
 	{
 		id:"biplane",
 		unlockPrice:0,
-		upgradePrice:500,
+		upgradePrice:5000,
 		spawnClass:Biplane,
 		levels:{
 			0:{name:"Nullplane",description:"Who needed wings anyway?"},
@@ -30,8 +30,8 @@ let planeSelection=[
 	},
 	{
 		id:"warplane",
-		unlockPrice:2000,
-		upgradePrice:500,
+		unlockPrice:20000,
+		upgradePrice:5000,
 		levels:{
 			0:{name:"Buzz Bomb",description:"You're the bomb!",spawnClass:BuzzBomb,isSpecial:true,baseLevel:1},
 			1:{name:"War Plane",description:"They just don't make em' like they used to.",spawnClass:WarPlane},
@@ -40,19 +40,19 @@ let planeSelection=[
 	},
 	{
 		id:"bomber",
-		unlockPrice:4000,
-		upgradePrice:1000,
+		unlockPrice:24000,
+		upgradePrice:6000,
 		spawnClass:Bomber,
 		levels:{
-			0:{name:"Hippie Bomber",description:"The planet is your friend",baseLevel:1},
+			0:{name:"Hippie Bomber",description:"The planet is your friend",rainbowExplosions:true},
 			1:{name:"Bomber",description:"Gravity is your friend"},
 			5:{name:"Black Bird",description:"You don't need friends.",spawnClass:BlackBird,baseLevel:1},
 		}
 	},
 	{
 		id:"helicopter",
-		unlockPrice:6000,
-		upgradePrice:1500,
+		unlockPrice:28000,
+		upgradePrice:7000,
 		spawnClass:Helicopter,
 		levels:{
 			0:{name:"Helicopter?",description:"Something seems... wrong..."},
@@ -62,8 +62,8 @@ let planeSelection=[
 	},
 	{
 		id:"hotairballoon",
-		unlockPrice:8000,
-		upgradePrice:2000,
+		unlockPrice:32000,
+		upgradePrice:8000,
 		levels:{
 			0:{name:"Flying House",description:"A short-lived adventure",spawnClass:FlyingHouse,baseLevel:1},
 			1:{name:"Hot Air Balloon",description:"Whimsical tranquility",spawnClass:HotAirBalloon},
@@ -72,8 +72,8 @@ let planeSelection=[
 	},
 	{
 		id:"flyingfortress",
-		unlockPrice:10000,
-		upgradePrice:2500,
+		unlockPrice:36000,
+		upgradePrice:9000,
 		levels:{
 			0:{name:"Air Liner",description:"King of the skies!",spawnClass:AirLiner,baseLevel:1},
 			1:{name:"Flying Fortress",description:"Like a castle in the sky",spawnClass:FlyingFortress},
@@ -82,8 +82,8 @@ let planeSelection=[
 	},
 	{
 		id:"triebflugel",
-		unlockPrice:12000,
-		upgradePrice:3000,
+		unlockPrice:40000,
+		upgradePrice:10000,
 		levels:{
 			0:{name:"???",description:"It looks hungry...",spawnClass:MadBall,isSpecial:true,baseLevel:1},
 			1:{name:"Triebflugel",description:"German engineering at its finest",spawnClass:Triebflugel},
@@ -92,8 +92,8 @@ let planeSelection=[
 	},
 	{
 		id:"podracer",
-		unlockPrice:14000,
-		upgradePrice:3500,
+		unlockPrice:44000,
+		upgradePrice:11000,
 		spawnClass:PodRacer,
 		levels:{
 			0:{name:"Pod",description:"Good luck"},
@@ -102,16 +102,34 @@ let planeSelection=[
 	},
 	{
 		id:"nyancat",
-		unlockPrice:16000,
-		upgradePrice:4000,
+		unlockPrice:50000,
+		upgradePrice:12500,
 		levels:{
 			0:{name:"Flappy Bird",description:"Boing! Boing! Boing!",spawnClass:FlappyBird,baseLevel:1},
-			1:{name:"Nyan Cat",description:"Nyan nyan nyan nyan nyan nyan...",spawnClass:NyanCat},
+			1:{name:"Nyan Cat",description:"Nyan nyan nyan nyan nyan nyan...",spawnClass:NyanCat,rainbowExplosions:true},
+		}
+	},
+	{
+		id:"dragon",
+		unlockPrice:1000000,
+		upgradePrice:-1,//-1 used to indicate no upgrades
+		spawnClass:Dragon,
+		levels:{
+			1:{name:"Dragon",description:"Let nothing stand in your way"},
+		}
+	},
+	{
+		id:"spaghetti",
+		unlockPrice:0,
+		upgradePrice:-1,//-1 used to indicate no upgrades
+		spawnClass:SpaghettiMonster,
+		levels:{
+			1:{name:"Spagootz",description:""},
 		}
 	},
 ];
 let playerProgress=bind({
-	coins:0,
+	coins:100000000,
 	unlocks:[
 		{//jet
 			unlockedLevel:1,
@@ -153,25 +171,42 @@ let playerProgress=bind({
 			unlockedLevel:0,
 			selectedLevel:1
 		},
+		{//dragon
+			unlockedLevel:0,
+			selectedLevel:1
+		},
+		{//spaghetti
+			hidden:true,
+			unlockedLevel:0,
+			selectedLevel:1
+		},
 	],
 });
+function unlockSpaghetti(){
+	playerProgress.unlocks[11].hidden.data=false;
+}
 
 class CoinDisplay extends CustomElm{
-	constructor(coins){
+	constructor(coins,useLetters=true){
 		super();
 		coins=bind(coins);
 		this.define(html`
-			${html`${()=>this.formatNum(coins.data)}`(coins)}<div class="coin"></div>
+			${html`${()=>this.formatNum(coins.data,useLetters)}`(coins)}<div class="coin"></div>
 		`);
 	}
-	formatNum(x){
+	formatNum(x,useLetters){
 		let letter="";
-		if(x>=1000000){
-			x/=1000000;
-			letter=" M";
-		}else if(x>=100000){
-			x/=1000;
-			letter=" K";
+		if(useLetters){
+			if(x>=1000000000){
+				x/=1000000000;
+				letter=" B";
+			}else if(x>=1000000){
+				x/=1000000;
+				letter=" M";
+			}else if(x>=100000){
+				x/=1000;
+				letter=" K";
+			}
 		}
 		x=Math.ceil(x*100)/100;
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+letter;
@@ -263,7 +298,7 @@ defineElm(ButtonPrice,scss`&{
 }`);
 
 class PlaneSelector extends CustomElm{
-	constructor(show){
+	constructor(show,muted){
 		super();
 		show=bind(show);
 		let level=bind(1);
@@ -277,7 +312,7 @@ class PlaneSelector extends CustomElm{
 			if(plane.baseLevel){
 				realLevel=(level.data-planeLevel)+plane.baseLevel;
 			}
-			gameRunner.spawnPlayer(plane.spawnClass??baseSpawnClass,realLevel,plane.isSpecial??false);
+			gameRunner.spawnPlayer(plane.spawnClass??baseSpawnClass,realLevel,plane.isSpecial??false,plane.rainbowExplosions??false);
 		}
 		let levelDown=()=>{
 			let progress=this.getProgress(idx.data);
@@ -287,21 +322,25 @@ class PlaneSelector extends CustomElm{
 		};
 		let levelUp=()=>{
 			let progress=this.getProgress(idx.data);
+			progress.selectedLevel.data=level.data+1;
+			progress.unlockedLevel.data=Math.max(level.data+1,progress.unlockedLevel.data);
 			level.data+=1;
-			progress.selectedLevel.data=level.data;
-			progress.unlockedLevel.data=Math.max(level.data,progress.unlockedLevel.data);
 			spawnPlane();
 		};
 		let prevIdx=()=>{
+			idx.lock();
 			idx.data=mod(idx.data-1,planeSelection.length);
 			let progress=this.getProgress(idx.data);
 			level.data=progress.selectedLevel.data;
+			idx.unlock();
 			spawnPlane();
 		}
 		let nextIdx=()=>{
+			idx.lock();
 			idx.data=mod(idx.data+1,planeSelection.length);
 			let progress=this.getProgress(idx.data);
 			level.data=progress.selectedLevel.data;
+			idx.unlock();
 			spawnPlane();
 		}
 		let unlock=()=>{
@@ -317,21 +356,39 @@ class PlaneSelector extends CustomElm{
 				show.data=false;
 			}
 		}
+		let openSettings=()=>{
+			showSettings.data=true;
+		}
+		let toggleVolume=()=>{
+			muted.data=!muted.data;
+			if(muted.data){
+				gameRunner.sounds.mute();
+				gameRunner.music.mute();
+			}else{
+				gameRunner.sounds.unmute();
+				gameRunner.music.unmute();
+			}
+		}
 		let unlockPrice=bind(0);
 		let upgradePrice=bind(0);
 		let downgradePrice=bind(0);
 		let unlockBtn=new ButtonPrice(unlockPrice,unlock);
 		let upgradeBtn=new ButtonPrice(upgradePrice,levelUp);
 		let downgradeBtn=new ButtonPrice(downgradePrice,levelDown);
+
 		this.attr("class",()=>show.data?"":"hidden")(show);
 		this.define(html`
 			${()=>{
 				let plane=this.getPlane(idx.data,level.data);
 				let progress=this.getProgress(idx.data);
+
 				let upPrice=level.data*(level.data+1)*planeSelection[idx.data].upgradePrice/2;
-				if(level.data>=5){
-					upPrice*=2;
+				if(level.data>5){
+					upPrice=(level.data-5)*10000;
+				}else if(level.data==5){
+					upPrice*=4;
 				}
+				let noUpgrades=planeSelection[idx.data].upgradePrice==-1;
 
 				unlocked.data=progress.unlockedLevel.data>0;
 				unlockPrice.data=planeSelection[idx.data].unlockPrice;
@@ -341,7 +398,11 @@ class PlaneSelector extends CustomElm{
 				<div>
 					<div class="top">
 						<div>
-							<h1>Unlimited Skies</h1>
+							<img src="img/logo.png"/>
+							<div class="settings">
+								<button onclick=${attr(act(toggleVolume))} class=${attr(()=>muted.data?"muted":"unmuted")}></button>
+								<button onclick=${attr(act(openSettings))} class="gear"></button>
+							</div>
 							<div class="play ${!unlocked.data?"locked":""}">
 								${new ButtonClickable("PLAY",tryPlay)}
 							</div>
@@ -358,13 +419,13 @@ class PlaneSelector extends CustomElm{
 					<div class="next">
 						<button
 							onclick=${attr(act(nextIdx))}
-							class="${(idx.data==planeSelection.length-1)?"hidden":""}"
+							class="${(idx.data==planeSelection.length-1||(this.getProgress(idx.data+1).hidden?.data??false))?"hidden":""}"
 						>
 							>
 						</button>
 					</div>
 					<div class="bottom">
-						<span class="level">lv ${level}</span>
+						<span class="level"><span>lv ${level}</span></span>
 						<span class="name">${plane.name}</span>
 						<span class="description">${plane.description}</span>
 						${()=>{
@@ -374,7 +435,7 @@ class PlaneSelector extends CustomElm{
 									Unlock
 									${unlockBtn}
 								</div>`
-							}else{
+							}else if(!noUpgrades){
 								return html`
 								<div class="bar">
 									${()=>Array(Math.max(5,progress.unlockedLevel.data)).fill().map((_,i,arr)=>
@@ -389,12 +450,14 @@ class PlaneSelector extends CustomElm{
 									)}
 								</div>
 								<div class="upgrades">
-									<div class="down ${level.data==0?"hidden":""}">
-										Level Down
-										${downgradeBtn}
+									<div class="down">
+										<span class="${level.data==0?"hidden":""}">
+											Level Down
+											${downgradeBtn}
+										</span>
 									</div>
 									<div class="up">
-										Level Up
+										${level.data>5?"; )":"Level Up"}
 										${upgradeBtn}
 									</div>
 								</div>`;
@@ -403,7 +466,7 @@ class PlaneSelector extends CustomElm{
 					</div>
 				<div>`;
 			}}
-		`(idx,level,coins,unlocked));
+		`(idx,level,coins,unlocked,muted));
 	}
 	getPlane(idx,level){
 		let levels=planeSelection[idx].levels;
@@ -503,14 +566,46 @@ defineElm(PlaneSelector,scss`&{
 			bottom:200px;
 			${theme.center}
 			>div{
-				font-size:60px;
-				font-family: 'Fredoka One', sans-serif;
 				text-align:center;
-				${theme.mobile}{
-					font-size:40px;
+				>img{
+					${theme.mobile}{
+						width:300px;
+					}
+				}
+				>.settings{
+					${theme.center}
+					>button{
+						&.muted{
+							background-image:url("img/volume-xmark.svg");
+							background-position:center;
+							background-repeat:no-repeat;
+							background-size:30px;
+						}
+						&.unmuted{
+							background-image:url("img/volume-high.svg");
+							background-position:center;
+							background-repeat:no-repeat;
+							background-size:34px;
+						}
+						&.gear{
+							background-image:url("img/gear.svg");
+							background-position:center;
+							background-repeat:no-repeat;
+							background-size:26px;
+						}
+						width:50px;
+						height:50px;
+						${theme.center}
+						font-size:30px;
+						background:none;
+						border:none;
+						&:hover{
+							background-color:#00000050;
+						}
+					}
 				}
 				>.play{
-					margin-top:40px;
+					margin-top:20px;
 					>${ButtonClickable}{
 						>button{
 							background-color: ${hsv(.35,.7,.6)};
@@ -533,6 +628,9 @@ defineElm(PlaneSelector,scss`&{
 				text-align:center;
 				font-weight:700;
 				font-size: 20px;
+				text-shadow:
+					0 0 4px #ffffff,
+					0 0 3px #ffffff;
 
 				>${ButtonPrice}{
 					margin-top:20px;
@@ -581,6 +679,9 @@ defineElm(PlaneSelector,scss`&{
 					font-weight:700;
 					font-size: 20px;
 					text-align:center;
+					text-shadow:
+						0 0 4px #ffffff,
+						0 0 3px #ffffff;
 					>${ButtonPrice}{
 						margin-top:20px;
 						>button{
@@ -605,7 +706,10 @@ defineElm(PlaneSelector,scss`&{
 					font-weight:700;
 					font-size: 20px;
 					text-align:center;
-					>${ButtonPrice}{
+					text-shadow:
+						0 0 4px #ffffff,
+						0 0 3px #ffffff;
+					${ButtonPrice}{
 						margin-top:20px;
 						>button{
 							background-color: ${hsv(0,.6,.6)};
@@ -631,15 +735,27 @@ defineElm(PlaneSelector,scss`&{
 				&.description{
 					font-size: 20px;
 					margin-bottom:20px;
+					text-shadow:
+						0 0 4px #ffffff,
+						0 0 3px #ffffff;
 				}
 				&.name{
 					font-size: 40px;
 					font-family: 'Fredoka One', sans-serif;
 					margin-bottom:20px;
+					margin-top:5px;
+					color:white;
+					text-shadow:
+						0 0 5px #000;
 				}
 				&.level{
 					font-size: 20px;
 					font-family: 'Fredoka One', sans-serif;
+					>span{
+						background-color:white;
+						border-radius:8px;
+						padding: 0px 10px;
+					}
 				}
 				${theme.mobile}{
 					&.description{
@@ -666,7 +782,7 @@ class HealthBar extends CustomElm{
 		maxHp=bind(maxHp);
 		this.define(html`
 			<div class="health">
-				<div style=${attr(()=>"width:"+(hp.data/maxHp.data*100)+"%")(hp,maxHp)}></div>
+				<div style=${attr(()=>"width:"+Math.max(hp.data/maxHp.data*100,0)+"%")(hp,maxHp)}></div>
 			</div>
 		`);
 	}
@@ -696,7 +812,7 @@ class TopDisplay extends CustomElm{
 				<div class="wave"><span>wave</span> ${html`${waveNum}`(waveNum)}/20</div>
 				${new HealthBar(hp,maxHp)}
 			</div>
-			${new CoinDisplay(coins)}
+			${new CoinDisplay(coins,false)}
 		`);
 	}
 	getCoins(){
@@ -736,18 +852,130 @@ defineElm(TopDisplay,scss`&{
 }`);
 
 class PauseMenu extends CustomElm{
-	constructor(text){
+	constructor(show,muted){
 		super();
-		text=bind(text);
+		show=bind(show);
+
+		let resume=()=>{
+			gameRunner.resume();
+		};
+		let end=()=>{
+			gameRunner.resume();
+			gameRunner.end();
+		};
+
+		let toggleVolume=()=>{
+			muted.data=!muted.data;
+			if(muted.data){
+				gameRunner.sounds.mute();
+				gameRunner.music.mute();
+			}else{
+				gameRunner.sounds.unmute();
+				gameRunner.music.unmute();
+			}
+		}
+		let openSettings=()=>{
+			showSettings.data=true;
+		}
+
+		this.attr("class",()=>show.data?"":"hidden")(show);
 		this.define(html`
-			<div class="surface">
-				${html`${text}`(text)}
+			<div>
+				<span class="title">PAUSED</span>
+				<div class="settings">
+					<button onclick=${attr(act(toggleVolume))} class=${attr(()=>muted.data?"muted":"unmuted")(muted)}></button>
+					<button onclick=${attr(act(openSettings))} class="gear"></button>
+				</div>
+				<span class="text">(Press F11 for fullscreen)</span>
+				${new ButtonClickable("Resume",resume)}
+				${addClass("bad",new ButtonClickable("End Game",end))}
 			</div>
 		`);
 	}
 }
 defineElm(PauseMenu,scss`&{
+	position: absolute;
+	display: block;
+	inset:0;
+	z-index:10;
+	${theme.center}
+	color:white;
 
+	>div{
+		${theme.center}
+		flex-direction:column;
+		background-color:#000000D0;
+		padding:50px 100px;
+		border-radius:20px;
+	
+		>.settings{
+			${theme.center}
+			>button{
+				&.muted{
+					background-image:url("img/volume-xmark-white.svg");
+					background-position:center;
+					background-repeat:no-repeat;
+					background-size:30px;
+				}
+				&.unmuted{
+					background-image:url("img/volume-high-white.svg");
+					background-position:center;
+					background-repeat:no-repeat;
+					background-size:34px;
+				}
+				&.gear{
+					background-image:url("img/gear-white.svg");
+					background-position:center;
+					background-repeat:no-repeat;
+					background-size:26px;
+				}
+				width:50px;
+				height:50px;
+				${theme.center}
+				font-size:30px;
+				background:none;
+				border:none;
+				margin-bottom:10px;
+				margin-top:10px;
+				&:hover{
+					background-color:#ffffff50;
+				}
+			}
+		}
+		>span{
+			display:block;
+			text-align:center;
+			&.text{
+				margin-bottom:10px;
+				font-size: 20px;
+				margin-bottom:20px;
+				user-select:none;
+			}
+			&.title{
+				font-size: 40px;
+				font-family: 'Fredoka One', sans-serif;
+				user-select:none;
+			}
+		}
+		>${ButtonClickable}{
+			margin-top:20px;
+			margin-bottom:20px;
+			>button{
+				background-color: ${hsv(.35,.7,.6)};
+				>.surface{
+					width:100px;
+					background-color: ${hsv(.35,.7,.8)};
+					white-space: nowrap;
+				}
+			}
+			&.bad>button{
+				background-color: ${hsv(0,.6,.6)};
+				>.surface{
+					background-color: ${hsv(0,.6,.8)};
+				}
+			}
+		}
+	}
 }`);
 
 class GameOverMenu extends CustomElm{
@@ -757,7 +985,6 @@ class GameOverMenu extends CustomElm{
 		waveNum=bind(waveNum);
 
 		let end=()=>{
-			console.log("test");
 			gameRunner.end();
 		};
 
@@ -805,11 +1032,13 @@ defineElm(GameOverMenu,scss`&{
 			&.subTitle{
 				font-size: 20px;
 				margin-bottom:20px;
+				user-select:none;
 			}
 			&.title{
 				font-size: 40px;
 				font-family: 'Fredoka One', sans-serif;
 				margin-bottom:20px;
+				user-select:none;
 			}
 		}
 		>${ButtonClickable}{
@@ -827,17 +1056,220 @@ defineElm(GameOverMenu,scss`&{
 
 }`);
 
-class GameDescription extends CustomElm{
-	constructor(){
+class GameWinMenu extends CustomElm{
+	constructor(show,waveNum){
 		super();
-		this.define(html`
-			<div class="surface">
+		show=bind(show);
+		waveNum=bind(waveNum);
 
+		let end=()=>{
+			gameRunner.end();
+		};
+		let endless=()=>{
+			gameRunner.endless();
+		};
+
+		this.attr("class",()=>show.data?"":"hidden")(show);
+		this.define(html`
+			<div>
+				<span class="title">You Win</span>
+				<span class="subTitle">Humanity is saved!</span>
+				<span class="subTitle">But what's this? There's a mysterious glowing button lying in the wreckage of a destroyed alien space craft.</span>
+				<span class="subTitle">It seems to be a distress beacon to summon reinforcements. Thank goodness they didn't manage to press it in time.</span>
+
+				${new ButtonClickable("Take the Win",end)}
+				<span class="subTitle">(end game)</span>
+				${addClass("bad",new ButtonClickable("Press the Button",endless))}
+				<span class="subTitle">(continue in endless)</span>
+				
 			</div>
 		`);
 	}
 }
-defineElm(GameDescription,scss`&{
+defineElm(GameWinMenu,scss`&{
+	position: absolute;
+	display: block;
+	inset:0;
+	z-index:10;
+	${theme.center}
+	color:white;
 
+	>div{
+		max-width:400px;
+		${theme.center}
+		flex-direction:column;
+		background-color:#000000D0;
+		padding:50px 100px;
+		border-radius:20px;
+	
+		>span{
+			display:block;
+			text-align:center;
+			&.subTitle{
+				font-size: 20px;
+				margin-bottom:20px;
+				margin-top:10px;
+				user-select:none;
+			}
+			&.title{
+				font-size: 40px;
+				font-family: 'Fredoka One', sans-serif;
+				margin-bottom:20px;
+				user-select:none;
+			}
+		}
+		>${ButtonClickable}{
+			margin-top:20px;
+			>button{
+				background-color: ${hsv(.35,.7,.6)};
+				>.surface{
+					width:200px;
+					background-color: ${hsv(.35,.7,.8)};
+					white-space: nowrap;
+				}
+			}
+			&.bad>button{
+				background-color: ${hsv(0,.6,.6)};
+				>.surface{
+					background-color: ${hsv(0,.6,.8)};
+				}
+			}
+		}
+	}
 }`);
 
+class VolumeControl extends CustomElm{
+	constructor(vol){
+		super();
+		this.attr("onclick",act((e)=>{
+			let toSet=e.layerX/this.offsetWidth;
+			if(toSet<.05){
+				toSet=0;
+			}else if(toSet>.95){
+				toSet=1;
+			}
+			vol.data=toSet;
+			gameRunner.sounds.laser.play(null,0,1,toSet,true);
+		}))();
+		this.define(html`<div style=${attr(()=>`width:${vol.data*100}%`)}></div>`(vol));
+	}
+}
+defineElm(VolumeControl,scss`&{
+	${theme.elementReset}
+	user-select:none;
+	cursor:pointer;
+	position: relative;
+	border:2px solid white;
+	border-radius:20px;
+	overflow:hidden;
+	height:20px;
+	>div{
+		height:20px;
+		background-color:${hsv(.35,.7,.8)};
+	}
+	&:hover{
+		border-color:${hsv(.35,.7,.8)};
+	}
+}`);
+
+class SettingsMenu extends CustomElm{
+	constructor(show,soundVolume,musicVolume){
+		super();
+		show=bind(show);
+
+		let close=()=>{
+			show.data=false;
+		};
+		let reset=()=>{
+
+		};
+
+		this.attr("class",()=>show.data?"":"hidden")(show);
+		this.define(html`
+			<div>
+				<button class="close" onclick=${attr(act(close))}>X</button>
+				<span class="title">SETTINGS</span>
+				<div>
+					<span class="subTitle">Effects Volume</span>
+					${new VolumeControl(soundVolume)}
+					<span class="subTitle">Music Volume</span>
+					${new VolumeControl(musicVolume)}
+					<span class="subTitle">Delete Saved Data (cannot be undone)</span>
+					<div class="center">${addClass("bad",new ButtonClickable("DELETE",reset))}</div>
+				</div>
+			</div>
+		`);
+	}
+}
+defineElm(SettingsMenu,scss`&{
+	position: absolute;
+	display: block;
+	inset:0;
+	z-index:10;
+	${theme.center}
+	color:white;
+	background-color:#00000050;
+
+	>div{
+		background-color:#000000D0;
+		border-radius:20px;
+		position:relative;
+		padding-top:20px;
+		
+		span{
+			display:block;
+			text-align:center;
+			&.subTitle{
+				font-size: 20px;
+				margin-bottom:20px;
+				user-select:none;
+			}
+			&.title{
+				font-size: 40px;
+				font-family: 'Fredoka One', sans-serif;
+				padding-bottom:20px;
+				border-bottom:2px solid white;
+			}
+		}
+		>.close{
+			position: absolute;
+			top:5px;
+			right:10px;
+			font-size: 40px;
+			font-family: 'Fredoka One', sans-serif;
+			background:0;
+			border:0;
+			color: ${hsv(0,.6,.8)};
+		}
+		>div{
+			padding:50px 100px;
+			padding-top:20px;
+			overflow-y:auto;
+			box-sizing:border-box;
+			max-height:calc(100vh - 200px);
+
+			.center{
+				${theme.center}
+			}
+			${VolumeControl}{
+				margin-bottom:40px;
+			}
+			${ButtonClickable}{
+				>button{
+					background-color: ${hsv(.35,.7,.6)};
+					>.surface{
+						width:100px;
+						background-color: ${hsv(.35,.7,.8)};
+						white-space: nowrap;
+					}
+				}
+				&.bad>button{
+					background-color: ${hsv(0,.6,.6)};
+					>.surface{
+						background-color: ${hsv(0,.6,.8)};
+					}
+				}
+			}
+		}
+	}
+}`);

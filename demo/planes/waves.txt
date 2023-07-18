@@ -1,23 +1,22 @@
 TODO:
 
--the rest of the game
-	-save/progress
--menu/ui
-	-pause
-		-exit
+-settings
 	-selection for difficulty scaling
 	-graphics settings
--settings
 -loading
 -tracking
--seo
+-seo/landing page
+-mobile version
 
--endless mode
--sound/music
--mobile
+-save/progress
+	-delete save
+-music*
+	-music settings*
+-particles variable framerate
 
--pod racer frame studdering physics
--sea serpent > dragon > mecha dragon
--more interesting mothership
--mothership in the sky easteregg
+-more interesting mothership?
+
+---
+
+-shader precision?
 

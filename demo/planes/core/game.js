@@ -20,12 +20,19 @@ class Game{
 		this.map=new HitMap(this.size);
 		this.cloudMap=new CloudMap(this.size);
 		this.effects=new EffectManager(this);
+		this.sounds=new SoundManager();
+		this.music=new MusicManager();
 		this.waterLine=new WaterLine(this);
 		this.shadowLine=new ShadowLine(this);
 		this.cloudSeedOffset=Math.random()*100000;
 
 		this.screenStart=Vec(0,0);
 		this.screenEnd=Vec(0,0);
+
+		this.rainbowExplosions=false;
+		this.canControl=false;
+		this.paused=false;
+		this.runSpeed=1;
 
 		this.spawnClass=Jet;
 		this.spawnLevel=1;
@@ -35,6 +42,9 @@ class Game{
 		this.messageText="";
 		this.messageTime=0;
 		this.messageCallback=null;
+
+		this.escDown=false;
+		this.queuedActions=[];
 	}
 	init(){
 		// this.player=new WrightFlyer(Vec(0,-400),-0.5);
@@ -90,11 +100,10 @@ class Game{
 		// this.player.init();
 		// this.planes.push(this.player);
 		this.spawnPlayer(Jet,1);
+		// this.spawnPlayer(HotAirBalloon,4);
 
 		sharedTextures.init(this.cloudMap);
-
-		this.rainbowExplosions=false;
-		this.canControl=false;
+		this.music.start();
 	}
 	spawnPlayer(spawnClass,level,isSpecial=false,rainbowExplosions=false){
 		if(!this.canControl){
@@ -117,25 +126,57 @@ class Game{
 	pay(amount){
 		playerProgress.coins.data+=Math.ceil(amount/this.difficultyScale);
 	}
+	pause(){
+		if(this.canControl&&!this.pausedControl){
+			paused.data=true;
+			this.paused=true;
+			this.sounds.pause();
+		}
+	}
+	resume(){
+		paused.data=false;
+		this.paused=false;
+		this.sounds.resume();
+	}
 	start(){
 		if(!this.canControl){
+			this.pausedControl=false;
 			this.canControl=true;
 			this.director.nextWave();
 			showPlaneSelector.data=false;
+			
+			//randomize cloud seed every time
+			this.cloudSeedOffset=Math.random()*100000;
 		}
 	}
 	gameOver(){
 		if(this.canControl){
 			this.canControl=false;
 			this.director.gameOver();
+			showWin.data=false;
 			showGameOver.data=true;
 		}
 	}
+	gameWin(){
+		if(this.canControl&&!showGameOver.data){
+			this.pausedControl=true;
+			showWin.data=true;
+		}
+	}
+	endless(){
+		this.pausedControl=false;
+		this.director.nextWave();
+		showWin.data=false;
+	}
 	end(){
+		this.pausedControl=false;
 		this.canControl=false;
 		this.director.end();
 		showPlaneSelector.data=true;
 		showGameOver.data=false;
+		showWin.data=false;
+
+		this.player.die(false);
 
 		this.planes=[];
 		this.aliens=[];
@@ -143,9 +184,23 @@ class Game{
 		this.aBullets=[];
 		this.specials=[];
 		this.resetZoom();
-		this.spawnPlayer(this.spawnClass,this.spawnLevel,this.spawnSpecial);
+		this.spawnPlayer(this.spawnClass,this.spawnLevel,this.spawnSpecial,this.spawnRainbowExplosions);
 	}
-	run(disp,ctrl,timeStep){
+	run(disp,ctrl,timeStep,runSpeed){
+		this.runSpeed=runSpeed;
+		let escPress=ctrl.pressedKeys["27"]&&!this.escDown;
+		this.escDown=ctrl.pressedKeys["27"];
+		if(escPress){
+			if(showSettings.data){
+				showSettings.data=false;
+			}else if(this.paused){
+				this.resume();
+				return;
+			}
+		}
+		if(this.paused){
+			return;
+		}
 		this.time+=timeStep;
 
 		this.map.prime();
@@ -154,10 +209,15 @@ class Game{
 
 		if(this.player.isAlive()){
 			if(this.canControl){
-				this.player.face(ctrl.getMouse(disp.cam),timeStep);
-				if(ctrl.mouseDown){
-					this.player.shoot(this.pBullets,timeStep);
-					this.player.boost(timeStep);
+				if(!this.pausedControl){
+					this.player.face(ctrl.getMouse(disp.cam),timeStep);
+					if(ctrl.mouseDown){
+						this.player.shoot(this.pBullets,timeStep);
+						this.player.boost(timeStep);
+					}
+					if(escPress){
+						this.pause();
+					}
 				}
 			}else{
 				this.player.forcePos(Vec(0,-250));
@@ -168,6 +228,7 @@ class Game{
 		playerHealth.data=this.player.health;
 		playerMaxHealth.data=this.player.maxHealth;
 
+		this.sounds.prime();
 		runAndFilter(this.planes,a=>{
 			a.prime();
 			a.run(timeStep);
@@ -209,8 +270,19 @@ class Game{
 		this.map.collide();
 		
 		this.waterLine.run(timeStep);
+		
+		this.queuedActions.forEach(a=>a(this));
+		this.queuedActions=[];
+	}
+	//used to run logic after the run step, this is useful if an item in array needs to add to it's own array
+	//for example a plane spawning new planes
+	queueAction(func){
+		this.queuedActions.push(func);
 	}
 	bombExplode(x,y,strength,damage){
+		let soundStrength=clamp(strength,1,10);
+		gameRunner.sounds.bang.play(Vec(x,y),0,1/soundStrength*random(1,1.2),soundStrength/3);
+
 		let radius=strength*50;
 		let duration=10+strength*2;
 		let hasTrail=radius<200;
@@ -337,7 +409,7 @@ class Game{
 		// this.displayDistanceFields(disp,ctrl);
 		// this.displayDistanceZeros(disp,ctrl);
 
-		if(this.canControl){
+		if(this.canControl&&!this.pausedControl&&!this.paused){
 			this.displayUI(disp,ctrl);
 			this.director.display(disp,ctrl);
 		}
@@ -371,7 +443,7 @@ class Game{
 		let minSize=1000;
 		let maxSize=8000;
 
-		if(this.canControl){
+		if(this.canControl&&!this.pausedControl&&!this.paused){
 			if(this.player.zoomType=="velo"){
 				let avgVelo=this.player.velo.mag();
 				this.averageZoom(clamp((avgVelo-10)/(40-10),0.2,1),timeStep);

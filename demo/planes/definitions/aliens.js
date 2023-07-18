@@ -184,6 +184,8 @@ class Alien extends Entity{
 		this.offset=Vec(0,0);
 		this.displayOffset=this.offset.cln();
 
+		this.hasBubbles=false;
+
 		this.head=null;
 	}
 	init(){
@@ -214,6 +216,7 @@ class Alien extends Entity{
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/5*random(1,1.2));
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -244,6 +247,7 @@ class Alien extends Entity{
 			pPos.add(this.pos);
 			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.laser.play(this.pos,0,1*random(1,1.2));
 		}
 	}
 
@@ -353,7 +357,7 @@ class Swarmer extends Alien{
 		this.resistance=0.8;
 		this.resistanceWater=0.8;
 
-		this.splashSize=1;
+		this.splashSize=.5;
 		this.waveSize=0.1;
 
 		this.cooldownMax=10;
@@ -379,6 +383,7 @@ class Swarmer extends Alien{
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,2);
+		gameRunner.sounds.bang.play(this.pos,0,5/2*random(1,1.2));
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -457,6 +462,7 @@ class Arrow extends Alien{
 				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 			}
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.laser.play(this.pos,0,.6*random(1,1.2));
 		}
 	}
 }
@@ -571,9 +577,11 @@ class StarGunner extends Alien{
 			let pVelo;
 			if(this.isForward){
 				pVelo=VecA(s,this.angle+ra);
+				gameRunner.sounds.laser.play(this.pos,0,1.5*random(1,1.2));
 			}else{
 				pVelo=VecA(s,this.angle+ra+PI);
 				this.shove(pVelo.cln().nrm(-this.kickBack));
+				gameRunner.sounds.laser.play(this.pos,0,1*random(1,1.2));
 			}
 			pVelo.add(this.velo);
 			let pPos=VecA(0,0);
@@ -668,6 +676,7 @@ class Wrecker extends Alien{
 	}
 	die(){
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,8);
+		gameRunner.sounds.bang.play(this.pos,0,5/8*random(1,1.2));
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -752,7 +761,7 @@ class BossSpike extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=25;
+		this.maxHealth=50;
 		this.health=this.maxHealth;
 
 		this.size=110;
@@ -812,6 +821,7 @@ class BossSpike extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/20*random(1,1.2),2);
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -884,7 +894,7 @@ class BossDrill extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=25;
+		this.maxHealth=50;
 		this.health=this.maxHealth;
 
 		this.displaySize=Vec(142,150).scl(2);
@@ -960,6 +970,7 @@ class BossDrill extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/20*random(1,1.2),2);
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -1013,6 +1024,7 @@ class BossDrill extends Alien{
 			let pPos=p.cln().rot(this.angle);
 			pPos.add(this.pos);
 			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			gameRunner.sounds.laser.play(this.pos,0,1*random(.8,1.2));
 		}
 		gunCount=6;
 		for(let i=0;i<gunCount;i++){
@@ -1033,6 +1045,7 @@ class BossDrill extends Alien{
 			let pPos=p.cln().rot(this.angle);
 			pPos.add(this.pos);
 			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			gameRunner.sounds.laser.play(this.pos,0,1*random(1,1.2));
 		}
 		gunCount=3;
 		for(let i=0;i<gunCount;i++){
@@ -1053,6 +1066,7 @@ class BossDrill extends Alien{
 			let pPos=p.cln().rot(this.angle);
 			pPos.add(this.pos);
 			bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+			gameRunner.sounds.laser.play(this.pos,0,1*random(1.2,1.2));
 		}
 		fireIdx+=Math.floor(Math.random()*2);
 		this.gunCooldown=fireIdx%this.gunCooldownMax;
@@ -1295,7 +1309,7 @@ class BossAxe extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=25;
+		this.maxHealth=50;
 		this.health=this.maxHealth;
 
 		this.size=118;
@@ -1356,6 +1370,7 @@ class BossAxe extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/20*random(1,1.2),2);
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -1375,6 +1390,7 @@ class BossAxe extends Alien{
 				pPos.add(this.pos);
 				bulletsArr.push(new AlienBulletHeavy(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
 				this.fireChainCooldown=this.fireChainCooldownMax;
+				gameRunner.sounds.laser.play(this.pos,0,.4*random(1,1.2));
 			}
 		}
 	}
@@ -1444,7 +1460,7 @@ class BossYarn extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=25;
+		this.maxHealth=50;
 		this.health=this.maxHealth;
 
 		this.size=122;
@@ -1510,6 +1526,7 @@ class BossYarn extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/20*random(1,1.2),2);
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -1527,6 +1544,7 @@ class BossYarn extends Alien{
 				let pPos=VecA(this.getSize().x,a);
 				pPos.add(this.pos);
 				bulletsArr.push(new AlienBullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange));
+				gameRunner.sounds.laser.play(this.pos,0,.8*random(1,1.2));
 			}
 			this.cooldown=this.cooldownMax;
 		}
@@ -1626,7 +1644,7 @@ class Mothership extends Alien{
 	constructor(p,a){
 		super(p,a);
 
-		this.maxHealth=150;
+		this.maxHealth=250;
 		this.health=this.maxHealth;
 
 		this.size=Vec(287,194).scl(3);
@@ -1715,6 +1733,8 @@ class Mothership extends Alien{
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
 		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+		gameRunner.sounds.bang.play(this.pos,0,5/20*random(1,1.2),2);
+		gameRunner.sounds.bang.play(this.pos,0,5/40*random(1,1.2),3);
 		if(this.head!=null){
 			this.head.die();
 		}
@@ -1737,4 +1757,241 @@ class Mothership extends Alien{
 		gameRunner.shadow(this.pos.x,this.pos.y,(hb[1].x-hb[0].x)/2);
 	}
 }
+//#endregion
+
+//#region spaghetti 
+class SpaghettiSegment extends Entity{
+	constructor(p,v,s,parent,idx){
+		super(p,v);
+		this.size=s;
+		this.parent=parent;
+		this.idx=idx;
+		this.damage=1;
+	}
+	run(){
+		this.alive=this.isAlive();
+	}
+	isAlive(){
+		return this.parent.isAlive();
+	}
+	runSpecial(arrays){
+		let a2=arrays["aliens"];
+		for(let j=0;j<a2.length;j++){
+			this.tryHit(a2[j],false,true);
+		}
+	}
+	hurt(damage,damager){
+		this.parent.hurt(damage,damager);
+	}
+	hit(target,special){
+		if(special){
+			target.hurt(this.damage,this);
+			this.parent.grow(.1);
+		}else{
+			super.hit(target);
+		}
+	}
+	display(){
+	}
+}
+//apply mixin
+Object.assign(SpaghettiSegment.prototype,shapeMixin.circ);
+
+class Spaghetti extends Entity{
+	constructor(p,v,length,width,force,hasEye=false){
+		super(p,v);
+		this.ballTexPos=Vec(808,490);
+		this.ballTexSize=Vec(30,30);
+		this.width=width;
+		this.hasEye=hasEye;
+
+		this.eyeTexPos=Vec(808,428);
+		this.eyeTexSize=Vec(30,30);
+		this.eyeSize=Vec(30,30).scl(4);
+
+		this.segments=[];
+		for(let i=0;i<length;i++){
+			this.addSegment();
+		}
+		this.time=0;
+		this.force=force.cln();
+	}
+	attach(p){
+		this.pos=p.cln();
+	}
+	run(timeStep){
+		super.run(timeStep);
+		this.time+=timeStep;
+		
+		for(let i=this.segments.length-1;i>=0;i--){
+			this.segments[i].pos.add(this.segments[i].velo.cln().scl(timeStep));
+			this.segments[i].calcHitbox();
+
+			let next=this.segments[i+1]?.pos??this.pos.cln();
+			let curr=this.segments[i].pos;
+
+			let backup=curr.cln();
+
+			curr.sub(next).lim(this.width*.25).add(next);
+
+			this.segments[i].velo.add(curr.cln().sub(backup).scl(.03));
+			let segAng=curr.ang(next)
+			let wave=Math.sin((this.time/100+i/20)*PI);
+			this.segments[i].velo.add(VecA(wave,segAng+PI/2));
+			this.segments[i].velo.add(this.force);
+			this.segments[i].velo.scl(.9**timeStep);
+		}
+
+	}
+	addSegment(){
+		let idx=this.segments.length;
+		let s=new SpaghettiSegment(this.pos.cln(),Vec(0,0),Math.min(idx*.5+20,45),this,idx).init();
+		this.segments.push(s);
+	}
+	display(disp){
+		this.segments.forEach(s=>s.display(disp));
+		let segAng=this.angle;
+		for(let x=0;x<this.segments.length;x++){
+			if(x<this.segments.length-1){
+				segAng=this.segments[x].pos.ang(this.segments[x+1].pos);
+			}
+			let width=this.width;
+			renderer.img(
+				this.segments[x].pos.x,this.segments[x].pos.y,
+				width,width,
+				segAng,
+				this.ballTexPos.x,
+				this.ballTexPos.y,
+				this.ballTexSize.x,
+				this.ballTexSize.y,
+				false,
+				0,
+				0);
+		}
+		if(this.hasEye){
+			renderer.img(
+				this.segments[0].pos.x,this.segments[0].pos.y,
+				this.eyeSize.x,this.eyeSize.y,
+				segAng,
+				this.eyeTexPos.x,
+				this.eyeTexPos.y,
+				this.eyeTexSize.x,
+				this.eyeTexSize.y,
+				false,
+				0,
+				0);
+		}
+	}
+}
+
+class SpaghettiMonster extends Alien{
+	constructor(p,a){
+		super(p,a);
+
+		this.maxHealth=1000;
+		this.health=this.maxHealth;
+
+		this.ballTexPos=Vec(748,432);
+		this.ballTexSize=Vec(59,59);
+
+		this.size=150;
+		
+		this.cooldownMax=50;
+
+		this.speed=10;
+		this.resistance=0.9;
+		this.agility=0.1;
+		this.pushSpeed=2;
+
+		this.splashSize=4;
+		this.waveSize=2;
+		this.buoyancyAdd=Vec(0,-1);
+		this.buoyancyAddDepth=1000;
+
+		let armCount=12;
+		this.arms=Array(armCount).fill().map((_,i)=>new Spaghetti(this.pos,Vec(0,0),150,50,VecA(.5,i/armCount*TAU)));
+		this.longArm1=new Spaghetti(this.pos,Vec(0,0),120,60,VecA(1,PI/2-.5));
+		this.longArm1Pos=Vec(200,0);
+		this.longArm2=new Spaghetti(this.pos,Vec(0,0),120,60,VecA(1,PI/2+.5));
+		this.longArm2Pos=Vec(-200,0);
+		this.eye1=new Spaghetti(this.pos,Vec(0,0),60,30,VecA(1,-PI/2+.5),true);
+		this.eye1Pos=Vec(100,0);
+		this.eye2=new Spaghetti(this.pos,Vec(0,0),60,30,VecA(1,-PI/2-.5),true);
+		this.eye2Pos=Vec(-100,0);
+
+		this.meatBallAng=0;
+		
+		this.zoomType="mouse";
+	}
+	die(){
+		gameRunner.splash(this.pos.x,this.pos.y,0,0,10);
+		gameRunner.bubbles(this.pos.x,this.pos.y,0,0,20);
+	}
+	shoot(){
+		
+	}
+
+	run(timeStep){
+		super.run(timeStep);
+		this.velo.add(this.buoyancyAdd.cln().scl(Math.max((this.pos.y-this.buoyancyAddDepth)/this.buoyancyAddDepth,0)));
+
+		this.arms.forEach(a=>a.attach(this.pos));
+		this.arms.forEach(a=>a.run(timeStep));
+		this.longArm1.attach(this.pos.cln().add(this.longArm1Pos));
+		this.longArm1.run(timeStep*.5);
+		this.longArm2.attach(this.pos.cln().add(this.longArm2Pos));
+		this.longArm2.run(timeStep*.5);
+		this.meatBallAng+=timeStep*.01;
+
+		this.eye1.attach(this.pos.cln().add(this.eye1Pos));
+		this.eye1.run(timeStep*.5);
+		this.eye2.attach(this.pos.cln().add(this.eye2Pos));
+		this.eye2.run(timeStep*.5);
+	}
+	display(disp){
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.size*2,this.size*2,
+			this.meatBallAng/2,
+			this.ballTexPos.x,
+			this.ballTexPos.y,
+			this.ballTexSize.x,
+			this.ballTexSize.y,
+			false,
+			0,
+			0);
+		this.arms.forEach(a=>a.display(disp));
+		this.longArm1.display(disp);
+		this.longArm2.display(disp);
+		this.eye1.display(disp);
+		this.eye2.display(disp);
+		
+		let width=240;
+		renderer.img(
+			this.longArm1Pos.x+this.pos.x,this.longArm1Pos.y+this.pos.y,
+			width,width,
+			this.meatBallAng,
+			this.ballTexPos.x,
+			this.ballTexPos.y,
+			this.ballTexSize.x,
+			this.ballTexSize.y,
+			false,
+			0,
+			0);
+		
+		renderer.img(
+			this.longArm2Pos.x+this.pos.x,this.longArm2Pos.y+this.pos.y,
+			width,width,
+			-this.meatBallAng,
+			this.ballTexPos.x,
+			this.ballTexPos.y,
+			this.ballTexSize.x,
+			this.ballTexSize.y,
+			false,
+			0,
+			0);
+	}
+}
+//apply mixin
+Object.assign(SpaghettiMonster.prototype,shapeMixin.circ);
 //#endregion

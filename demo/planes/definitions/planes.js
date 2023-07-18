@@ -12,6 +12,11 @@ class Plane extends Entity{
 
 		//Movement
 		//Thrust
+		this.thrustSound=null;
+		this.thrustSoundSpeed=1;
+		this.thrustSoundVolume=1;
+		this.thrustActive=false;
+
 		this.thrustLimit=1;
 		this.thrustRecover=0.25;
 		this.thrustPotential=15;
@@ -37,6 +42,8 @@ class Plane extends Entity{
 		this.buoyancy=Vec(0,-0.5);
 		this.waveSize=5;
 		this.splashSize=7;
+		this.buoyancyAdd=Vec(0,-.1);
+		this.buoyancyAddDepth=1000;
 
 		//Firing
 		this.cooldown=0;
@@ -68,6 +75,9 @@ class Plane extends Entity{
 		this.health*=gameRunner.playerHealthScale;
 		return super.init();
 	}
+	kill(){
+		this.health=0;
+	}
 
 	//#region run
 	/*
@@ -76,6 +86,18 @@ class Plane extends Entity{
 	*/
 	runCustom(timeStep){
 		this.velo.add(VecA(this.thrust,this.angle));
+		if(this.alive){
+			if(this.thrustActive){
+				if(this.thrustSound!=null){
+					this.thrustSound.play(this.pos,timeStep/gameRunner.runSpeed,this.thrustSoundSpeed,this.thrustSoundVolume*this.heightEfficiency());
+				}
+			}else{
+				if(this.thrustSound!=null){
+					this.thrustSound.play(this.pos,timeStep/gameRunner.runSpeed,this.thrustSoundSpeed,0);
+				}
+			}
+		}
+		this.thrustActive=false;
 		this.thrust=0;
 		if(this.thrustPotential<this.thrustPotLim){
 			this.thrustPotential+=this.thrustRecover*timeStep;
@@ -109,6 +131,10 @@ class Plane extends Entity{
 		
 		this.move(timeStep);
 	}
+	runWater(timeStep){
+		super.runWater(timeStep);
+		this.velo.add(this.buoyancyAdd.cln().scl(Math.max((this.pos.y-this.buoyancyAddDepth)/this.buoyancyAddDepth,0)));
+	}
 	//#endregion
 
 	//#region actions/events
@@ -125,6 +151,7 @@ class Plane extends Entity{
 			nrmAngPI(ang-this.angle),-this.agility*timeStep,this.agility*timeStep);
 	}
 	boost(timeStep){
+		this.thrustActive=true;
 		let bPower=Math.min(this.thrustLimit*timeStep,this.thrustPotential);
 		bPower*=this.heightEfficiency();
 		this.thrust+=bPower;
@@ -151,13 +178,20 @@ class Plane extends Entity{
 			bulletsArr.push(bullet.init());
 
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.gunshot.play(this.pos,0,1*random(1,1.2));
 		}
 	}
-	die(){
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,40);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+	die(explode=true){
+		if(explode){
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,40);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+			gameRunner.sounds.bang.play(this.pos,0,10/40*random(1,1.2));
+		}
+		if(this.thrustSound!=null){
+			this.thrustSound.play(this.pos,0.1,this.thrustSoundSpeed,0);
+		}
 	}
 	//#endregion
 
@@ -193,6 +227,9 @@ class Jet extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2.5;
+
 		this.maxHealth=500+(this.level-1)*100;
 		this.health=this.maxHealth;
 
@@ -219,6 +256,9 @@ class Jet extends Plane{
 class WrightFlyer extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=0.5;
 		
 		this.thrustLimit=0.2;
 		this.thrustRecover=0.2;
@@ -296,6 +336,9 @@ class Raptor extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2;
+
 		this.thrustLimit=1;
 		this.thrustRecover=0.4;
 		this.thrustPotential=15;
@@ -347,6 +390,9 @@ class Raptor extends Plane{
 class Biplane extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=.8;
 
 		this.wingNum=this.level+1;
 		if(this.level==0){
@@ -425,6 +471,7 @@ class Biplane extends Plane{
 			let s=this.bulletSpeed;
 			
 			let wingHeight=(this.wingNum-1)*this.wingGap.y;
+			let maxShotSounds=5;
 			for(let i=0;i<this.wingNum;i++){
 				let w=i/Math.max((this.wingNum-1),1);
 				let wingP=this.wingPos.cln();
@@ -439,6 +486,9 @@ class Biplane extends Plane{
 				let pVelo=VecA(s,this.angle+ra);
 				pVelo.add(this.velo);
 				bulletsArr.push(new Bullet(wingP,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
+				if(i<maxShotSounds){
+					gameRunner.sounds.gunshot.play(this.pos,i/Math.min(maxShotSounds,this.wingNum)*.1,1.5*random(1,1.2));
+				}
 			}
 			if(this.wingNum==0){
 				let wingP=this.wingPos.cln();
@@ -452,6 +502,7 @@ class Biplane extends Plane{
 				let pVelo=VecA(s,this.angle+ra);
 				pVelo.add(this.velo);
 				bulletsArr.push(new Bullet(wingP,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
+				gameRunner.sounds.gunshot.play(this.pos,0,1.5*random(1,1.2));
 			}
 			this.cooldown=this.cooldownMax;
 		}
@@ -563,6 +614,9 @@ class Biplane extends Plane{
 class Bomber extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+		
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2;
 
 		this.thrustLimit=0.4;
 		this.thrustRecover=0.3;
@@ -659,6 +713,9 @@ class BlackBird extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2;
+
 		this.thrustLimit=0.4;
 		this.thrustRecover=0.3;
 		this.thrustPotential=1;
@@ -749,6 +806,10 @@ class BuzzBomb extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2.5;
+		this.thrustSoundVolume=.25;
+
 		this.thrustLimit=0.4;
 		this.thrustRecover=0.4;
 		this.thrustPotential=0.4;
@@ -823,6 +884,9 @@ Object.assign(BuzzBomb.prototype,shapeMixin.rect);
 class WarPlane extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=0.6;
 
 		this.thrustLimit=1;
 		this.thrustRecover=0.3;
@@ -948,6 +1012,9 @@ class Corsair extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=0.3;
+
 		this.thrustLimit=1;
 		this.thrustRecover=0.4;
 		this.thrustPotential=10;
@@ -1008,6 +1075,7 @@ class Corsair extends Plane{
 	shoot(bulletsArr){
 		if(this.cooldown<=0){
 			let shots=Math.max(-this.cooldownMax-1,1);
+			let maxShotSounds=5;
 			for(let i=0;i<shots;i++){
 				let flip=nrmAngPI(this.angle+PI/2)<0;
 				let ra=(Math.random()-0.5)*2*this.accuracy;
@@ -1021,13 +1089,17 @@ class Corsair extends Plane{
 				pPos.rot(this.angle);
 				pPos.add(this.pos);
 				if(shots>5){
-					bulletsArr.push(new BulletExtraLite(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
+					bulletsArr.push(new BulletLite(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
+					// bulletsArr.push(new BulletExtraLite(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
 				}else if(shots>1){
 					bulletsArr.push(new BulletLite(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
 				}else{
 					bulletsArr.push(new Bullet(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
 				}
 				this.cooldown=Math.max(this.cooldownMax,0);
+				if(i<maxShotSounds){
+					gameRunner.sounds.gunshot.play(this.pos,i/Math.min(maxShotSounds,shots)*.1,random(1,1.2));
+				}
 			}
 		}
 	}
@@ -1253,6 +1325,9 @@ class Triebflugel extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2.5;
+
 		this.propNum=3;
 
 		this.thrustLimit=2;
@@ -1332,6 +1407,7 @@ class Triebflugel extends Plane{
 				engineP.rot(this.angle).add(this.pos);
 				
 				bulletsArr.push(new BulletLite(engineP,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
+				gameRunner.sounds.gunshot.play(this.pos,0,random(1,1.2));
 			}
 
 			this.cooldown=this.cooldownMax;
@@ -1489,6 +1565,10 @@ class Rocket extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=1;
+		this.thrustSoundVolume=2;
+
 		this.thrustLimit=this.level;
 		this.thrustRecover=this.level;
 		this.thrustPotential=this.level;
@@ -1497,6 +1577,9 @@ class Rocket extends Plane{
 		this.agilityMin=0.03;
 		this.agilityMax=0.03;
 		this.agilityFall=0.03;
+
+		this.ceilingStart=8000;
+		this.ceilingEnd=12000;
 		
 		this.buoyancy=Vec(0,-1.4);
 		
@@ -1517,6 +1600,8 @@ class Rocket extends Plane{
 		this.displayOffset=Vec(-19,0);
 
 		this.boosting=false;
+		this.floodTimeMax=50;
+		this.floodTime=this.floodTimeMax;
 		
 		this.damage=10;
 		this.waveSize=5;
@@ -1527,12 +1612,25 @@ class Rocket extends Plane{
 	}
 	runCustom(timeStep){
 		super.runCustom(timeStep);
+
+		let backP=VecA(-this.displaySize.x/2-50,this.angle).add(this.pos);
+		if(gameRunner.isUnderwater(backP.x,backP.y)){
+			if(this.boosting){
+				this.floodTime-=timeStep;
+				if(this.floodTime<0){
+					this.boosting=false;
+				}
+			}
+		}else{
+			this.floodTime=this.floodTimeMax;
+		}
+
 		if(this.boosting){
+			this.thrustActive=true;
 			let bPower=Math.min(this.thrustLimit*timeStep,this.thrustPotential);
 			this.thrust+=bPower;
 			this.thrustPotential-=bPower;
 
-			let backP=VecA(-this.displaySize.x/2-50,this.angle).add(this.pos);
 			gameRunner.thrust(backP.x,backP.y,this.velo.x,this.velo.y,5);
 
 			let m=this.velo.mag()*timeStep;
@@ -1544,7 +1642,7 @@ class Rocket extends Plane{
 					gameRunner.cloud(p2.x,p2.y,255,255,255,255);
 				}
 			}
-			gameRunner.pBullets.push(new DamageField(backP,this.damage,100*timeStep));
+			gameRunner.pBullets.push(new DamageField(backP,this.damage,100));
 		}
 	}
 	boost(){
@@ -1571,6 +1669,10 @@ class Rocket extends Plane{
 class Helicopter extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=0.3;
+		this.thrustSoundVolume=2;
 
 		this.thrustLimit=2;
 		this.thrustRecover=0.7;
@@ -1678,6 +1780,7 @@ class Helicopter extends Plane{
 				this.cooldown=this.cooldownMax;
 			}
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.gunshot.play(this.pos,0,random(1,1.2));
 		}
 	}
 	display(disp,renderer){
@@ -1823,6 +1926,10 @@ class AirLiner extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
 
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2.5;
+		this.thrustSoundVolume=.5;
+
 		this.thrustLimit=1;
 		this.thrustRecover=0.15;
 		this.thrustPotential=10;
@@ -1912,6 +2019,10 @@ class AirLiner extends Plane{
 class FlyingFortress extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=0.5;
+		this.thrustSoundVolume=2;
 
 		this.thrustLimit=1;
 		this.thrustRecover=0.25;
@@ -2011,6 +2122,7 @@ class FlyingFortress extends Plane{
 			bulletsArr.push(new Bullet(pPos2,pVelo2,this.bulletDamage,this.bulletSize,this.bulletRange).init());
 
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.gunshot.play(this.pos,0,random(1,1.2));
 		}
 		let flip=nrmAngPI(this.angle+PI/2)<0;
 		for(let i=0;i<this.turretAngleList.length;i++){
@@ -2029,6 +2141,7 @@ class FlyingFortress extends Plane{
 
 				bulletsArr.push(new Bullet(p,pVelo,this.turretBulletDamage,this.turretBulletSize,this.turretBulletRange).init());
 				this.turretCooldownList[i]=Math.floor((Math.random()+1)*this.turretCooldownMax);
+				gameRunner.sounds.gunshot.play(this.pos,0,1.5*random(1,1.2));
 			}else{
 				this.turretCooldownList[i]-=timeStep;
 			}
@@ -2124,6 +2237,9 @@ class FlyingCastle extends Plane{
 		this.resistanceMax=0.95;
 		this.fallResistance=0.95;
 		
+		this.ceilingStart=12000;
+		this.ceilingEnd=20000;
+		
 		this.minSpeed=10;//min speed for lift
 		this.maxSpeed=30;//speed for max efficiency
 		
@@ -2188,6 +2304,7 @@ class FlyingCastle extends Plane{
 			
 			bulletsArr.push(new BulletNuke(pPos,pVelo,this.bulletDamage,this.bulletSize,this.bulletRange).init());
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.laser.play(this.pos,0,.3*random(1,1.2));
 		}
 	}
 	display(disp,renderer){
@@ -2285,6 +2402,7 @@ class HotAirBalloon extends Plane{
 	getClosest(vec){
 		let basket=null;
 		let pos=loopVec(this.pos,vec);
+		let balloonPos=loopVec(this.balloonPos,vec);
 		{
 			let v=vec.cln().sub(pos).rot(-this.basketAngle).sub(this.offset);
 			let s=v.cln().sign();
@@ -2299,8 +2417,8 @@ class HotAirBalloon extends Plane{
 		}
 
 		let bOff=this.hbBalloonOff.cln().rot(this.balloonAngle);
-		let balloon=vec.cln().sub(bOff).sub(this.balloonPos).lim(this.balloonSize.x/2);
-		balloon.add(this.balloonPos).add(bOff);
+		let balloon=vec.cln().sub(bOff).sub(balloonPos).lim(this.balloonSize.x/2);
+		balloon.add(balloonPos).add(bOff);
 		if(balloon.mag(vec)<basket.mag(vec)){
 			return balloon;
 		}else{
@@ -2310,6 +2428,7 @@ class HotAirBalloon extends Plane{
 	getDist(vec){
 		let basket=0;
 		let pos=loopVec(this.pos,vec);
+		let balloonPos=loopVec(this.balloonPos,vec);
 		{
 			let v=vec.cln().sub(pos).rot(-this.basketAngle);
 			let off=this.offset.cln();
@@ -2326,7 +2445,7 @@ class HotAirBalloon extends Plane{
 		}
 
 		let bOff=this.hbBalloonOff.cln().rot(this.balloonAngle);
-		let balloon=vec.cln().sub(bOff).mag(this.balloonPos)-this.balloonSize.x/2;
+		let balloon=vec.cln().sub(bOff).mag(balloonPos)-this.balloonSize.x/2;
 		return Math.min(balloon,basket);
 	}
 	calcHitbox(){
@@ -2470,10 +2589,11 @@ class HotAirBalloon extends Plane{
 		this.posList[0]=p.cln();
 	}
 	hurt(damage,damager){
-		let vec=damager.getPos(this.pos);
+		let vec=damager.getClosest(this.balloonPos);
 		let bOff=this.hbBalloonOff.cln().rot(this.balloonAngle);
 		let balloon=vec.cln().sub(bOff).mag(this.balloonPos)-this.balloonSize.x/2;
-		if(balloon<100){
+		let margin=50;
+		if(balloon<margin){
 			this.veloList[this.veloList.length-1].add(this.balloonPos.cln().sub(vec).nrm(damage*2));
 		}else{
 			this.health-=damage;
@@ -2492,6 +2612,7 @@ class HotAirBalloon extends Plane{
 			this.veloList[0].add(pVelo.cln().nrm(-this.kickback));
 
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.gunshot.play(this.pos,0,1*random(1,1.2));
 		}
 	}
 	display(disp,renderer){
@@ -2591,10 +2712,11 @@ class FlyingHouse extends HotAirBalloon{
 		let balloonMin=Infinity;
 		let balloonMinPos=basket.cln();
 		for(let i=0;i<this.balloonPosList.length;i++){
-			let balloon=vec.cln().mag(this.balloonPosList[i])-this.balloonSize.x/2;
+			let bPos=loopVec(this.balloonPosList[i],vec);
+			let balloon=vec.cln().mag(bPos)-this.balloonSize.x/2;
 			if(balloonMin>balloon){
 				balloonMin=balloon;
-				balloonMinPos=vec.cln().sub(this.balloonPosList[i]).lim(this.balloonSize.x/2).add(this.balloonPosList[i]);
+				balloonMinPos=vec.cln().sub(bPos).lim(this.balloonSize.x/2).add(bPos);
 			}
 		}
 		if(balloonMin<basket.mag(vec)){
@@ -2623,7 +2745,8 @@ class FlyingHouse extends HotAirBalloon{
 
 		let balloonMin=Infinity;
 		for(let i=0;i<this.balloonPosList.length;i++){
-			let balloon=vec.cln().mag(this.balloonPosList[i])-this.balloonSize.x/2;
+			let bPos=loopVec(this.balloonPosList[i],vec);
+			let balloon=vec.cln().mag(bPos)-this.balloonSize.x/2;
 			balloonMin=Math.min(balloonMin,balloon);
 		}
 		return Math.min(balloonMin,basket);
@@ -2675,20 +2798,23 @@ class FlyingHouse extends HotAirBalloon{
 	}
 	hurt(damage,damager){
 		let vec=damager.getPos(this.pos);
-		let balloonMin=Infinity;
-		let balloonMinI;
-		for(let i=0;i<this.balloonPosList.length;i++){
-			let balloon=vec.cln().mag(this.balloonPosList[i])-this.balloonSize.x/2;
-			if(balloonMin>balloon){
-				balloonMin=balloon;
-				balloonMinI=i;
-			}
-		}
-		if(balloonMin<100){
-			this.balloonVeloList.splice(balloonMinI,1);
-			this.balloonPosList.splice(balloonMinI,1);
-		}else{
+		let hitVec=damager.getClosest(this.pos);
+		if(hitVec.mag(this.pos)<this.size.mag()/2||this.balloonPosList.length==0){
 			this.health-=damage;
+		}else{
+			let balloonMin=Infinity;
+			let balloonMinI;
+			for(let i=0;i<this.balloonPosList.length;i++){
+				let balloon=vec.cln().mag(this.balloonPosList[i])-this.balloonSize.x/2;
+				if(balloonMin>balloon){
+					balloonMin=balloon;
+					balloonMinI=i;
+				}
+			}
+			if(balloonMin<Infinity){
+				this.balloonVeloList.splice(balloonMinI,1);
+				this.balloonPosList.splice(balloonMinI,1);
+			}
 		}
 	}
 	display(disp,renderer){
@@ -2723,6 +2849,9 @@ class FlyingHouse extends HotAirBalloon{
 class Zeppelin extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.prop;
+		this.thrustSoundSpeed=.7;
 
 		this.propNum=3+this.level;
 
@@ -2827,6 +2956,7 @@ class Zeppelin extends Plane{
 			this.velo.add(pVelo.cln().nrm(-this.kickback));
 
 			this.cooldown=this.cooldownMax;
+			gameRunner.sounds.gunshot.play(this.pos,0,1*random(1,1.2));
 		}
 	}
 	display(disp,renderer){
@@ -2874,14 +3004,20 @@ class Zeppelin extends Plane{
 		}
 		gameRunner.shadow(this.pos.x,this.pos.y,(this.hitbox[1].x-this.hitbox[0].x)/2);
 	}
-	die(){
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,320);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,160);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,80);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,40);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
-		gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+	die(explode=true){
+		if(explode){
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,320);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,160);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,80);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,40);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,20);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,10);
+			gameRunner.wreck(this.pos.x,this.pos.y,this.velo.x,this.velo.y,5);
+			gameRunner.sounds.bang.play(this.pos,0,10/80*random(1,1.2));
+		}
+		if(this.thrustSound!=null){
+			this.thrustSound.play(this.pos,0,this.thrustSoundSpeed,0);
+		}
 	}
 }
 //apply mixin
@@ -2906,6 +3042,9 @@ class NyanCat extends Plane{
 		this.resistanceMax=0.99;
 		this.fallResistance=0.9995;
 		this.transfer=0;
+		
+		this.ceilingStart=12000;
+		this.ceilingEnd=20000;
 
 		this.health=2000;
 		this.maxHealth=this.health;
@@ -3127,6 +3266,7 @@ class FlappyBird extends Plane{
 			this.velo.y=-this.jump*hE;
 			this.velo.add(VecA(this.jumpForward*hE,this.angle));
 			this.canJump=false;
+			gameRunner.sounds.gunshot.play(this.pos,0,.4*random(1,1.2),2);
 		}
 		this.jumping=true;
 	}
@@ -3177,28 +3317,28 @@ class PodRacerRope{
 	run(start,startVelo,end,endVelo,timeStep){
 		this.start=start;
 		this.end=end;
-		let iterations=5;
+		let iterations=Math.round(Math.max(5*timeStep,1));
 		for(let t=0;t<iterations;t++){
 			for(let i=0;i<this.points.length;i++){
-				let next=this.points[i+1]??end.cln().sub(endVelo.cln().scl((1-t/iterations)*timeStep));
-				let prev=this.points[i-1]??start.cln().sub(startVelo.cln().scl((1-t/iterations)*timeStep));
+				let next=this.points[i+1]??end.cln().sub(endVelo.cln().scl((1-t/iterations)));
+				let prev=this.points[i-1]??start.cln().sub(startVelo.cln().scl((1-t/iterations)));
 				let curr=this.points[i];
 
 				let nP=curr.cln().sub(next).lim(i==this.points.length-1?0:this.segmentDist).add(next);
 				let pP=curr.cln().sub(prev).lim(i==0?0:this.segmentDist).add(prev);
 				let mid=nP.cln().mix(pP,.5);
-				this.pointsVelo[i].add(mid.cln().sub(this.points[i]).scl(1/iterations*timeStep));
+				this.pointsVelo[i].add(mid.cln().sub(this.points[i]).scl(1/iterations));
 
-				this.pointsVelo[i].add(this.gravity.cln().scl(1/iterations*timeStep));
+				this.pointsVelo[i].add(this.gravity.cln().scl(1/iterations));
 			}
 			for(let i=0;i<this.points.length;i++){
 				this.points[i].add(this.pointsVelo[i]);
 			}
 			this.pointsVelo=this.pointsVelo.map((currV,i)=>{
-				let nextV=this.pointsVelo[i+1]??endVelo.cln().scl(1/iterations*timeStep);
-				let prevV=this.pointsVelo[i-1]??startVelo.cln().scl(1/iterations*timeStep);
+				let nextV=this.pointsVelo[i+1]??endVelo.cln().scl(1/iterations);
+				let prevV=this.pointsVelo[i-1]??startVelo.cln().scl(1/iterations);
 				let avgV=nextV.cln().mix(prevV,.5);
-				return currV.cln().sub(avgV).scl(0.8**timeStep).add(avgV);
+				return currV.cln().sub(avgV).scl(0.8).add(avgV);
 			})
 		}
 	}
@@ -3219,6 +3359,9 @@ class PodRacerRope{
 class PodRacer extends Plane{
 	constructor(p,a,l){
 		super(p,a,l);
+
+		this.thrustSound=gameRunner.sounds.rocket;
+		this.thrustSoundSpeed=2.5;
 		
 		let thrust=1;
 		this.thrustLimit=thrust;
@@ -3304,7 +3447,7 @@ class PodRacer extends Plane{
 				let mag=dir.mag();
 				for(let d=0;d<mag;d+=this.damageSize){
 					let damagePos=dir.cln().nrm(d).add(curr);
-					bulletsArr.push(new DamageField(damagePos,this.bulletDamage,this.damageSize/2,true).init());
+					bulletsArr.push(new DamageField(damagePos,this.bulletDamage*timeStep,this.damageSize/2,false).init());
 				}
 			}
 		}
@@ -3353,7 +3496,7 @@ class PodRacer extends Plane{
 			if(dist>this.thrusterRange){
 				//TODO: smooth this out
 				let ang=this.pos.ang(p);
-				let bounce=VecA(this.thrusterRange-dist,ang).scl(this.thrusterBounce*timeStep/this.thrusterPosList.length).lim(100);
+				let bounce=VecA(this.thrusterRange-dist,ang).scl(this.thrusterBounce/this.thrusterPosList.length).lim(100);
 				v.sub(this.velo).rot(-ang);
 				v.x*=this.thrusterSmooth**timeStep;
 				v.rot(ang).add(this.velo);
@@ -3366,10 +3509,12 @@ class PodRacer extends Plane{
 	
 				slowed.sub(v);
 				let strength=slowed.mag();
-				gameRunner.wave(p.x,p.y,100,strength*this.waveSize*timeStep);
+				let waveSize=this.waveSize/2;
+				let splashSize=this.splashSize;
+				gameRunner.wave(p.x,p.y,100,Math.min(strength*waveSize,5));
 				if(!this.thrusterSubmergedList[i]){
-					let splash=slowed.mag()*this.splashSize;
-					gameRunner.splash(p.x+v.x*5,p.y+v.y*5,slowed.x*100,slowed.y*100,splash);
+					let splash=Math.min(strength*splashSize,10);
+					gameRunner.splash(p.x,p.y,slowed.x/timeStep,slowed.y/timeStep,splash/timeStep);
 				}
 				this.thrusterSubmergedList[i]=true;
 				v.add(this.buoyancy.cln().scl(timeStep));
@@ -3475,5 +3620,367 @@ class PodRacer extends Plane{
 }
 //apply mixin
 Object.assign(PodRacer.prototype,shapeMixin.rect);
+
+//#endregion
+
+//#region dragon
+
+class DragonSegment extends Entity{
+	constructor(p,v,s,parent,idx){
+		super(p,v);
+		this.size=s;
+		this.parent=parent;
+		this.idx=idx;
+		this.damage=1;
+	}
+	run(){
+		this.alive=this.isAlive();
+	}
+	isAlive(){
+		return this.parent.isAlive();
+	}
+	runSpecial(arrays){
+		let a2=arrays["aliens"];
+		for(let j=0;j<a2.length;j++){
+			this.tryHit(a2[j],false,true);
+		}
+	}
+	hurt(damage,damager){
+		this.parent.hurt(damage,damager);
+	}
+	hit(target,special){
+		if(special){
+			target.hurt(this.damage,this);
+			this.parent.grow(.1);
+		}else{
+			super.hit(target);
+		}
+	}
+	display(){
+		if(this.idx%3==0){
+			let hb=this.getHitbox();
+			gameRunner.shadow(this.pos.x,this.pos.y,(hb[1].x-hb[0].x)/2);
+		}
+	}
+}
+//apply mixin
+Object.assign(DragonSegment.prototype,shapeMixin.circ);
+
+class Dragon extends Plane{
+	constructor(p,a,l){
+		super(p,a,l);
+
+		this.thrustLimit=1;
+		this.thrustRecover=1;
+		this.thrustPotential=1;
+		this.thrustPotLim=1;
+		
+		this.agilityMin=0.1;
+		this.agilityMax=0.1;
+		this.agilityFall=0.1;
+		
+		this.ceilingStart=4000;
+		this.ceilingEnd=10000;
+
+		//Flight
+		this.resistanceMin=0.99;
+		this.resistanceMax=0.99;
+		this.fallResistance=0.99;
+		this.transfer=0.2;
+		this.minSpeed=1;//min speed for lift
+		this.maxSpeed=20;//speed for max efficiency
+
+		this.cooldownMax=15;
+		this.bulletDamage=10;
+		this.bulletSpeed=100;
+		this.bulletSize=20;
+		this.bulletRange=50;
+		this.bulletOffset=Vec(0,25);
+
+		this.minSpeed=0;
+		this.maxSpeed=20;
+		
+		this.maxHealth=10000;
+		this.health=this.maxHealth;
+
+		this.scaleSize=Vec(25,14).scl(2);
+		this.scaleTexPos=[Vec(748,552),Vec(774,552),Vec(800,552)];
+		this.scaleTexSize=Vec(25,14);
+		this.ballTexPos=Vec(841,576);
+		this.ballTexSize=Vec(30,30);
+		this.feather1TexPos=Vec(883,608);
+		this.feather1TexSize=Vec(6,14);
+		this.feather1Size=Vec(6,14).scl(2);
+		this.feather2TexPos=Vec(872,590);
+		this.feather2TexSize=Vec(10,23);
+		this.feather2Size=Vec(10,23).scl(2);
+		this.jawTexPos=Vec(841,638);
+		this.jawTexSize=Vec(60,22);
+		this.jawSize=Vec(60,22).scl(2);
+		this.jawOffset=Vec(35,10).scl(2);
+		this.hornTexPos=Vec(902,614);
+		this.hornTexSize=Vec(76,34);
+		this.hornSize=Vec(76,34).scl(2);
+		this.hornOffset=Vec(-38,-26).scl(2);
+		this.hornAng=-.1;
+		this.displaySize=Vec(92,50).scl(2);
+		this.texPos=Vec(748,582);
+		this.texSize=Vec(92,50);
+		this.displayOffset=Vec(54,0);
+
+		this.size=50;
+		
+		this.growth=0;
+		this.growthMax=500;
+		this.segments=[];
+
+		this.biteTime=0;
+		this.biting=false;
+		this.biteSpeed=1/this.cooldownMax;
+		this.jawAng=0;
+	}
+	init(){
+		this.grow(100);
+		let trail=this.pos.cln();
+		let ang=this.angle+PI;
+		let spinBase=.2;
+		let spin=spinBase;
+		for(let i=this.segments.length-1;i>=0;i--){
+			trail.add(VecA(25,ang));
+			// ang-=Math.cos(i*PI*.1)*.2;
+			ang+=spin;
+			let diffAng=nrmAngTAU(ang-trail.ang(this.pos));
+			if(diffAng>TAU*3/4){
+				spin=spinBase/2;
+			}
+			this.segments[i].pos=trail.cln();
+		}
+		return super.init();
+	}
+	grow(amount){
+		let diff=Math.floor(this.growth);
+		this.growth=Math.min(this.growth+amount,this.growthMax);
+		diff=Math.floor(this.growth)-diff;
+		for(let i=0;i<diff;i++){
+			this.addSegment();
+		}
+	}
+	addSegment(){
+		let idx=this.segments.length;
+		let s=new DragonSegment(this.pos.cln(),Vec(0,0),Math.min(idx*.5+20,45),this,idx).init();
+		this.segments.push(s);
+
+		if(idx%3==0){
+			gameRunner.queueAction((game)=>{
+				game.planes.push(s);
+				game.specials.push(s);
+			});
+		}
+	}
+	shoot(bulletsArr){
+		this.biting=true;
+		// bulletsArr.push(new DamageField(this.pos,this.damage,80));
+		// let bt=(this.biteTime*this.biteSpeed)%2;
+		// if(bt>.5&&bt<1.5){
+		// 	super.shoot(bulletsArr);
+		// }
+	}
+	runCustom(timeStep){
+		super.runCustom(timeStep);
+
+		if(this.biting||this.jawAng<0){
+			this.biteTime+=timeStep;
+			this.biting=false;
+		}
+		this.jawAng=Math.min(Math.cos(this.biteTime*this.biteSpeed*PI)-.8,0)*PI/8;
+
+		for(let i=this.segments.length-1;i>=0;i--){
+			this.segments[i].pos.add(this.segments[i].velo.cln().scl(timeStep));
+			this.segments[i].calcHitbox();
+
+			let next=this.segments[i+1]?.pos??this.pos.cln();
+			let curr=this.segments[i].pos;
+
+			let backup=curr.cln();
+
+			curr.sub(next).lim(25).add(next);
+
+			this.segments[i].velo.add(curr.cln().sub(backup).scl(.03));
+			this.segments[i].velo.scl(.9**timeStep);
+			// if(!gameRunner.isUnderwater(curr.x,curr.y)){
+			// 	this.segmentsVelo[i].add(this.segmentGravity.cln().scl(timeStep));
+			// }
+		}
+	}
+	display(){
+		let scaleRepeat=this.scaleSize.cln().scl([.25,1]);
+		let skewDensity=3;
+		let segAng=this.angle;
+		renderer.img(
+			this.pos.x,this.pos.y,
+			85,85,
+			segAng,
+			this.ballTexPos.x,
+			this.ballTexPos.y,
+			this.ballTexSize.x,
+			this.ballTexSize.y,
+			false,
+			0,
+			0);
+		for(let x=0;x<this.segments.length;x++){
+			if(x<this.segments.length-1){
+				segAng=this.segments[x].pos.ang(this.segments[x+1].pos);
+			}
+			let width=Math.max(Math.min(x*.5+20,45)*2-15,1);
+			renderer.img(
+				this.segments[x].pos.x,this.segments[x].pos.y,
+				width,width,
+				segAng,
+				this.ballTexPos.x,
+				this.ballTexPos.y,
+				this.ballTexSize.x,
+				this.ballTexSize.y,
+				false,
+				0,
+				0);
+		}
+		for(let x=0;x<this.segments.length;x++){
+			if(x<this.segments.length-1){
+				segAng=this.segments[x].pos.ang(this.segments[x+1].pos);
+			}
+			let width=Math.min(x*.5+20,45);
+			let scaleNum=Math.ceil(width/scaleRepeat.y*.75);
+			let scaleWidth=width/scaleNum;
+			if(x%2==0){
+				for(let y=0;y<scaleNum;y++){
+					let skew=skewDensity/(Math.abs(y)+skewDensity);
+					let scaleIdx=clamp(Math.round(Math.abs(y*2)),0,2);
+					this.displayScale(this.segments[x].pos.x,this.segments[x].pos.y,segAng,0,y*scaleWidth,scaleWidth*skew,scaleIdx);
+				}
+			}else{
+				for(let y=0.5;y<=scaleNum-0.5;y++){
+					let skew=skewDensity/(Math.abs(y)+skewDensity);
+					let scaleIdx=clamp(Math.round(Math.abs(y*2)),0,2);
+					if(scaleNum==1){
+						scaleIdx=2;
+					}
+					this.displayScale(this.segments[x].pos.x,this.segments[x].pos.y,segAng,0,y*scaleWidth,scaleWidth*skew,scaleIdx);
+				}
+			}
+		}
+		renderer.img(
+			this.pos.x,this.pos.y,
+			85,85,
+			segAng,
+			this.ballTexPos.x,
+			this.ballTexPos.y,
+			this.ballTexSize.x,
+			this.ballTexSize.y,
+			false,
+			0,
+			0);
+		
+		let flip=nrmAngPI(this.angle+PI/2)<0;
+		[PI/2-.5,PI/2-.1,PI/2+.6].forEach(ang=>
+			renderer.img(
+				this.pos.x,this.pos.y,
+				this.feather2Size.x,this.feather2Size.y,
+				this.angle-ang*(flip?-1:1),
+				this.feather2TexPos.x,
+				this.feather2TexPos.y,
+				this.feather2TexSize.x,
+				this.feather2TexSize.y,
+				flip,
+				0,
+				-40)
+		);
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.jawSize.x,this.jawSize.y,
+			this.angle-this.jawAng*(flip?-1:1),
+			this.jawTexPos.x,
+			this.jawTexPos.y,
+			this.jawTexSize.x,
+			this.jawTexSize.y,
+			flip,
+			this.jawOffset.x,
+			this.jawOffset.y);
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.displaySize.x,this.displaySize.y,
+			this.angle+this.jawAng/2*(flip?-1:1),
+			this.texPos.x,
+			this.texPos.y,
+			this.texSize.x,
+			this.texSize.y,
+			flip,
+			this.displayOffset.x,
+			this.displayOffset.y);
+		
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.feather1Size.x,this.feather1Size.y,
+			this.angle+.2*(flip?-1:1),
+			this.feather1TexPos.x,
+			this.feather1TexPos.y,
+			this.feather1TexSize.x,
+			this.feather1TexSize.y,
+			flip,
+			20,
+			40);
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.feather1Size.x,this.feather1Size.y,
+			this.angle+.6*(flip?-1:1),
+			this.feather1TexPos.x,
+			this.feather1TexPos.y,
+			this.feather1TexSize.x,
+			this.feather1TexSize.y,
+			flip,
+			20,
+			40);
+		
+		renderer.img(
+			this.pos.x,this.pos.y,
+			this.hornSize.x,this.hornSize.y,
+			this.angle+this.hornAng*(flip?-1:1)+this.jawAng/2*(flip?-1:1),
+			this.hornTexPos.x,
+			this.hornTexPos.y,
+			this.hornTexSize.x,
+			this.hornTexSize.y,
+			flip,
+			this.hornOffset.x,
+			this.hornOffset.y);
+		
+		let hb=this.getHitbox();
+		gameRunner.shadow(this.pos.x,this.pos.y,(hb[1].x-hb[0].x)/2);
+	}
+	displayScale(x,y,ang,offX,offY,width,idx){
+		renderer.img(
+			x,y,
+			this.scaleSize.x,width,
+			ang,
+			this.scaleTexPos[idx].x,
+			this.scaleTexPos[idx].y,
+			this.scaleTexSize.x,
+			this.scaleTexSize.y,
+			false,
+			offX,
+			-offY);
+		renderer.img(
+			x,y,
+			this.scaleSize.x,width,
+			ang,
+			this.scaleTexPos[idx].x,
+			this.scaleTexPos[idx].y,
+			this.scaleTexSize.x,
+			this.scaleTexSize.y,
+			true,
+			offX,
+			-offY);
+	}
+}
+//apply mixin
+Object.assign(Dragon.prototype,shapeMixin.circ);
 
 //#endregion

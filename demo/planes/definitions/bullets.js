@@ -186,7 +186,7 @@ class DamageField extends Bullet{
 }
 class Rainbow extends DamageField{
 	constructor(p,d,s,range,angle,spawnTime){
-		super(p,d,s,true,range);
+		super(p,d,s,false,range);
 		this.angle=angle;
 		this.spawnTime=spawnTime;
 	}

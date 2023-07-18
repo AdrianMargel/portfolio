@@ -9,6 +9,7 @@ class Director{
 			wrecker:[],
 			boss:[],
 			mother:[],
+			other:[],
 		};
 		this.AIKeys=Object.keys(this.AIs);
 		this.spawners=[];
@@ -33,10 +34,21 @@ class Director{
 		this.bossCondition=false;
 		this.unitCondition=false;
 		this.runSpeed=1000/60;
+
+		this.spaghettiHeight=-30000;
+		this.spaghettiMonster=null;
 	}
 	run(timeStep){
 		this.timer-=timeStep*this.runSpeed;
 		let aiCount=0;
+
+		let playerPos=this.game.getPlayer().getPos();
+		if(playerPos.y<this.spaghettiHeight&&(this.spaghettiMonster==null||!this.spaghettiMonster.isAlive())){
+			this.spawnSpaghettiMonster(playerPos.cln().add(Vec(0,-500)));
+			this.game.message("When you gaze into the spagootz, the spagootz gazes also into you",15);
+			unlockSpaghetti();
+			console.log("Spagootz");
+		}
 
 		let toPay=0;
 		this.AIKeys.forEach(key=>{
@@ -234,11 +246,11 @@ class Director{
 			case 10.5:
 				this.game.message("The real game begins...",4);
 				this.killAll();
-				this.resetExcess();
 				this.queueNextOnTime(5,11);
 				break;
 
 			case 11:
+				this.resetExcess();
 				this.game.message("Wave "+this.waveNum);
 				this.spawnRandomWave(2200*difficultyScale+this.excess);
 				this.queueNext(15);
@@ -301,25 +313,17 @@ class Director{
 
 			case 20.5:
 				this.killAll();
-				this.resetExcess();
+				this.game.gameWin();
+				this.waveNum=21;
 				break;
 			
+			case 21:
+				this.resetExcess();
 			default:
-				// if(this.waveNum%5==0){
-				// 	this.spawnRandomWave(this.waveNum*400);
-				// 	this.spawnRandomWave(this.waveNum*400);
-					
-				// }else if(this.waveNum%10==0){
-				// 	this.spawnRandomWave(this.waveNum*400);
-				// 	this.spawnRandomWave(this.waveNum*400);
-
-				// }else if(this.waveNum%2==0){
-				// 	this.spawnRandomWave(this.waveNum*200);
-				// 	this.spawnRandomBoss(this.waveNum*200);
-				// }else{
-				// 	this.spawnRandomWave(this.waveNum*400);
-				// }
-				// this.queueNext(30);
+				this.game.message("Wave "+this.waveNum);
+				this.spawnRandomWave((this.waveNum-20)*1000*difficultyScale+this.excess);
+				this.spawnRandomBoss();
+				this.queueNext(30);
 		}
 		if(usedExcess){
 			this.resetExcess();
@@ -333,6 +337,12 @@ class Director{
 		this.resetExcess();
 	}
 	end(){
+		this.waveQueued=false;
+		this.bossCondition=false;
+		this.unitCondition=false;
+		this.motherCondition=false;
+		this.resetExcess();
+
 		this.waveNum=1;
 		waveNum.data=Math.ceil(this.waveNum);
 
@@ -344,6 +354,7 @@ class Director{
 			wrecker:[],
 			boss:[],
 			mother:[],
+			other:[],
 		};
 		this.spawners=[];
 	}
@@ -777,6 +788,13 @@ class Director{
 			this.game.aliens.push(toAdd);
 			this.spawners.push(toAdd);
 		}
+	}
 
+	spawnSpaghettiMonster(pos){
+		let toAdd=new SpaghettiMonster(pos,Math.random()*TAU).init();
+		let ai=new SpaghettiAI(toAdd,this);
+		this.AIs.other.push(ai);
+		this.game.aliens.push(toAdd);
+		this.spaghettiMonster=toAdd;
 	}
 }
