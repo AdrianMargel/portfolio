@@ -262,7 +262,6 @@ class AboutPage extends CustomElm{
 		let yearsMax=6;
 		this.define(html`
 		${addClass("intro",new Surface(html`
-			<div class="pic"></div>
 			<h2>Who I Am</h2>
 			<p>I'm a software developer with a focus on web technoligies. In this constantly evolving industry flexability and adaptation are key to success. There is no greater skill than the ability to learn and this is a skill I've mastered. Almost everything I know about programming I've taught myself. With every line of code I write I continue to sharpen my skills - and with well over a hundred thousand lines of code behind me in personal projects alone, this portfolio speaks for itself.</p>
 			<p>I've worked on a huge variety of projects. Everything ranging from novel artificial intelligence models to my own reactive web framework which I used to build this website. Programming is both my career and my passion so I am always excited to explore new areas where I can apply my skills.</p>

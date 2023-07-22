@@ -21,7 +21,8 @@ class Theme{
 
 		/* COLORS */
 		this.color={
-			greyStep:(a)=>this.#colorStep2(a,new Color("#363640"),new Color("#09000b"),0.6),
+			// greyStep:(a)=>this.#colorStep2(a,new Color("#363640"),new Color("#09000b"),0.6),
+			greyStep:(a)=>this.#colorStep(a,new Color("#363640"),0.6),
 			inputStep:(a)=>this.#colorStep(a,new Color("#363639"),0.6),
 			highlight:Col("#7AC16C"),
 			highlightDark:Col("#58934C"),
