@@ -1,4 +1,10 @@
 function trackPage(pageName){
+	let host=window.location.hostname;
+	if(host.toLowerCase()=="localhost"||host=="127.0.0.1"){
+		// Don't bother tracking localhost
+		return;
+	}
+
 	let name=pageName;
 	// Remove starting and ending "/", for example "/projects/thing/" becomes "projects/thing"
 	if(name[0]=="/"){
