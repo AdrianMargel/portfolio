@@ -460,6 +460,16 @@ let projectsList=bind([
 			"programming"
 		],
 		description: "A small start up using AI to teach highschool students how to program."
+	},
+	{
+		id: "unlimitedSkies",
+		title: "Unlimited Skies",
+		weight: 0.7,
+		highlight: true,
+		categories:[
+			"programming"
+		],
+		description: "A 2D plane game with an absurd selection of planes and unlimited upgrades."
 	}
 ]).sort((a,b)=>a.weight.data-b.weight.data);
 let selectedCategory=bind("programming");
