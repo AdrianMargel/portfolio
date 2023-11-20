@@ -53,6 +53,7 @@ class ProjectPage extends CustomElm{
 				<p class="bold">1. Thrust</p>
 				<p>Thrust determines how quickly a plane can accelerate. It is calculated in 3 parts. <span class="bold">Thrust Limit</span>: the maximum allowed acceleration. <span class="bold">Thrust Potential</span>: The maximum amount of 'stored up' acceleration. <span class="bold">Thrust Recover</span>: the speed that acceleration can be stored up.</p>
 				<p>At all times the plane slowly stores up acceleration. When the player wants to move forward that stored up acceleration is then depleted as thrust. In effect while the plane is in constant movement it will have a constant acceleration equal to its <span class="bold">Thrust Recover</span>. But if it stops moving it will start to store up excess acceleration, like a spring, up to its <span class="bold">Thrust Potential</span>. Which will then be released when it starts moving again as a quick boost to get up to speed, accelerating at its <span class="bold">Thrust Limit</span> until the excess stored up acceleration is used up. This allows more agile play since if the player stops they can very quickly get back up to speed or change direction.</p>
+				<p>The <span class="bold">Thrust Limit</span> is also dependent on the <span class="bold">Height Efficiency</span>, decreasing with height. This limits how high the plane is able to fly by decreasing its maximum thrust output until at the plane's maximum height there is no thrust.</p>
 				<p class="bold">2. Agility</p>
 				<p>Agility is based on a min and max value as well as a stall value. As the plane speeds up and approaches its max <span class="bold">Flight Efficiency</span> the agility decreases to the min value. This means at slow speeds the plane is quick to turn and at fast speeds the plane is more resistant to turning. If the plane is moving backwards from the direction it is facing that is considered a stall and the agility will be set to the stall value which is generally higher. By increasing agility during a stall it makes it easier to quickly recover to normal flight.</p>
 				<p class="bold">3. Resistance (Drag)</p>
@@ -62,9 +63,12 @@ class ProjectPage extends CustomElm{
 				<p>A good way of thinking about momentum transfer is by cutting a knife through water, you will notice that as you rotate the angle of the blade it will feel like it is pushing sideways as you move it forward. But if you rotate it too far so that it is almost completely sideways there will be no sideways force. This is why a dot product is used.</p>
 				<p class="bold">5. Flight Efficiency</p>
 				<p>Flight efficiency is calculated as a value from 0 to 1, based on the speed of the plane compared to its min and max speed. Up until its min speed the flight efficiency is 0 and thus there is no lift but also minimal drag. As it speeds up the flight efficiency increases towards 1 where there is maximum lift and maximum drag.</p>
-				<p class="bold">6. Gravity</p>
+				<p class="bold">6. Height Efficiency</p>
+				<p>Height efficiency is calculated as a value from 0 to 1, based on the height of the plane compared to its height ceiling. The height ceiling is different for each plane and consists of a min and max value. Up until the min height is reached the height efficiency is 1, after that it will decrease until at the max height it is 0. This is used to limit how high different planes can fly by decreasing their maximum thrust output at high altitudes.</p>
+				<p>Some planes like the Rocket have no height ceiling and can fly to any height.</p>
+				<p class="bold">7. Gravity</p>
 				<p>Heavier planes have a stronger gravitational vector. This is not technically how gravity works in the real world but it works very well for games.</p>
-				<p class="bold">7. Water</p>
+				<p class="bold">8. Water</p>
 				<p>Each plane has custom values for how it interacts with water. <span class="bold">Water Resistance(Drag)</span>, <span class="bold">Buoyancy</span>, <span class="bold">Splash Size</span>, and <span class="bold">Wave Size</span> are all set per plane to give a unique sense of weight and size when the plane hits the water.</p>
 
 				<p class="bold">- Conclusion -</p>
