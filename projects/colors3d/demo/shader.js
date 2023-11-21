@@ -431,8 +431,8 @@ let velocity=[
 	0,
 	0
 ];
-let angle1=PI/5;
-let angle2=1;
+let angle1=new Vector(1,1).getAng();
+let angle2=new Vector(1,1).getAng();
 let opacity=0;
 let opacityBase=0;
 calcOpacity();
@@ -537,6 +537,9 @@ let opacitySpeed=0.5;
 setInterval(run,1000/60);
 function run(){
 	let mDiff=control.getMouseMove();
+	if(document.pointerLockElement!=control.element){
+		mDiff.sclVec(0);
+	}
 
 	angle1=Math.min(Math.max(mDiff.y*turnSpeed+angle1,-PI/2),PI/2);
 	angle2+=mDiff.x*turnSpeed;

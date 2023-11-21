@@ -14,6 +14,7 @@ class Control{
 		this.rightClickTime=0;
 	}
 	connect(element){
+		this.element=element;
 		window.onkeyup = (e)=>{
 			this.pressedKeys[e.keyCode] = false;
 			if(e.keyCode==16||e.keyCode==32){

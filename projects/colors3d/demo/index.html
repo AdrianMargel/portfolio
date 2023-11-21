@@ -11,11 +11,18 @@
 	<link rel="stylesheet" href="main.css">
 </head>
 <body>
-	<button id="toggle"></button>
+	<button id="toggle">^</button>
 	<div class="control">
+		<div class="explain">
+			<p class="bold">Controls:</p>
+			<p>- Click on screen and use mouse to look around<br/><span>(press ESC to free mouse)</span></p>
+			<p>- Use the WASD keys + SHIFT and SPACE to move</p>
+			<p>- Use Scroll Wheel to adjust opacity<br/><span>(scroll towards yourself to make it more transparent)</span></p>
+		</div>
 		<div class="imageUpload">
-			<canvas id="uploaded" width="0" height="0"></canvas>
+			<p class="bold">Upload Image:</p>
 			<input id="uploader" type='file' />
+			<canvas id="uploaded" width="0" height="0"></canvas>
 		</div>
 	</div>
 
