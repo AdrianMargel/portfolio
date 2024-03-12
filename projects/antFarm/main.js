@@ -33,14 +33,14 @@ class ProjectPage extends CustomElm{
 				</p>
 				<h3>Direct Competition</h3>
 				<p>
-					In early versions of the project I had a constant number of organisms and had it set up that when one organism died another random organism would give birth. This would always lead to a single species taking over completely with very little genetic diversity. The reason was that by having the reproduction set up in this way it put all organisms in a global competition with each other. As all organisms where now forced to compete directly with all other organisms along a single dimension - longest lifespan - it caused the system to always converge to a single species.
+					In early versions of the project I had a constant number of organisms and had it set up that when one organism died another random organism would give birth. This would always lead to a single species taking over completely with very little genetic diversity. The reason was that by having the reproduction set up in this way it put all organisms in a global competition with each other. As all organisms were now forced to compete directly with all other organisms along a single dimension - longest lifespan - it caused the system to always converge to a single species.
 				</p>
 				<p>
-					It turns out that the only way to have a diverse ecosystem without convergence on a single species is to have the rules allow for species to compete along different dimensions usually through use different strategies. As long as species are locked into direct competition with each other one species will always come out on top.
+					It turns out that the only way to have a diverse ecosystem without convergence on a single species is to have the rules allow for species to compete along different dimensions, usually through use of different strategies. As long as species are locked into direct competition with each other one species will always come out on top.
 				</p>
 				<h3>Mutation Rates</h3>
 				<p>
-					Determining the best mutation rates for an evolutionary algorithm usually just comes down to trying different things and making a best guess. At least this is the way it most commonly done. However I have discovered that by making the mutation rates themselves a mutatable field it almost completely removes this problem. Species which mutate mutation rates that are optimal for effective evolution are able to evolve faster and have more successful offspring. Thus species will overtime evolve to have mutation rates that are best suited to the current environment. This also allows for species to change their mutation rates when the environment changes as well which would normally not be possible.
+					Determining the best mutation rates for an evolutionary algorithm usually just comes down to trying different things and making a best guess. At least this is the way it is most commonly done. However I have discovered that by making the mutation rates themselves a mutatable field it almost completely removes this problem. Species which mutate mutation rates that are optimal for effective evolution are able to evolve faster and have more successful offspring. Thus species will overtime evolve to have mutation rates that are best suited to the current environment. This also allows for species to change their mutation rates when the environment changes as well, which would normally not be possible.
 				</p>
 				<h3>Resource Scarcity</h3>
 				<p>
