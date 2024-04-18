@@ -1,0 +1,43 @@
+html{
+	font-family: 'Montserrat', sans-serif;
+	background-color: #28282E;
+	color: white;
+}
+::selection {
+  background: #97F28060;
+}
+
+input{
+	border:none;
+	background:none;
+	color:inherit;
+	font:inherit;
+	padding:0;
+}
+input:focus{
+	outline: none;
+}
+button{
+	border:none;
+	background:none;
+	color:inherit;
+	font:inherit;
+	padding:0;
+}
+button:focus{
+	outline: none;
+}
+a{
+	color: #7AC16C;
+	text-decoration: none;
+}
+a:hover{
+	color: #7AC16C;
+	text-decoration: underline;
+}
+a:active{
+	color: #7AC16C;
+}
+a:visited{
+	color: #7AC16C;
+}
