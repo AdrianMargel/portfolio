@@ -21,7 +21,12 @@ class AudioPlayer extends CustomElm{
 				<div class="player">
 				<div class="corner">
 					${new ButtonMinimize(minimized,()=>minimized.data=!minimized.data)}
-					${new ButtonClose(()=>closed.data=!closed.data)}
+					${new ButtonClose(()=>{
+						closed.data=!closed.data;
+						if(closed.data){
+							audio.pause();
+						}
+					})}
 				</div>
 					<div class="screen">
 						<p class="title">${()=>book.title.data}</p>
