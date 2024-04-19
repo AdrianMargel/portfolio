@@ -339,12 +339,6 @@ function setPage(id){
 	selectedPage.data=getSelectedPage();
 }
 
-// Set up scroll watcher
-let scrollPosition=bind(0);
-document.addEventListener('scroll', ()=>{
-	scrollPosition.data=window.scrollY;
-});
-
 let selectedBook=bind({
 	title:"NONE",
 	author:"",
@@ -364,6 +358,7 @@ let selectedChapter=bind({
 let player=new AudioPlayer(selectedBook,selectedChapter);
 let audio=new AudioManager(selectedBook,selectedChapter);
 
+let scrollPosition=bind(0);
 // Create main elements
 let headerElm=new Header(title);
 let navElm=new Nav(pages,scrollPosition);
@@ -380,6 +375,11 @@ let body=html`
 `();
 addElm(body,document.body);
 body.disolve();
+
+// Set up scroll watcher
+getElm(".scrollContainer",document).addEventListener('scroll', (e)=>{
+	scrollPosition.data=e.target.scrollTop;
+});
 
 /*
 TODO:
