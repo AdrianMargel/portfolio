@@ -95,6 +95,16 @@ class LeniaShader extends FragShader{
 					}
 					return a;
 				}
+				float[8] normal(float[8] a,out float total){
+					total=integral(a);
+					if(total==0.){
+						return a;
+					}
+					for(int i=0;i<8;i++){
+						a[i]/=total;
+					}
+					return a;
+				}
 				float[8] diff(float[8] a){
 					float[8] b;
 					for(int i=0;i<8;i++){
@@ -187,6 +197,9 @@ class LeniaShader extends FragShader{
 					vec3 geneVec=lookup3.xyz;
 					return compare(c,geneVals,geneVec);
 				}
+				float screen(float a,float b){
+					return 1.-(1.-a)*(1.-b);
+				}
 				void main(){
 					vec2 pos2=(pos+1.)*.5;
 					ivec2 coord2=ivec2(pos2*size);
@@ -198,13 +211,17 @@ class LeniaShader extends FragShader{
 					}
 
 					float[8] c=check(coord2,leniaTex);
-					c=normal(c);
-					float result=clamp(
+					float mass;
+					c=normal(c,mass);
+					float result=screen(
+						clamp(
 						(gene(dna[0],c)+
 						gene(dna[1],c)+
 						gene(dna[2],c)+
 						gene(dna[3],c))/4.,
-						-1.,1.);
+						-1.,1.),
+						min(mass/8.*0.1,1.)
+					);
 
 					outColor0=vec4(result,0.,0.,0.);
 				}
