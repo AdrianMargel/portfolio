@@ -259,55 +259,53 @@ defineElm(Skill,scss`&{
 class AboutPage extends CustomElm{
 	constructor(){
 		super();
-		let yearsMax=6;
+		let yearsMax=8;
 		this.define(html`
 		${addClass("intro",new Surface(html`
 			<h2>Who I Am</h2>
 			<p>I'm a software developer with a focus on web technoligies. In this constantly evolving industry flexability and adaptation are key to success. There is no greater skill than the ability to learn and this is a skill I've mastered. Almost everything I know about programming I've taught myself. With every line of code I write I continue to sharpen my skills - and with well over a hundred thousand lines of code behind me in personal projects alone, this portfolio speaks for itself.</p>
 			<p>I've worked on a huge variety of projects. Everything ranging from novel artificial intelligence models to my own reactive web framework which I used to build this website. Programming is both my career and my passion so I am always excited to explore new areas where I can apply my skills.</p>
-			<p class="center buttonDiv">
-				${new ButtonClickable("My Resume",()=>window.open("/resume/resume-2023-web.docx", '_blank'))}
-			</p>
 		`,"lg",false,true))}
 		${addClass("skills",new Surface(html`
 			<h2>Skills</h2>
-			<p class="center updated">(updated early 2023)</p>
+			<p class="center updated">(updated early 2025)</p>
 			<p class="center">Listed below is the number of years I have <span class="bold">actively</span> been practicing each skill.</p>
 			<div class="list">
 				<p class="group">Web</p>
-				${new Skill("HTML",6,"6 years",yearsMax)}
-				${new Skill("CSS",6,"6 years",yearsMax,html`
-					${new SubSkill("Sass",5,"5 years",yearsMax)}
+				${new Skill("HTML",8,"8 years",yearsMax)}
+				${new Skill("CSS",8,"8 years",yearsMax,html`
+					${new SubSkill("Sass",7,"7 years",yearsMax)}
 				`)}
-				${new Skill("JS",5,"5 years",yearsMax,html`
+				${new Skill("JS",7,"7 years",yearsMax,html`
 					${new SubSkill("Node.js",4,"4 years",yearsMax)}
-					${new SubSkill("WebGL",2,"2 years",yearsMax)}
+					${new SubSkill("WebGL",4,"4 years",yearsMax)}
+					${new SubSkill("Jest",4,"4 years",yearsMax)}
 					${new SubSkill("Vue",2,"2 years",yearsMax)}
-					${new SubSkill("Jest",2,"2 years",yearsMax)}
-					${new SubSkill("Puppeteer",1,"1 year",yearsMax)}
-					${new SubSkill("Deno",1,"1 year",yearsMax)}
+					${new SubSkill("React",2,"2 years",yearsMax)}
+					${addClass("small",new SubSkill("React Native",1,"1 year",yearsMax))}
+					${new SubSkill("Puppeteer",2,"2 years",yearsMax)}
+					${new SubSkill("Deno",2,"2 years",yearsMax)}
 					${new SubSkill("Socket.io",1,"1 year",yearsMax)}
-					${new SubSkill("WebRTC",.75,"<1 year",yearsMax)}
-					${new SubSkill("React",.75,"<1 year",yearsMax)}
+					${new SubSkill("WebRTC",1,"1 year",yearsMax)}
 				`)}
 
 				<p class="group">Application / Server</p>
-				${new Skill("Java",5,"5 years",yearsMax)}
-				${new Skill("C#",4,"4 years",yearsMax,html`
+				${new Skill("C#",6,"6 years",yearsMax,html`
+					${new SubSkill("LINQ",5,"5 years",yearsMax)}
+					${new SubSkill(".NET Core",5,"5 years",yearsMax)}
 					${addClass("small",new SubSkill(".NET Framework",4,"4 years",yearsMax))}
-					${new SubSkill(".NET Core",3,"3 years",yearsMax)}
-					${new SubSkill("LINQ",3,"3 years",yearsMax)}
 				`)}
+				${new Skill("Java",5,"5 years",yearsMax)}
 				${new Skill("PHP",1,"1 year",yearsMax)}
 				${new Skill("Python",.75,"<1 year",yearsMax)}
 				
 				<p class="group">Database</p>
-				${new Skill("SQL",4,"4 years",yearsMax)}
+				${new Skill("SQL",6,"6 years",yearsMax)}
 				${new Skill("MongoDB",.75,"<1 year",yearsMax)}
 
 				<p class="group">Other</p>
-				${new Skill("Git",6,"6 years",yearsMax)}
-				${new Skill("GLSL",2,"2 years",yearsMax)}
+				${new Skill("Git",8,"8 years",yearsMax)}
+				${new Skill("GLSL",4,"4 years",yearsMax)}
 				${new Skill("OpenCL",1,"1 year",yearsMax)}
 				${new Skill("Docker",.75,"<1 year",yearsMax)}
 				${addClass("small",new Skill("Google API",.75,"<1 year",yearsMax))}

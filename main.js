@@ -146,16 +146,6 @@ let projectsList=bind([
 		description: "A program for rendering mandelbrot based fractals, most notably the buddhabrot"
 	},
 	{
-		id: "fireBird",
-		title: "Fire Bird",
-		weight: 1,
-		highlight: false,
-		categories:[
-			"art"
-		],
-		description: "A phoenix-like digital art bird."
-	},
-	{
 		id: "leviathan",
 		title: "Leviathan",
 		weight: 1,
@@ -383,7 +373,7 @@ let projectsList=bind([
 		id: "voxelLighting",
 		title: "Voxel Lighting",
 		weight: 0.85,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming"
 		],
@@ -393,7 +383,7 @@ let projectsList=bind([
 		id: "colors3d",
 		title: "3D Color Spaces",
 		weight: 0.8,
-		highlight: true,
+		highlight: false,
 		categories:[
 			"programming",
 			"art"
@@ -454,7 +444,7 @@ let projectsList=bind([
 	{
 		id: "teachingGame",
 		title: "AI Education Game",
-		weight: 1.9,
+		weight: 1.8,
 		highlight: false,
 		categories:[
 			"programming"
@@ -470,9 +460,59 @@ let projectsList=bind([
 			"programming"
 		],
 		description: "A 2D plane game with an absurd selection of planes and unlimited upgrades."
-	}
+	},
+	{
+		id: "holographicRadianceCascades",
+		title: "Holographic Radiance Cascades",
+		weight: 0.6,
+		highlight: true,
+		categories:[
+			"programming"
+		],
+		description: "A novel realtime lighting algorithm for direct global illumination."
+	},
+	{
+		id: "lenia",
+		title: "Fluid Lenia",
+		weight: 0.6,
+		highlight: true,
+		categories:[
+			"programming"
+		],
+		description: "An advanced artificial cellular life simulation."
+	},
+	{
+		id: "mandelbulb",
+		title: "Mandelbulb",
+		weight: 1.9,
+		highlight: false,
+		new: true,
+		categories:[
+			"programming"
+		],
+		description: "A realtime ray tracer for the Mandelbrot fractal."
+	},
+	{
+		id: "billiardBalls",
+		title: "Billiard Ball Fractal",
+		weight: 1.9,
+		highlight: false,
+		new: true,
+		categories:[
+			"programming"
+		],
+		description: "An animated fractal rendering of the Billiard Ball math problem."
+	},
 ]).sort((a,b)=>a.weight.data-b.weight.data);
 let selectedCategory=bind("programming");
+
+//CONSIDER:
+// shape sdf generator
+// GPU langton's ant
+// GPU buddhabrot
+// Evolutionary code
+// GPU variable size list
+// Classic RC
 
 let initialPage=(window.location.pathname.split("/")[1]??"").toLowerCase();
 if(initialPage==""){

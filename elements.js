@@ -761,7 +761,7 @@ defineElm(ProjectCard,(()=>{
 		}
 	}
 	.caption{
-		top: calc(100% - 24px - 10px - 25px);
+		top: calc(100% - 23px - 10px - 25px);
 		right: 0;
 		left: -4px;
 		position: absolute;
