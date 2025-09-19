@@ -490,7 +490,7 @@ let projectsList=bind([
 		categories:[
 			"programming"
 		],
-		description: "A realtime ray tracer for the Mandelbrot fractal."
+		description: "A realtime ray tracer for the Mandelbulb fractal."
 	},
 	{
 		id: "billiardBalls",
