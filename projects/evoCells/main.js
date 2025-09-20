@@ -57,7 +57,7 @@ defineElm(ProjectPage,scss`&{
 	}
 }`);
 
-let title=bind("Alchemy Circles");
+let title=bind("Evolving Cells");
 let page=bind(null);
 page.data=bind({
 	content: new ProjectPage()

@@ -7,7 +7,7 @@ class ProjectPage extends CustomElm{
 				<p class="center bold projectLink"><a href="/demo/mandelbulb/" rel="nofollow">Demo</a></p>
 				${new ImageDisplay("img/mandelbulb.png")}
 				<p>
-					This program allows realtime rendering of the 3D Mandelbulb fractal. This is achieved by ray-marching a Signed Distance Field(SDF) of the Mandelbulb fractal. 
+					This program allows realtime rendering of the 3D Mandelbulb fractal. This is achieved by ray-marching a Signed Distance Function (SDF) of the Mandelbulb fractal. 
 					The inspiration for this project came from the incredible work of <a href="https://iquilezles.org/articles/mandelbulb/">Inigo Quilez</a>.
 				</p>
 			`,"lg",false,true)}
