@@ -13,10 +13,10 @@ class ProjectPage extends CustomElm{
 					Holographic Radiance Cascades (HRC) is a novel solution for calculating direct global illumination. It runs in constant time, unaffected by scene complexity or number of light sources.
 				</p>
 				<p>
-					HRC is heavily based on the the Radiance Cascades (RC) algorithm and thus inherits many of the same properties/advantages that RC offers. HRC is able to more accurately capture lighting details such as hard shadows which RC struggles with. Though it is worth noting that this increased accuracy comes the cost of performance. However, HRC is still able to resolve the lighting for 2D scenes in realtime with a higher accuracy than RC can accomplish and with the same computational budget.
+					HRC is heavily based on the Radiance Cascades (RC) algorithm and thus inherits many of the same properties/advantages that RC offers. HRC is able to more accurately capture lighting details such as hard shadows which RC struggles with. Though it is worth noting that this increased accuracy comes at the cost of performance. However, HRC is still able to resolve the lighting for 2D scenes in realtime with a higher accuracy than RC can accomplish and with the same computational budget.
 				</p>
 				<p>
-					In 2D HRC is a near perfect solution to lighting. Unforunately in 3D the scaling costs are much higher. Whether HRC can be modified to be viable for realtime 3D applications remains an open question. 
+					In 2D HRC is a near perfect solution to lighting. Unfortunately in 3D the scaling costs are much higher. Whether HRC can be modified to be viable for realtime 3D applications remains an open question. 
 				</p>
 			`,"lg",false,true)}
 			<div class="gap"></div>
@@ -36,16 +36,16 @@ class ProjectPage extends CustomElm{
 					Traditionally realtime approximation of ambient lighting is done using light probes. Each probe is effectively a low resolution camera that takes sample rays around it, accumulating the average light and then interpolating it back onto the surrounding scene.
 				</p>
 				<p>
-					When working with light probes both the sample resolution of each probe and the number of probes (probe density) can be adjusted to balance accuracy and performance. In a perfect world you would have one probe per pixel in the rendered image and with a high number of samples per probe. In this extreme case this is equivalent to brute force ray tracing the scene. Obviously for realtime rendering this is not feasible, which begs the question: what is the optimal arrangement of probes and sample rays?
+					When working with light probes both the sample resolution of each probe and the number of probes (probe density) can be adjusted to balance accuracy and performance. In a perfect world you would have one probe per pixel in the rendered image and a high number of samples per probe. This extreme case is equivalent to brute force ray tracing the scene. Obviously for realtime rendering this is not feasible, which begs the question: what is the optimal arrangement of probes and sample rays?
 				</p>
 				<p>
-					The classic Radiance Cascades algorithm answers this question in a novel way. Instead of using a single grid of probes, instead it uses multiple grids of probes at different scales. Each of these grids is called a cascade. At the smallest scale each probe only uses a few samples, but the probe density is very high. At the largest scale there are very few probes but each probe has a high number of sample rays.
+					The classic Radiance Cascades algorithm answers this question in a novel way. Instead of using a single grid of probes, it uses multiple grids of probes at different scales. Each of these grids is called a cascade. At the smallest scale each probe only uses a few samples, but the probe density is very high. At the largest scale there are very few probes but each probe has a high number of sample rays.
 				</p>
 				<p>
 					These samples are then interpolated and merged down into the next cascade starting at the largest scale and moving down to smaller scales until at the final level of interpolation we are merging into each pixel.
 				</p>
 				<p>
-					This turns out to be a very powerful strategy for approximating lighting. But unfortunately it is not perfect and cannot capture detailed lighting effects such as hard shadows. As a result RC is very effective for approximating ambient lighting effects but still requires a separate ray tracing pass to calculate hard shadows from point light sources. I was very interested in finding a way to improve the algorithm so that it could be used for both direct and ambient lighting as part of the same algorithm. HRC is the result this endeavour.
+					This turns out to be a very powerful strategy for approximating lighting. But unfortunately it is not perfect and cannot capture detailed lighting effects such as hard shadows. As a result RC is very effective for approximating ambient lighting effects but still requires a separate ray tracing pass to calculate hard shadows from point light sources. I was very interested in finding a way to improve the algorithm so that it could be used for both direct and ambient lighting as part of the same algorithm. HRC is the result of this endeavour.
 				</p>
 				<p>
 					HRC improves upon the classic RC algorithm by changing the structure of the cascades from using probe grids to using holographic boundaries. Instead of interpolating between probes we interpolate from holographic boundaries. Doing it this way is more expensive than classic RC but allows for the lighting to be much more accurately captured.
