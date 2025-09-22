@@ -21,7 +21,7 @@ class ProjectPage extends CustomElm{
 					To briefly summarize what the problem is: Imagine a triangle shaped billiard table. Now imagine rolling a ball on that table, allowing it to follow a straight path bouncing each time it hits a wall. The question is for any shape of triangle is there a path where the ball will eventually return back to where it started and repeat the same path again (imagining that the ball travels infinitely without any friction and perfectly elastic bounces).
 				</p>
 				<p>
-					I suspected the problem was chaotic by nature due to the infinite bouncing, which is similar to the kind of recursion present in Mandlebrot and Collatz Conjecture. And so I was curious to explore the problem space visually and better understand it. It turned out that like many other chaotic systems the visualisation of the problem yields a complex and beautiful fractal.
+					I suspected the problem was chaotic by nature due to the infinite bouncing, which is similar to the kind of recursion present in Mandelbrot and Collatz Conjecture. And so I was curious to explore the problem space visually and better understand it. It turned out that like many other chaotic systems the visualisation of the problem yields a complex and beautiful fractal.
 				</p>
 			`,"lg")}
 			<div class="gap"></div>
@@ -31,7 +31,7 @@ class ProjectPage extends CustomElm{
 					To analyze this problem we start by considering the space of all possible starting conditions from which a path could be generated. We can quickly reduce the dimensionality down to 4 dimensions by realizing first that the scale and rotation of the triangle don't affect whether a path is periodic. Thus all triangles can be uniquely described with 2 variables. Secondly when the ball is bouncing around we know that it will eventually come into contact with all 3 walls. Once it comes into contact with a wall then we can continue calculating the path forward or backwards from that point without any reason to care about the initial 2D point from which the path originated. This means that the only information we really need when considering a path is a starting position on one of the lines (as a 1D scalar) and the angle of the bounce. So we get 2 more variables to describe the path, giving us a total of 4 dimensions to explore.
 				</p>
 				<p>
-					Now that we know the dimensionality of the problem we can start thinking about ways to calculate solutions to these paths. One way is to look at the problem from the perspective of the ball. From the ball's perspective when it reflects off a wall it is equivalent to entering into a new reflected triangle and continuing on the same straight line. From this persective the ball never deviates from a straight line path:
+					Now that we know the dimensionality of the problem we can start thinking about ways to calculate solutions to these paths. One way is to look at the problem from the perspective of the ball. From the ball's perspective when it reflects off a wall it is equivalent to entering into a new reflected triangle and continuing on the same straight line. From this perspective the ball never deviates from a straight line path:
 				</p>
 				${addClass("small",new ImageDisplay("img/triangle-bounce-line-1.png"))}
 				<p>
@@ -45,10 +45,10 @@ class ProjectPage extends CustomElm{
 				</p>
 				${addClass("small",new ImageDisplay("img/triangle-path-3.png"))}
 				<p>
-					Each of these corridoors represents a class of periodic path solutions which covers some area of the problem space. If we flatten that covering down to the 2D space of all possible triangles then we can build a map of overlapping coverings. If that map could cover the full set of all possible triangles then it would solve the problem and prove that: yes, all triangles have a periodic path.
+					Each of these corridors represents a class of periodic path solutions which covers some area of the problem space. If we flatten that covering down to the 2D space of all possible triangles then we can build a map of overlapping coverings. If that map could cover the full set of all possible triangles then it would solve the problem and prove that: yes, all triangles have a periodic path.
 				</p>
 				<p>
-					Having placated my curiousity, this is where my journey ends. I enjoyed visualizing the problem, but the amount of compute needed to outright solve it (if even possible) is beyond me. The problem was an interesting exploration for me to better understand chaos, but solving it has little if any practical application.
+					Having placated my curiosity, this is where my journey ends. I enjoyed visualizing the problem, but the amount of compute needed to outright solve it (if even possible) is beyond me. The problem was an interesting exploration for me to better understand chaos, but solving it has little if any practical application.
 				</p>
 				<h3>Candidates Visualized:</h3>
 				${addClass("small",new ImageDisplay("img/triangle-bounce-7.png"))}

@@ -12,10 +12,10 @@ class ProjectPage extends CustomElm{
 					This is an advanced artificial life simulation I built which runs in realtime on the GPU.
 				</p>
 				<p>
-					Cellular automata like Conway's Game of Life are meant to emulate the behavior of simple multicellular life. Conway's Game of Life uses rules that operate on small local neighborhoods with discrete states. Expanding the neighborhood and making the cell states continous results in Smooth Life cellular automata. Making the kernal more advanced and applying an arbitrary growth function results in Lenia cellular automata. Taking the results of Lenia and applying that to generate a vector flow field that pushes material around results in Flow Lenia. Taking Flow Lenia and combining it with a fluid simulator results in a new automaton I've chosen to call Fluid Lenia. Each species is represented with a different color.
+					Cellular automata like Conway's Game of Life are meant to emulate the behavior of simple multicellular life. Conway's Game of Life uses rules that operate on small local neighborhoods with discrete states. Expanding the neighborhood and making the cell states continuous results in Smooth Life cellular automata. Making the kernal more advanced and applying an arbitrary growth function results in Lenia cellular automata. Taking the results of Lenia and applying that to generate a vector flow field that pushes material around results in Flow Lenia. Taking Flow Lenia and combining it with a fluid simulator results in a new automaton I've chosen to call Fluid Lenia. Each species is represented with a different color.
 				</p>
 				<p>
-					I also made added the ability for the simulation to adhere to the brightness of a preset greyscale image. I was asked to build this feature by Samuel Bianchini who later used it in an <a href="https://dispotheque.org/en/taking-lifes">exhibition</a> at <a href="https://jeudepaume.org/mediateque/cartels-des-oeuvres/">Jeu de Paume</a>.
+					I also added the ability for the simulation to adhere to the brightness of a preset greyscale image. I was asked to build this feature by Samuel Bianchini who later used it in an <a href="https://dispotheque.org/en/taking-lifes">exhibition</a> at <a href="https://jeudepaume.org/mediateque/cartels-des-oeuvres/">Jeu de Paume</a>.
 				</p>
 				${new ImageDisplay("img/butterfly-rainbow3.png")}
 			`,"lg",false,true)}
@@ -33,7 +33,7 @@ class ProjectPage extends CustomElm{
 			${new Surface(html`
 				<h2>Results</h2>
 				<p>
-					There's actually too much to cover here if I went into the implementation, so instead let's just skip to the results. If you are interested in how it works I recomend checking out the Flow Lenia paper or this project's Github link above. 
+					There's actually too much to cover here if I went into the implementation, so instead let's just skip to the results. If you are interested in how it works I recommend checking out the Flow Lenia paper or this project's Github link above. 
 				</p>
 				<h3>Flow Lenia</h3>
 				${new ImageDisplay("img/lenia44.png")}
