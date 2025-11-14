@@ -1,6 +1,3 @@
-//track basic page analytics
-trackPage(window.location.pathname);
-
 // Create global page styles
 createStyles(scss`&{
 	background-color: ${theme.color.greyStep(-1)};
