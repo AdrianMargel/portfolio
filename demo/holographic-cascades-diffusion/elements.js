@@ -124,44 +124,6 @@ defineElm(ButtonLink,scss`&{
 	}
 }`);
 
-class Header extends CustomElm{
-	constructor(text){
-		super();
-		this.define(html`
-			<div class="back"></div>
-			<h1>Cimexis ${html`${text}`(text)}</h1>
-		`);
-	}
-}
-defineElm(Header,(()=>{
-	let size="400px";
-
-	return scss`&{
-		${theme.elementReset}
-		${theme.center}
-		height: ${size};
-		background-color: ${theme.color.greyStep(0)};
-		z-index: 2;
-		position: relative;
-		> .back{
-			position: absolute;
-			height:${size};
-			width:${size};
-			background-image: url('./img/logo.png');
-			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
-		}
-		> h1{
-			position: relative;
-			margin-top: 5px;
-			padding-bottom: 5px;
-			background-color: ${theme.color.greyStep(0)};
-			${theme.font.title}
-		}
-	}`})()
-);
-
 class EndSymbol extends CustomElm{
 	constructor(){
 		super();
@@ -333,6 +295,7 @@ defineElm(ControlPanel,scss`&{
 	max-height:100%;
 	overflow:hidden;
 	>.head{
+		z-index:1;
 		background-color:${theme.color.greyStep(0)};
 		${theme.boxShadowStep(-1)}
 		${theme.center}
