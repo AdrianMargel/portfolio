@@ -8,7 +8,7 @@ createStyles(scss`&{
 	color: white;
 	overflow:hidden;
 
-	background-image: url('/img/back-pattern-1b.png');
+	background-image: url('./img/back-pattern-1b.png');
 	background-repeat: repeat;
 	background-position: center;
 

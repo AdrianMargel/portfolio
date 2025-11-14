@@ -9,7 +9,7 @@ class Game{
 		this.orbsToggled=true;
 		// A quick thanks to this maze generator that saved me some time here:
 		// https://keesiemeijer.github.io/maze-generator/#generate
-		this.mazeImg.src='../img/maze.png';
+		this.mazeImg.src='./img/maze.png';
 	}
 	clear(disp,barrierDisp){
 		disp.clear();
