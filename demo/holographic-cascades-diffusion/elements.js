@@ -216,10 +216,6 @@ class ControlPanel extends CustomElm{
 					<p>Size:</p>
 					${new Slider(brush.size,.5,10)}
 				</div>
-				<div class="controlBar">
-					<p>Opacity:</p>
-					${new Slider(brush.opacity,0,1)}
-				</div>
 				<div class="controlType">
 					<p>Type:</p>
 					<div>
