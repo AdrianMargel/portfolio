@@ -6,6 +6,8 @@ class Game{
 			this.mazeImgLoaded=true;
 		};
 
+		this.previousMPos=null;
+
 		this.orbsToggled=true;
 		// A quick thanks to this maze generator that saved me some time here:
 		// https://keesiemeijer.github.io/maze-generator/#generate
@@ -17,30 +19,58 @@ class Game{
 	}
 	drawInteractive(disp,barrierDisp,ctrl,t,brush){
 		let onePix=disp.size.x/129;
+		disp.ctx.lineCap="round";
+		barrierDisp.ctx.lineCap="round";
+
+		let mPos=disp.view.transformInv(ctrl.mousePos());
+		let start=mPos;
+		let end=this.previousMPos??mPos;
+		if(ctrl.mouseDown()){
+			this.previousMPos=mPos;
+		}else{
+			this.previousMPos=null;
+		}
 
 		if(ctrl.mouseDown("L")){
 			disp.noStroke();
 			if(brush.type=="color"){
-				disp.setFill(rgb(brush.r,brush.g,brush.b,brush.opacity).gammaShift());
-				disp.circ(disp.view.transformInv(ctrl.mousePos()),brush.size*onePix);
+				disp.setStroke(rgb(brush.r,brush.g,brush.b,brush.opacity).gammaShift());
+				disp.setWeight(brush.size*onePix);
+				disp.start();
+				disp.mt(start);
+				disp.lt(end);
+				disp.path()
 			}else if(brush.type=="rainbow"){
-				disp.setFill(hsv(t/4,1,1).toRgb().gammaShift());
-				disp.circ(disp.view.transformInv(ctrl.mousePos()),brush.size*onePix);
+				disp.setStroke(hsv(t/4,1,1,brush.opacity).toRgb().gammaShift());
+				disp.setWeight(brush.size*onePix);
+				disp.start();
+				disp.mt(start);
+				disp.lt(end);
+				disp.path()
 			}else if(brush.type=="barrier"){
-				barrierDisp.noStroke();
-				barrierDisp.setFill(rgb(0.,0.,0.,brush.opacity));
-				barrierDisp.circ(disp.view.transformInv(ctrl.mousePos()),brush.size*onePix);
+				barrierDisp.setStroke(rgb(0.,0.,0.,brush.opacity));
+				barrierDisp.setWeight(brush.size*onePix);
+				barrierDisp.start();
+				barrierDisp.mt(start);
+				barrierDisp.lt(end);
+				barrierDisp.path()
 			}else if(brush.type=="erase"){
 				disp.ctx.globalCompositeOperation="destination-out";
-				disp.noStroke();
-				disp.setFill(rgb(0.,0.,0.,brush.opacity));
-				disp.circ(disp.view.transformInv(ctrl.mousePos()),brush.size*onePix);
+				disp.setStroke(rgb(0.,0.,0.,brush.opacity));
+				disp.setWeight(brush.size*onePix);
+				disp.start();
+				disp.mt(start);
+				disp.lt(end);
+				disp.path()
 				disp.ctx.globalCompositeOperation="source-over";
 
 				barrierDisp.ctx.globalCompositeOperation="destination-out";
-				barrierDisp.noStroke();
-				barrierDisp.setFill(rgb(0.,0.,0.,brush.opacity));
-				barrierDisp.circ(disp.view.transformInv(ctrl.mousePos()),brush.size*onePix);
+				barrierDisp.setStroke(rgb(0.,0.,0.,brush.opacity));
+				barrierDisp.setWeight(brush.size*onePix);
+				barrierDisp.start();
+				barrierDisp.mt(start);
+				barrierDisp.lt(end);
+				barrierDisp.path()
 				barrierDisp.ctx.globalCompositeOperation="source-over";
 			}
 		}

@@ -22,13 +22,6 @@ class InitShader extends FragShader{
 				${SHADER_FUNCS.CASCADE}
 				${SHADER_FUNCS.CASCADE_COORD}
 
-				bool isReflective(vec4 v){
-					return v.a<0.;
-				}
-				bool isAbsorptive(vec4 v){
-					return (v.a>0.)&&!isReflective(v);
-				}
-
 				vec4 getInitValue(ivec2 coord){
 					vec2 p=vec2(coord)/getCascadeSize();
 					vec2 pi=vec2(p.x,1.-p.y);
@@ -36,22 +29,21 @@ class InitShader extends FragShader{
 					// return texelFetch(inputTex,coord*4,0);
 				}
 				float selfConnection(ivec2 coord){
-					vec4 v1=getInitValue(coord);
-					if(isReflective(v1)){
-						return 0.;
-					}
+					vec4 vA=getInitValue(coord);
+					float reflectionA=max(-vA.a,0.);
 
 					float baseWeight=1./8.;
 					float total;
 					for(int x=-1;x<=1;x++){
 						for(int y=-1;y<=1;y++){
 							if(x!=0||y!=0){
-								vec4 v=getInitValue(coord+ivec2(x,y));
-								total+=float(isReflective(v));
+								vec4 vB=getInitValue(coord+ivec2(x,y));
+								float reflectionB=max(-vB.a,0.);
+								total+=1.-(1.-reflectionA)*(1.-reflectionB);
 							}
 						}
 					}
-					return float(total)*baseWeight/4.;
+					return total*baseWeight;
 				}
 				float initVal(ivec2 mtxCoord,Matrix mtx){
 					//note that midCount will always be 0 for the smallest cascade which is the one we initialize
@@ -61,30 +53,26 @@ class InitShader extends FragShader{
 					
 					if(mtxCoord.x==mtxCoord.y){
 						//map self-connection
-						return selfConnection(aCoord);
+						//divide by 4 to account for overlap since these connections will get merged twice later
+						return selfConnection(aCoord)*.25;
 					}else if(mtxCoord.y<mtx.edgeCount){
+						
 						//map edge node
 						ivec2 bCoord=getEdgeCoord(mtxCoord.y,mtx.blk);
 						vec4 b=getInitValue(bCoord);
 
-						if(isReflective(a)||isReflective(b)||isAbsorptive(a)){
-							return 0.;
-						}
 						bool isDiagonal=modI(mtxCoord.y-mtxCoord.x,mtx.edgeCount)==2;
 						float baseWeight=1./8.;
-						
+
+						float absorption=max(a.a,.0);
+						float reflectionA=max(-a.a,0.);
+						float reflectionB=max(-b.a,0.);
+
 						//divide each non-diagonal weight by 2 since these connections will get merged later
-						return baseWeight/(1.+float(!isDiagonal)); //branchless
+						return (1.-reflectionA)*(1.-reflectionB)*(1.-absorption)*baseWeight/(1.+float(!isDiagonal)); //branchless
 					}else{
 						//map channel output
 						int channelIdx=mtxCoord.y-mtx.edgeCount;
-						if(isReflective(a)){
-							return mod(float(aCoord.x+aCoord.y),2.)/4.*.1
-								+.1*float(channelIdx==0)
-								+.01*float(channelIdx==1)
-								+.15*float(channelIdx==2);
-							// return 1.;
-						}
 						float val=(a.x*float(channelIdx==0))
 							+(a.y*float(channelIdx==1))
 							+(a.z*float(channelIdx==2)); //branchless

@@ -182,6 +182,6 @@ class CascadeManager{
 		// console.timeEnd('run');
 
 		// Render
-		this.renderShader.run(this.outputTexPP);
+		this.renderShader.run(this.inputTexPP,this.outputTexPP);
 	}
 }

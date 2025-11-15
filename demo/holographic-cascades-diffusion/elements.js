@@ -206,15 +206,19 @@ class ControlPanel extends CustomElm{
 								`background-image:url("./img/brush-${brush.type.data}.png")`
 							};
 							border:2px solid ${theme.color.greyStep(1)};
-							width:${brush.size.data*8}px;
-							height:${brush.size.data*8}px;
+							width:${brush.size.data*5}px;
+							height:${brush.size.data*5}px;
 							opacity:${brush.opacity.data};
 						`)(brush.type,brush.r,brush.g,brush.b,brush.size,brush.opacity)}
 					></div>
 				</div>
 				<div class="controlBar">
 					<p>Size:</p>
-					${new Slider(brush.size,.5,10)}
+					${new Slider(brush.size,1,20)}
+				</div>
+				<div class="controlBar">
+					<p>Opacity:</p>
+					${new Slider(brush.opacity,0,1)}
 				</div>
 				<div class="controlType">
 					<p>Type:</p>

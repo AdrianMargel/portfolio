@@ -19,15 +19,19 @@ class InputMergeShader extends FragShader{
 					ivec2 coord=ivec2(pos2*size);
 
 					vec4 barrier=texture(barrierTex,pos2);
-					if(barrier.r<0.1&&barrier.a>0.){
-						outColor=vec4(0.,0.,0.,-1.);
+					if(barrier.a>0.){
+						outColor=vec4(0.,0.,0.,-barrier.a);
+						// outColor=vec4(0.,0.,0.,-.1);
 						return;
 					}
 
 					vec4 a=texture(aTex,pos2);
 					vec4 b=texture(bTex,pos2);
 
-					outColor=a+b;//TODO
+					outColor=vec4(
+						a.rgb*a.a+(1.-a.a)*b.rgb*b.a,
+						a.a+(1.-a.a)*b.a
+					);
 				}
 			`,
 		);

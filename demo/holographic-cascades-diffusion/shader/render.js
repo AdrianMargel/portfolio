@@ -6,7 +6,8 @@ class RenderShader extends FragShader{
 				precision highp int;
 				precision highp sampler2D;
 
-				uniform sampler2D tex;
+				uniform sampler2D texA;
+				uniform sampler2D texB;
 				uniform vec2 size;
 				in vec2 pos;
 
@@ -52,19 +53,49 @@ class RenderShader extends FragShader{
 
 				void main(){
 					vec2 pos2=(pos+1.)*.5;
-					vec4 col=texture(tex,pos2);
+					vec2 coord=pos2*size*2.;
+					vec4 a=texture(texA,vec2(pos2.x,1.-pos2.y));
+					vec4 b=texture(texB,pos2);
 
-					outColor=vec4(gammaCorrect(col.rgb),1.);
-					// outColor=vec4(gammaCorrect(col.rrr)*vec3(1.,.3,.01)*2.,1.);
-					// outColor=heatColorMap(min(col.r+0.001,.99));
+					outColor=vec4(gammaCorrect(b.rgb),1.);
+
+					if(a.a<0.){
+						float reflectivity=-a.a;
+						float pattern1=clamp(
+							1.-abs(
+								sqrt(
+									pow(mod(coord.x,4.)-2.,2.)
+									+pow(mod(coord.y,4.)-2.,2.)
+								)
+								-1.
+							),
+							0.,1.
+						);
+						float pattern2=clamp(
+							1.-abs(
+								sqrt(
+									pow(mod(coord.x-2.,4.)-2.,2.)
+									+pow(mod(coord.y-2.,4.)-2.,2.)
+								)
+								-1.
+							),
+							0.,1.
+						);
+						float pattern=(pattern1*pattern2)*4.+.5;
+						outColor=vec4(
+							mix(outColor.rgb,vec3(0.65,.24,.78)*pattern,max(reflectivity,.1)),
+							1.
+						);
+					}
 				}
 			`,
 		);
 	}
-	run(renderTex){
+	run(texA,texB){
 		this.uniforms={
-			tex:renderTex.tex,
-			size:renderTex.size,
+			texA:texA.tex,
+			texB:texB.tex,
+			size:texA.size,
 		};
 		super.run();
 	}
